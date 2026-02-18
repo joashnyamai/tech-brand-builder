@@ -55,6 +55,12 @@ const education = [
     status: "Awaiting Graduation",
   },
   {
+    degree: "Software Development",
+    institution: "Power Learn Project",
+    period: "Feb 2025 to Jun 2025",
+    status: "Completed",
+  },
+  {
     degree: "Diploma in Software Engineering",
     institution: "Zetech University",
     period: "Jan 2022 to Nov 2023",
@@ -102,8 +108,8 @@ export default function Certifications() {
                   <div className="flex items-start justify-between gap-2 flex-wrap">
                     <span
                       className={`text-xs px-2 py-0.5 rounded-full ${edu.status === "Completed"
-                          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                          : "bg-cyan/10 text-cyan border border-cyan/20"
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        : "bg-cyan/10 text-cyan border border-cyan/20"
                         }`}
                     >
                       {edu.status}
