@@ -6,8 +6,8 @@ import { Code2, Shield, Users, Zap } from "lucide-react";
 const differentiators = [
   {
     icon: Code2,
-    title: "Full-Stack Depth",
-    desc: "From React frontends to ASP.NET Core backends — I architect end-to-end solutions with production-grade quality.",
+    title: "Full Stack Depth",
+    desc: "From React frontends to ASP.NET Core backends, I architect end to end solutions with production grade quality.",
   },
   {
     icon: Shield,
@@ -17,12 +17,12 @@ const differentiators = [
   {
     icon: Users,
     title: "Digital Empowerment",
-    desc: "I've trained hundreds of entrepreneurs, students, and youth groups — turning technology into lasting opportunity.",
+    desc: "I've trained hundreds of entrepreneurs, students, and youth groups, turning technology into lasting opportunity.",
   },
   {
     icon: Zap,
     title: "Automation & Efficiency",
-    desc: "I identify workflow bottlenecks and eliminate them — reducing processing time by up to 40% for organizations I serve.",
+    desc: "I identify workflow bottlenecks and eliminate them, reducing processing time by up to 40% for organizations I serve.",
   },
 ];
 
@@ -56,16 +56,16 @@ export default function About() {
             className="space-y-5 text-muted-foreground leading-relaxed text-base"
           >
             <p>
-              My journey in technology began not in a classroom, but in curiosity — a relentless drive to understand how systems work and how they can be made better. Today, I operate at the intersection of software engineering, quality assurance, and digital transformation as a practitioner who has seen both the code and the people it serves.
+              My journey in technology began not in a classroom, but in curiosity, a relentless drive to understand how systems work and how they can be made better. Today, I operate at the intersection of software engineering, quality assurance, and digital transformation as a practitioner who has seen both the code and the people it serves.
             </p>
             <p>
-              With over <span className="text-foreground font-medium">5 years of hands-on experience</span>, I've shipped production applications at Kiwami Tech Solutions, architected digital tax infrastructure at Tari Africa Platforms, and independently consulted dozens of SMEs and NGOs across Kenya — helping them escape spreadsheet chaos and embrace scalable digital workflows.
+              With over <span className="text-foreground font-medium">5 years of hands on experience</span>, I've shipped production applications at Kiwami Tech Solutions, architected digital tax infrastructure at Tari Africa Platforms, and independently consulted dozens of SMEs and NGOs across Kenya, helping them escape spreadsheet chaos and embrace scalable digital workflows.
             </p>
             <p>
-              I hold a <span className="text-foreground font-medium">BSc in Information Technology</span> from Zetech University, complemented by Cisco CCNA, Cybersecurity, and Generative AI certifications. But what defines my career isn't credentials — it's the measurable impact I create for every team, client, and community I engage with.
+              I hold a <span className="text-foreground font-medium">BSc in Information Technology</span> from Zetech University, complemented by Cisco CCNA, Cybersecurity, and Generative AI certifications. But what defines my career isn't credentials, it's the measurable impact I create for every team, client, and community I engage with.
             </p>
             <p>
-              When I'm not building software, I'm mentoring the next generation of Kenyan engineers, writing instructional content, or exploring the frontier of AI-powered automation.
+              When I'm not building software, I'm mentoring the next generation of Kenyan engineers, writing instructional content, or exploring the frontier of AI powered automation.
             </p>
 
             <div className="flex flex-wrap gap-3 pt-4">

@@ -6,26 +6,26 @@ const initiatives = [
   {
     icon: Users,
     title: "Rural Digital Literacy Workshops",
-    period: "Aug 2022 – Present",
-    desc: "Facilitated community-based digital literacy workshops for youth and women's groups across Kenya, covering everything from basic computer skills to programming fundamentals and employable IT skills.",
+    period: "Aug 2022 to Present",
+    desc: "Facilitated community based digital literacy workshops for youth and women's groups across Kenya, covering everything from basic computer skills to programming fundamentals and employable IT skills.",
   },
   {
     icon: BookOpen,
     title: "Student Mentorship & Career Guidance",
     period: "Ongoing",
-    desc: "Actively mentoring high school and university students on pathways into IT — from choosing the right certifications to building their first full-stack projects in React and ASP.NET Core.",
+    desc: "Actively mentoring high school and university students on pathways into IT, from choosing the right certifications to building their first full stack projects in React and ASP.NET Core.",
   },
   {
     icon: Trophy,
     title: "University Examination Invigilator",
-    period: "Dec 2021 – Present | JKUAT, COHRED",
-    desc: "Supporting academic integrity at Jomo Kenyatta University's College of Human Resource Development — ensuring fair, orderly, and transparent examination environments for hundreds of students.",
+    period: "Dec 2021 to Present | JKUAT, COHRED",
+    desc: "Supporting academic integrity at Jomo Kenyatta University's College of Human Resource Development, ensuring fair, orderly, and transparent examination environments for hundreds of students.",
   },
   {
     icon: Heart,
     title: "SME Digital Transformation Advocate",
-    period: "2022 – Present",
-    desc: "Going beyond software delivery — actively training business owners to understand and independently manage their digital tools, creating lasting capability rather than dependency.",
+    period: "2022 to Present",
+    desc: "Going beyond software delivery, actively training business owners to understand and independently manage their digital tools, creating lasting capability rather than dependency.",
   },
 ];
 
@@ -49,8 +49,8 @@ export default function Community() {
           </h2>
           <div className="section-divider mb-6" />
           <p className="max-w-2xl text-muted-foreground leading-relaxed">
-            Technology becomes meaningful when it empowers people. Beyond building software, 
-            I invest in communities — training the underserved, mentoring the ambitious, 
+            Technology becomes meaningful when it empowers people. Beyond building software,
+            I invest in communities, training the underserved, mentoring the ambitious,
             and helping organizations build digital confidence from the ground up.
           </p>
         </motion.div>

@@ -4,9 +4,9 @@ import { motion, useInView } from "framer-motion";
 const stats = [
   { value: 40, suffix: "%", label: "Reduction in processing time achieved for SME clients through digital migration." },
   { value: 35, suffix: "%", label: "Decrease in QA testing time through automated test scripting at Kiwami Tech." },
-  { value: 10000, suffix: "+", label: "End-users protected from a defective mobile app release through proactive QA." },
-  { value: 500, suffix: "+", label: "Concurrent users successfully load-tested on a healthcare platform." },
-  { value: 300, suffix: "+", label: "University staff and students supported with daily first-line IT assistance." },
+  { value: 10000, suffix: "+", label: "End users protected from a defective mobile app release through proactive QA." },
+  { value: 500, suffix: "+", label: "Concurrent users successfully load tested on a healthcare platform." },
+  { value: 300, suffix: "+", label: "University staff and students supported with daily first line IT assistance." },
   { value: 50, suffix: "%", label: "Improvement in system boot and stability during JKUAT computer lab upgrades." },
 ];
 
@@ -41,19 +41,19 @@ function Counter({ target, suffix, inView }: { target: number; suffix: string; i
 const achievements = [
   {
     title: "Automated VAT Compliance",
-    desc: "Engineered API-driven workflows that eliminated manual VAT submissions for SMEs, reducing compliance risk and processing overhead.",
+    desc: "Engineered API driven workflows that eliminated manual VAT submissions for SMEs, reducing compliance risk and processing overhead.",
   },
   {
     title: "QA Pipeline Automation",
-    desc: "Transformed manual QA cycles into automated test suites — cutting testing time by 35% and enabling faster, safer release cadences.",
+    desc: "Transformed manual QA cycles into automated test suites, cutting testing time by 35% and enabling faster, safer release cadences.",
   },
   {
     title: "Community Digital Training",
-    desc: "Led hands-on workshops for rural youth and women's groups across Kenya, building practical IT skills and opening career pathways in tech.",
+    desc: "Led hands on workshops for rural youth and women's groups across Kenya, building practical IT skills and opening career pathways in tech.",
   },
   {
     title: "Legacy System Migration",
-    desc: "Guided SMEs from paper-based records to digital platforms — improving data accuracy, reducing errors, and saving hours of weekly admin time.",
+    desc: "Guided SMEs from paper based records to digital platforms, improving data accuracy, reducing errors, and saving hours of weekly admin time.",
   },
 ];
 

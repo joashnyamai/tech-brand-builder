@@ -49,15 +49,15 @@ const certifications = [
 
 const education = [
   {
-    degree: "Bachelor of Science — Information Technology",
+    degree: "Bachelor of Science, Information Technology",
     institution: "Zetech University",
-    period: "Jan 2024 – Nov 2026 (Expected)",
+    period: "Jan 2024 to Nov 2026 (Expected)",
     status: "Awaiting Graduation",
   },
   {
     degree: "Diploma in Software Engineering",
     institution: "Zetech University",
-    period: "Jan 2022 – Nov 2023",
+    period: "Jan 2022 to Nov 2023",
     status: "Completed",
   },
 ];
@@ -101,11 +101,10 @@ export default function Certifications() {
                 >
                   <div className="flex items-start justify-between gap-2 flex-wrap">
                     <span
-                      className={`text-xs px-2 py-0.5 rounded-full ${
-                        edu.status === "Completed"
+                      className={`text-xs px-2 py-0.5 rounded-full ${edu.status === "Completed"
                           ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                           : "bg-cyan/10 text-cyan border border-cyan/20"
-                      }`}
+                        }`}
                     >
                       {edu.status}
                     </span>
@@ -159,8 +158,8 @@ export default function Certifications() {
             <h3 className="font-display font-semibold text-sm text-foreground">Beyond Code</h3>
           </div>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            When I step away from the terminal, I channel the same analytical mind into other pursuits: 
-            writing about emerging technology, playing chess, exploring AI innovations, and mentoring 
+            When I step away from the terminal, I channel the same analytical mind into other pursuits:
+            writing about emerging technology, playing chess, exploring AI innovations, and mentoring
             the next generation of Kenyan engineers into the industry.
           </p>
         </motion.div>

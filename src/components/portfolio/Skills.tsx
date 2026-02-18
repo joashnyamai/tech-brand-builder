@@ -6,8 +6,8 @@ import { Code2, TestTube2, Building2, Shield, Wrench } from "lucide-react";
 const skillGroups = [
   {
     icon: Code2,
-    category: "Full-Stack Development",
-    tagline: "Building end-to-end web solutions that scale",
+    category: "Full Stack Development",
+    tagline: "Building end to end web solutions that scale",
     skills: ["React", "TypeScript", "JavaScript (ES6+)", "Svelte / SvelteKit", "Tailwind CSS", "ASP.NET Core / C#", "Node.js", "PostgreSQL", "Firebase", "Docker", "WebPack"],
   },
   {
@@ -20,7 +20,7 @@ const skillGroups = [
     icon: Building2,
     category: "IT Consulting & Digital Transformation",
     tagline: "Modernizing operations for SMEs and NGOs",
-    skills: ["Digital Workflow Design", "MS Excel Automation", "Payroll & Financial Dashboards", "CRM Systems", "User Onboarding", "Instructional Design", "Training Documentation", "Remote & On-site Support"],
+    skills: ["Digital Workflow Design", "MS Excel Automation", "Payroll & Financial Dashboards", "CRM Systems", "User Onboarding", "Instructional Design", "Training Documentation", "Remote & On site Support"],
   },
   {
     icon: Shield,
@@ -64,9 +64,8 @@ export default function Skills() {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`card-glass rounded-2xl p-6 hover-glow group cursor-default ${
-                i === 4 ? "md:col-span-2 xl:col-span-1" : ""
-              }`}
+              className={`card-glass rounded-2xl p-6 hover-glow group cursor-default ${i === 4 ? "md:col-span-2 xl:col-span-1" : ""
+                }`}
             >
               <div className="flex items-start gap-4 mb-5">
                 <div className="w-11 h-11 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center flex-shrink-0 group-hover:bg-cyan/20 transition-colors">

@@ -6,7 +6,7 @@ export default function Footer() {
           © {new Date().getFullYear()} <span className="text-cyan">Malila Nyamai</span>. All rights reserved.
         </p>
         <p className="text-xs text-muted-foreground">
-          Full-Stack Engineer · QA Specialist · IT Consultant · Nairobi, Kenya
+          Full Stack Engineer · QA Specialist · IT Consultant · Nairobi, Kenya
         </p>
       </div>
     </footer>

@@ -5,37 +5,37 @@ import { ExternalLink, ArrowUpRight } from "lucide-react";
 const projects = [
   {
     name: "Kiwami TestCloud",
-    period: "Sep 2025 – Jan 2026",
+    period: "Sep 2025 to Jan 2026",
     url: "https://www.kiwamitestcloud.com",
-    objective: "A professional software testing platform for QA teams — supporting test case management, execution, reporting, and analytics.",
-    stack: ["React", "TypeScript", "Vite", "REST APIs", "Role-based Auth"],
-    summary: "Built the complete frontend architecture of a cloud-based QA platform, implementing modular components, real-time dashboards, and secure authentication flows for enterprise users.",
+    objective: "A professional software testing platform for QA teams, supporting test case management, execution, reporting, and analytics.",
+    stack: ["React", "TypeScript", "Vite", "REST APIs", "Role Based Auth"],
+    summary: "Built the complete frontend architecture of a cloud based QA platform, implementing modular components, real time dashboards, and secure authentication flows for enterprise users.",
     value: "Protected 10,000+ users from faulty releases. Reduced manual testing effort by 35% through automated workflows.",
     highlight: true,
   },
   {
     name: "Tari Digital Nexus",
-    period: "Jan 2025 – Jun 2025",
+    period: "Jan 2025 to Jun 2025",
     url: null,
-    objective: "Digital tax automation infrastructure for East African SMEs — connecting tax systems, inventory platforms, and mobile payment gateways.",
+    objective: "Digital tax automation infrastructure for East African SMEs, connecting tax systems, inventory platforms, and mobile payment gateways.",
     stack: ["API Integration", "Dashboard Dev", "Agile", "Mobile Payments", "VAT Automation"],
-    summary: "Architected scalable tax compliance infrastructure that automated VAT submissions and integrated multi-platform payment workflows. Built real-time dashboards centralizing financial data for business owners.",
+    summary: "Architected scalable tax compliance infrastructure that automated VAT submissions and integrated multi platform payment workflows. Built real time dashboards centralizing financial data for business owners.",
     value: "Improved SME compliance efficiency, reduced manual tax processing, and enabled business growth through automated regulatory workflows.",
     highlight: false,
   },
   {
     name: "EcoNest",
-    period: "Jun 2025 – Sep 2025",
+    period: "Jun 2025 to Sep 2025",
     url: null,
-    objective: "A sustainability-focused digital platform built to connect eco-conscious consumers with green product providers.",
+    objective: "A sustainability focused digital platform built to connect eco conscious consumers with green product providers.",
     stack: ["React", "TypeScript", "Backend APIs", "PostgreSQL"],
-    summary: "Designed and built a clean, user-first web application featuring product discovery, listings, and environmental impact tracking.",
-    value: "Delivered a production-ready green-tech marketplace prototype, demonstrating full-stack capability from concept to deployment.",
+    summary: "Designed and built a clean, user first web application featuring product discovery, listings, and environmental impact tracking.",
+    value: "Delivered a production ready green tech marketplace prototype, demonstrating full stack capability from concept to deployment.",
     highlight: false,
   },
   {
     name: "Skymed Life",
-    period: "Mar 2025 – Jun 2025",
+    period: "Mar 2025 to Jun 2025",
     url: null,
     objective: "Healthcare management platform designed to streamline patient onboarding, appointment scheduling, and health records management.",
     stack: ["React", "ASP.NET Core", "C#", "PostgreSQL", "Load Testing"],
@@ -45,12 +45,12 @@ const projects = [
   },
   {
     name: "Paid Freelancer Ledger",
-    period: "Jan 2025 – Mar 2025",
+    period: "Jan 2025 to Mar 2025",
     url: null,
-    objective: "A financial tracking and invoicing tool for freelancers — automating income recording, expense tracking, and invoice generation.",
+    objective: "A financial tracking and invoicing tool for freelancers, automating income recording, expense tracking, and invoice generation.",
     stack: ["React", "TypeScript", "Firebase", "Tailwind CSS"],
-    summary: "Built a single-page application enabling freelancers to manage client projects, log payments, generate invoices, and track income trends over time.",
-    value: "Replaced error-prone spreadsheet workflows with a clean, purpose-built financial management tool tailored to freelance professionals.",
+    summary: "Built a single page application enabling freelancers to manage client projects, log payments, generate invoices, and track income trends over time.",
+    value: "Replaced error prone spreadsheet workflows with a clean, purpose built financial management tool tailored to freelance professionals.",
     highlight: false,
   },
 ];
@@ -83,9 +83,8 @@ export default function Projects() {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`card-glass rounded-2xl p-6 hover-glow group cursor-default flex flex-col ${
-                project.highlight ? "md:col-span-2 border border-cyan/20" : ""
-              }`}
+              className={`card-glass rounded-2xl p-6 hover-glow group cursor-default flex flex-col ${project.highlight ? "md:col-span-2 border border-cyan/20" : ""
+                }`}
             >
               <div className="flex items-start justify-between mb-4">
                 <div>

@@ -55,8 +55,8 @@ export default function Contact() {
           </h2>
           <div className="section-divider mx-auto mb-8" />
           <p className="max-w-xl mx-auto text-muted-foreground leading-relaxed">
-            Whether you're looking for a full-stack engineer, a QA specialist, an IT consultant, 
-            or a digital trainer — I'd love to hear about what you're building. Let's make it happen.
+            Whether you're looking for a full stack engineer, a QA specialist, an IT consultant,
+            or a digital trainer, I'd love to hear about what you're building. Let's make it happen.
           </p>
         </motion.div>
 

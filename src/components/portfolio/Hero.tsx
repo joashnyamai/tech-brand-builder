@@ -35,9 +35,31 @@ export default function Hero() {
           Available for Opportunities
         </motion.div>
 
+        {/* Profile Image */}
+        <motion.div
+          {...fadeUp(0.2)}
+          className="relative inline-block mb-10 group"
+        >
+          {/* Animated Gradient Ring */}
+          <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-cyan/40 via-blue-500/40 to-purple-500/40 opacity-70 blur-sm group-hover:opacity-100 group-hover:blur-md transition-all duration-500" />
+
+          {/* Image Container */}
+          <div className="relative w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-[6px] border-background shadow-2xl mx-auto">
+            <img
+              src="/profile.jpg"
+              alt="Malila Nyamai"
+              className="w-full h-full object-cover object-[center_15%] transform transition-transform duration-700 group-hover:scale-105"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.parentElement?.classList.add('bg-muted');
+              }}
+            />
+          </div>
+        </motion.div>
+
         {/* Main headline */}
         <motion.h1
-          {...fadeUp(0.2)}
+          {...fadeUp(0.3)}
           className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.05] tracking-tight mb-6"
         >
           <span className="text-foreground">Malila</span>{" "}
@@ -46,24 +68,24 @@ export default function Hero() {
 
         {/* Title */}
         <motion.p
-          {...fadeUp(0.35)}
+          {...fadeUp(0.65)}
           className="font-display text-lg md:text-2xl text-muted-foreground font-light tracking-wide mb-6"
         >
-          Full-Stack Engineer · QA Specialist · IT Consultant
+          Full Stack Engineer | QA Specialist | IT Consultant
         </motion.p>
 
         {/* Value proposition */}
         <motion.p
-          {...fadeUp(0.45)}
+          {...fadeUp(0.55)}
           className="max-w-2xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed mb-10"
         >
-          I build scalable web applications, automate quality assurance pipelines, and transform 
-          organizations through targeted digital training — delivering real, measurable impact 
+          I build scalable web applications, automate quality assurance pipelines, and transform
+          organizations through targeted digital training, delivering real, measurable impact
           across Kenya's tech ecosystem and beyond.
         </motion.p>
 
         {/* CTAs */}
-        <motion.div {...fadeUp(0.55)} className="flex flex-wrap items-center justify-center gap-4 mb-12">
+        <motion.div {...fadeUp(0.65)} className="flex flex-wrap items-center justify-center gap-4 mb-12">
           <a
             href="#projects"
             className="px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide gradient-accent text-primary-foreground hover:opacity-90 transition-all duration-200 animate-pulse-glow shadow-lg"
@@ -79,7 +101,7 @@ export default function Hero() {
         </motion.div>
 
         {/* Social links */}
-        <motion.div {...fadeUp(0.65)} className="flex items-center justify-center gap-6 mb-16">
+        <motion.div {...fadeUp(0.75)} className="flex items-center justify-center gap-6 mb-16">
           <a
             href="mailto:jamesmnyamai9@gmail.com"
             className="text-muted-foreground hover:text-cyan transition-colors duration-200"
