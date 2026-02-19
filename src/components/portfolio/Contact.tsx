@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Mail, Linkedin, Github, Phone, MapPin, ArrowUpRight } from "lucide-react";
+import { Mail, Linkedin, Github, Phone, MapPin, ArrowUpRight, Download } from "lucide-react";
 
 const contactLinks = [
   {
@@ -129,6 +129,17 @@ export default function Contact() {
             >
               <Linkedin size={16} />
               Connect on LinkedIn
+            </motion.a>
+            <motion.a
+              href="/Malila_Nyamai_Resume.pdf"
+              download
+              initial={{ opacity: 0, y: 10 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.9 }}
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl border border-cyan/40 text-cyan font-display font-semibold text-sm tracking-wide hover:bg-cyan/10 transition-all duration-200"
+            >
+              <Download size={16} />
+              Download CV
             </motion.a>
           </div>
         </motion.div>
