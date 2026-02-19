@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import type { Easing } from "framer-motion";
-import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowDown, Github, Linkedin, Mail, Download } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const EASE: Easing = "easeOut";
@@ -97,6 +97,14 @@ export default function Hero() {
             className="px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide border border-navy-border text-foreground hover:border-cyan hover:text-cyan transition-all duration-200"
           >
             Get In Touch
+          </a>
+          <a
+            href="/Malila_Nyamai_Resume.pdf"
+            download
+            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide border border-cyan/40 text-cyan hover:bg-cyan/10 transition-all duration-200"
+          >
+            <Download size={16} />
+            Download CV
           </a>
         </motion.div>
 
