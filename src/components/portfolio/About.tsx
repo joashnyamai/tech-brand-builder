@@ -59,7 +59,7 @@ export default function About() {
               My journey in technology began not in a classroom, but in curiosity, a relentless drive to understand how systems work and how they can be made better. Today, I operate at the intersection of software engineering, quality assurance, and digital transformation as a practitioner who has seen both the code and the people it serves.
             </p>
             <p>
-              With over <span className="text-foreground font-medium">5 years of hands on experience</span>, I've shipped production applications at Kiwami Tech Solutions, architected digital tax infrastructure at Tari Africa Platforms, and independently consulted dozens of SMEs and NGOs across Kenya, helping them escape spreadsheet chaos and embrace scalable digital workflows.
+              With over <span className="text-foreground font-medium">3 years of hands on experience</span>, I've shipped production applications at Kiwami Tech Solutions, architected digital tax infrastructure at Tari Africa Platforms, and independently consulted dozens of SMEs and NGOs across Kenya, helping them escape spreadsheet chaos and embrace scalable digital workflows.
             </p>
             <p>
               I hold a <span className="text-foreground font-medium">BSc in Information Technology</span> from Zetech University, complemented by Cisco CCNA, Cybersecurity, and Generative AI certifications. But what defines my career isn't credentials, it's the measurable impact I create for every team, client, and community I engage with.
