@@ -79,7 +79,7 @@ export default function Hero() {
           {...fadeUp(0.55)}
           className="max-w-2xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed mb-10"
         >
-          I identify, analyze, and mitigate cyber threats, build secure frontend interfaces, and co-found digital solutions like eFoleni that drive real-world impact from Juja, Kiambu, Kenya.
+          I identify, analyze, and mitigate cyber threats, build secure frontend interfaces, and co-found digital solutions like E-Foleni that drive real-world impact from Juja, Kiambu, Kenya.
         </motion.p>
 
         {/* CTAs */}

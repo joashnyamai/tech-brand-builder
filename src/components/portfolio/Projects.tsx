@@ -4,13 +4,13 @@ import { ExternalLink, ArrowUpRight } from "lucide-react";
 
 const projects = [
   {
-    name: "eFoleni",
+    name: "E-Foleni",
     period: "Sep 2025 to Present",
     url: "https://efoleni.co.ke/",
-    objective: "A comprehensive digital school administration and management system built to streamline school setup, academic tracking, and administrative workflows for educational institutions in Kenya.",
-    stack: ["React", "TypeScript", "Tailwind CSS", "REST APIs", "Usability Design"],
-    summary: "Designed and built the user setup wizard and administrative dashboards to enable schools to quickly onboard and configure classes, fee structures, and user privileges.",
-    value: "Replaced paper-based school registration and configuration processes with a modern, high-fidelity setup wizard that guides administrators securely through onboarding.",
+    objective: "A queue-free booking platform replacing walk-in lines, WhatsApp threads, and double-booked spreadsheets with an M-Pesa native time-slot scheduler.",
+    stack: ["React", "TypeScript", "Tailwind CSS", "M-Pesa API (Daraja)", "Role-Aware Dashboards"],
+    summary: "Co-founded and engineered a booking platform serving schools, clinics, and banks. Built multi-person back-to-back booking logic, M-Pesa STK push integration, and fast mobile-first web views for low-bandwidth networks.",
+    value: "Saved an average of 42 minutes of queue time per visitor, with over 120,000+ slots booked locally and 99.9% uptime.",
     highlight: true,
   },
   {
