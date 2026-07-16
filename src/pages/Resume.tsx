@@ -393,6 +393,12 @@ export default function Resume() {
               <div className="space-y-4 text-xs text-muted-foreground print:text-neutral-700">
                 <div className="print-break-inside-avoid">
                   <h3 className="font-bold text-foreground print-exp-title">
+                    E-Foleni <span className="font-normal text-muted-foreground/80">· React · TypeScript · M-Pesa API</span>
+                  </h3>
+                  <p className="mt-1">Queue-free booking scheduler built for Kenyan organizations. Co-founded and engineered the platform end-to-end, integrating M-Pesa payment validation and facilitating 120,000+ bookings.</p>
+                </div>
+                <div className="print-break-inside-avoid">
+                  <h3 className="font-bold text-foreground print-exp-title">
                     Kiwami TestCloud <span className="font-normal text-muted-foreground/80">· React · TypeScript · Vite</span>
                   </h3>
                   <p className="mt-1">Production cloud-based software testing platform. Built full frontend with real-time dashboards, secure auth flows, and API integration.</p>
