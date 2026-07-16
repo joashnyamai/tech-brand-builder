@@ -5,24 +5,24 @@ import { Code2, Shield, Users, Zap } from "lucide-react";
 
 const differentiators = [
   {
-    icon: Shield,
-    title: "Cybersecurity Analyst",
-    desc: "Passion for identifying, analyzing, and mitigating threats. Proactively detecting and responding to security incidents.",
+    icon: Code2,
+    title: "Software Engineering",
+    desc: "Prototyping responsive web solutions using React, TypeScript, Node.js, and PHP, alongside relational database management.",
   },
   {
-    icon: Code2,
-    title: "Frontend & Usability",
-    desc: "Designing and building secure, responsive web and mobile interfaces with a focus on usability and modern aesthetics.",
+    icon: Shield,
+    title: "Quality Assurance",
+    desc: "Experienced in manual & automated testing, Jest, Postman API testing, load testing, and defect tracking in Jira.",
   },
   {
     icon: Users,
-    title: "Co-Founder & Leader",
-    desc: "Co-founder of RemboGlow.com and Facefit-ke, driving product quality, Agile execution, and business operations.",
+    title: "IT Support & Docs",
+    desc: "Delivering user support, authoring IT help guides, training manuals, and advising on cybersecurity hygiene.",
   },
   {
     icon: Zap,
-    title: "AI & Data Operations",
-    desc: "2+ years of experience in data annotation, quality assurance, and image processing supporting ML pipelines at scale.",
+    title: "AI & Innovation",
+    desc: "Familiar with AI/ML concepts, building intelligent agents and workflows using LangChain, RAG architectures, and automation.",
   },
 ];
 
@@ -56,20 +56,20 @@ export default function About() {
             className="space-y-5 text-muted-foreground leading-relaxed text-base"
           >
             <p>
-              I am a Freelance IT Consultant and Cybersecurity Analyst with a passion for identifying, analyzing, and mitigating cyber threats. As an Incident Response Specialist and Threat Intelligence Expert, I excel in proactively detecting and responding to security incidents, safeguarding critical systems and data from malicious actors.
+              I am a motivated IT professional and BSc Information Technology finalist with 3+ years of hands-on experience in software development, quality assurance, IT support, cloud exposure (AWS), and digital training. I have a proven ability to monitor systems, document workflows, troubleshoot application issues, and support end users in fast-paced technology environments.
             </p>
             <p>
-              With hands-on experience spanning software engineering, security analysis, and co-founding ventures like <span className="text-foreground font-medium">RemboGlow.com</span> and <span className="text-foreground font-medium">Facefit-ke</span>, I operate at the intersection of robust security practices and high-fidelity frontend development.
+              Experienced in application testing (Jest & Postman), bug tracking (Jira), data management (MySQL, PostgreSQL), and prototyping web solutions using React, TypeScript, Node.js, and PHP. I am also familiar with AI/ML concepts through LangChain, RAG, and Generative AI certifications.
             </p>
             <p>
-              I am currently pursuing a <span className="text-foreground font-medium">Bachelor of Science in Information Technology</span> at Zetech University, expanding my expertise in software engineering, database management, and web development. I also leverage over two years of experience as an Image Annotator at Remotasks supporting ML pipelines.
+              Currently, I am pursuing my <span className="text-foreground font-medium">Bachelor of Science in Information Technology</span> at Zetech University (Expected Graduation: November 2026), expanding my database management, software engineering, and web development skills.
             </p>
             <p>
-              When I'm not auditing system logs or refining frontend interfaces, I contribute to technology roadmaps, mentor peers, and monitor the threat landscape to share actionable intelligence with stakeholders.
+              I am a fast learner and collaborative team player eager to contribute to digital transformation agendas and innovation initiatives.
             </p>
 
             <div className="flex flex-wrap gap-3 pt-4">
-              {["Juja, Kiambu, Kenya", "English & Swahili", "Open to Remote", "CCNA Certified"].map((tag) => (
+              {["Nairobi, Kenya", "English & Swahili", "Open to Remote", "Software & QA Engineer"].map((tag) => (
                 <span
                   key={tag}
                   className="px-3 py-1.5 rounded-full border border-navy-border text-xs text-muted-foreground bg-navy-elevated"

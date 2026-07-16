@@ -5,34 +5,34 @@ import { Code2, TestTube2, Building2, Shield, Wrench } from "lucide-react";
 
 const skillGroups = [
   {
-    icon: Shield,
-    category: "Cybersecurity & Threat Mitigation",
-    tagline: "Identifying, analyzing, and mitigating cyber threats",
-    skills: ["Incident Response", "Threat Intelligence", "Security Auditing", "Vulnerability Detection", "CCNA: Enterprise Networking", "Endpoint Protection", "Network Security", "Compliance & Logging", "The Complete Cyber Security Course", "Cyberthreats by Malware"],
+    icon: Code2,
+    category: "Frontend Development",
+    tagline: "Building highly responsive user interfaces",
+    skills: ["React", "TypeScript", "JavaScript (ES6+)", "HTML5", "CSS3", "Tailwind CSS", "Bootstrap", "Vite"],
   },
   {
-    icon: Code2,
-    category: "Frontend Development & Usability",
-    tagline: "Building secure, responsive, and user-centric interfaces",
-    skills: ["React", "TypeScript", "JavaScript (ES6+)", "HTML / CSS", "Tailwind CSS", "Usability Design", "Responsive Web Design", "UI Debugging", "Mobile UI Testing"],
+    icon: Shield,
+    category: "Application Testing & QA",
+    tagline: "Ensuring software stability and reliability",
+    skills: ["Manual & Automated Testing", "Postman (API)", "Jira (bug tracking)", "UAT", "Load Testing", "TDD", "Jest"],
   },
   {
     icon: Building2,
-    category: "Project & Operations Implementation",
-    tagline: "Executing technology strategies and managing Agile workflows",
-    skills: ["Project Implementation", "Agile / Scrum Sprints", "QA Test Planning", "Manual/Automated Testing", "Test Case Management", "Defect Tracking (Jira)", "Post-release Checklist"],
+    category: "Cloud & Infrastructure",
+    tagline: "Provisioning resources and deployment automation",
+    skills: ["AWS (exposure)", "Azure (exposure)", "Cloud resource provisioning", "Performance monitoring", "Docker", "CI/CD Pipelines"],
   },
   {
     icon: TestTube2,
-    category: "AI/ML & Data Operations",
-    tagline: "Annotating data and integrating smart systems",
-    skills: ["Data Annotation", "Quality Assurance (QA)", "Image Processing", "Object Detection & Segmentation", "Generative AI at SAP", "n8n / Automations"],
+    category: "Backend & Databases",
+    tagline: "Data architectures and secure REST API services",
+    skills: ["Node.js", "ASP.NET Core / C#", "MySQL", "PostgreSQL", "Firebase", "REST APIs", "Data Migration", "PHP"],
   },
   {
     icon: Wrench,
-    category: "Tools, Platforms & Databases",
-    tagline: "The tech stack powering my engineering work",
-    skills: ["Git / GitHub", "Postman", "MySQL", "Oracle DB / SQL", "PHP", "Node.js", "Microsoft Excel Automation", "Digital Literacy"],
+    category: "AI, ML & IT Support",
+    tagline: "Agent models, system logs, and user support",
+    skills: ["LangChain", "RAG", "Agent Architectures", "Generative AI (SAP certified)", "n8n Automation", "First-line user support", "Technical writing", "Cybersecurity (CCNA)", "Wireshark"],
   },
 ];
 

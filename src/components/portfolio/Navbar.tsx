@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
   { label: "About", href: "#about" },
@@ -14,12 +15,40 @@ const navItems = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const isHome = location.pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const renderLink = (item: { label: string; href: string }, isMobile = false) => {
+    const activeClass = location.pathname === item.href ? "text-cyan" : "text-muted-foreground";
+    
+    if (isHome) {
+      return (
+        <a
+          href={item.href}
+          onClick={() => isMobile && setOpen(false)}
+          className={`text-sm hover:text-cyan transition-colors duration-200 tracking-wide font-medium ${activeClass}`}
+        >
+          {item.label}
+        </a>
+      );
+    } else {
+      return (
+        <Link
+          to={"/" + item.href}
+          onClick={() => isMobile && setOpen(false)}
+          className={`text-sm hover:text-cyan transition-colors duration-200 tracking-wide font-medium ${activeClass}`}
+        >
+          {item.label}
+        </Link>
+      );
+    }
+  };
 
   return (
     <motion.nav
@@ -33,27 +62,33 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="#hero" className="font-display font-bold text-xl tracking-tight">
+        <Link to="/" className="font-display font-bold text-xl tracking-tight">
           <span className="text-gradient">MN</span>
           <span className="text-foreground/80">.</span>
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <ul className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
             <li key={item.href}>
-              <a
-                href={item.href}
-                className="text-sm text-muted-foreground hover:text-cyan transition-colors duration-200 tracking-wide"
-              >
-                {item.label}
-              </a>
+              {renderLink(item)}
             </li>
           ))}
+          <li>
+            <Link
+              to="/ai-lab"
+              className={`text-sm hover:text-cyan transition-colors duration-200 tracking-wide font-semibold flex items-center gap-1.5 ${
+                location.pathname === "/ai-lab" ? "text-cyan" : "text-muted-foreground"
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
+              Ava AI Lab
+            </Link>
+          </li>
         </ul>
 
         <a
-          href="#contact"
+          href={isHome ? "#contact" : "/#contact"}
           className="hidden md:inline-flex items-center px-4 py-2 rounded-lg border border-cyan text-cyan text-sm font-medium hover:bg-cyan hover:text-primary-foreground transition-all duration-200 hover-glow"
         >
           Hire Me
@@ -81,18 +116,24 @@ export default function Navbar() {
             <ul className="flex flex-col gap-4 pt-4">
               {navItems.map((item) => (
                 <li key={item.href}>
-                  <a
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className="text-sm text-muted-foreground hover:text-cyan transition-colors"
-                  >
-                    {item.label}
-                  </a>
+                  {renderLink(item, true)}
                 </li>
               ))}
               <li>
+                <Link
+                  to="/ai-lab"
+                  onClick={() => setOpen(false)}
+                  className={`text-sm hover:text-cyan transition-colors duration-200 flex items-center gap-1.5 ${
+                    location.pathname === "/ai-lab" ? "text-cyan" : "text-muted-foreground"
+                  }`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
+                  Ava AI Lab
+                </Link>
+              </li>
+              <li>
                 <a
-                  href="#contact"
+                  href={isHome ? "#contact" : "/#contact"}
                   onClick={() => setOpen(false)}
                   className="inline-flex items-center px-4 py-2 rounded-lg border border-cyan text-cyan text-sm font-medium"
                 >

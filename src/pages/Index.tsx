@@ -4,6 +4,7 @@ import About from "@/components/portfolio/About";
 import Skills from "@/components/portfolio/Skills";
 import Experience from "@/components/portfolio/Experience";
 import Projects from "@/components/portfolio/Projects";
+import AiLabTeaser from "@/components/portfolio/AiLabTeaser";
 import Impact from "@/components/portfolio/Impact";
 import Certifications from "@/components/portfolio/Certifications";
 import Community from "@/components/portfolio/Community";
@@ -19,6 +20,7 @@ const Index = () => {
       <Skills />
       <Experience />
       <Projects />
+      <AiLabTeaser />
       <Impact />
       <Certifications />
       <Community />

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import type { Easing } from "framer-motion";
-import { ArrowDown, Github, Linkedin, Mail, Download } from "lucide-react";
+import { ArrowDown, Github, Linkedin, Mail, FileText, Cpu } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const EASE: Easing = "easeOut";
@@ -71,7 +72,7 @@ export default function Hero() {
           {...fadeUp(0.65)}
           className="font-display text-lg md:text-2xl text-muted-foreground font-light tracking-wide mb-6"
         >
-          Cybersecurity Analyst | Frontend Developer | Co-founder, remboglow.com
+          Software Engineer · QA Engineer · IT Consultant
         </motion.p>
 
         {/* Value proposition */}
@@ -79,7 +80,7 @@ export default function Hero() {
           {...fadeUp(0.55)}
           className="max-w-2xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed mb-10"
         >
-          I identify, analyze, and mitigate cyber threats, build secure frontend interfaces, and co-found digital solutions like E-Foleni that drive real-world impact from Juja, Kiambu, Kenya.
+          I am a Software Engineer, QA Engineer, and IT Consultant with 3+ years of hands-on experience in software development, quality assurance, system support, and digital training.
         </motion.p>
 
         {/* CTAs */}
@@ -90,19 +91,25 @@ export default function Hero() {
           >
             View My Work
           </a>
+          <Link
+            to="/ai-lab"
+            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide bg-cyan/10 border border-cyan hover:bg-cyan hover:text-primary-foreground transition-all duration-200 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+          >
+            <Cpu size={16} />
+            Ava AI Lab
+          </Link>
+          <Link
+            to="/resume"
+            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide border border-cyan/40 text-cyan hover:bg-cyan/10 transition-all duration-200"
+          >
+            <FileText size={16} />
+            View CV
+          </Link>
           <a
             href="#contact"
             className="px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide border border-navy-border text-foreground hover:border-cyan hover:text-cyan transition-all duration-200"
           >
             Get In Touch
-          </a>
-          <a
-            href="/Malila_Nyamai_Resume.pdf"
-            download
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide border border-cyan/40 text-cyan hover:bg-cyan/10 transition-all duration-200"
-          >
-            <Download size={16} />
-            Download CV
           </a>
         </motion.div>
 
@@ -116,7 +123,7 @@ export default function Hero() {
             <Mail size={20} />
           </a>
           <a
-            href="https://www.linkedin.com/in/malilanyamai-0b2711221"
+            href="https://www.linkedin.com/in/malila-nyamai-0b2711221"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-cyan transition-colors duration-200"

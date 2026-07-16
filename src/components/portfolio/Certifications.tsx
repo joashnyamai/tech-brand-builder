@@ -4,66 +4,72 @@ import { Award, GraduationCap, BookOpen } from "lucide-react";
 
 const certifications = [
   {
-    name: "CCNA: Enterprise Networking, Security, and Automation",
-    issuer: "Cisco Academy",
+    name: "CCNA: Enterprise Networking, Security & Automation",
+    issuer: "Cisco Networking Academy",
     icon: "🔐",
     category: "Networking",
   },
   {
-    name: "Generative AI at SAP",
-    issuer: "SAP",
-    icon: "🤖",
-    category: "AI/ML",
-  },
-  {
-    name: "Q1 Masterclass",
-    issuer: "Cisco / Security",
+    name: "Cybersecurity Fundamentals",
+    issuer: "Q1 Masterclass",
     icon: "🛡️",
     category: "Security",
   },
   {
-    name: "Attendance Hashgraph Developer",
-    issuer: "Hedera Hashgraph",
-    icon: "⚡",
-    category: "Development",
-  },
-  {
-    name: "The Complete Cyber Security Course: Hackers Exposed!",
+    name: "The Complete Cyber Security Course",
     issuer: "Udemy",
     icon: "🛡️",
     category: "Security",
   },
   {
-    name: "Cyberthreats by Malware",
-    issuer: "Cisco Academy / Cybersecurity",
-    icon: "🦠",
-    category: "Security",
+    name: "Generative AI",
+    issuer: "SAP",
+    icon: "🤖",
+    category: "AI/ML",
   },
   {
-    name: "Responsive Web Design",
-    issuer: "freeCodeCamp",
+    name: "Hashgraph Developer",
+    issuer: "Hedera / Attendance",
+    icon: "⚡",
+    category: "Development",
+  },
+  {
+    name: "Software Engineering",
+    issuer: "Power Learn Africa",
     icon: "💻",
     category: "Development",
+  },
+  {
+    name: ".NET Fundamentals",
+    issuer: "Microsoft Student Learn",
+    icon: "⚡",
+    category: "Development",
+  },
+  {
+    name: "Microsoft Office Suite",
+    issuer: "Microsoft",
+    icon: "📊",
+    category: "Productivity",
   },
 ];
 
 const education = [
   {
-    degree: "Bachelor of Science, Information Technology",
+    degree: "BSc Information Technology",
     institution: "Zetech University",
-    period: "Jan 2023 to Dec 2025",
-    status: "Completed",
-  },
-  {
-    degree: "Software Development Certification",
-    institution: "Power Learn Project",
-    period: "Mar 2025 to Aug 2025",
-    status: "Completed",
+    period: "Jan 2023 – Dec 2025 (Graduation: Nov 2026)",
+    status: "Finalist",
   },
   {
     degree: "Diploma — Computer Software Engineering",
     institution: "Zetech University",
-    period: "Jan 2022 to Nov 2023",
+    period: "Jan 2022 – Nov 2023",
+    status: "Completed",
+  },
+  {
+    degree: "Software Development Certification",
+    institution: "Power Learn Project (PLP Africa)",
+    period: "Mar 2025 – Aug 2025",
     status: "Completed",
   },
 ];

@@ -149,3 +149,138 @@
     color: hsl(var(--cyan));
   }
 }
+
+/* ==========================================================================
+   Professional Corporate CV Print Template
+   ========================================================================== */
+@media print {
+  /* Force exact background colors printing */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide screen-only interactive items */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Set A4 page constraints and neat margins */
+  @page {
+    size: A4;
+    margin: 14mm 14mm 14mm 14mm;
+  }
+
+  body, html {
+    background: #ffffff !important;
+    color: #334155 !important; /* Slate 700 text */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    font-size: 10.5pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Reset main resume container */
+  .print-cv-container {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Header adjustments */
+  .print-header-border {
+    border-bottom: 2px solid #cbd5e1 !important;
+    padding-bottom: 12px !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Clean headings & accents */
+  .print-text-name {
+    color: #0f172a !important; /* Slate 900 */
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 26pt !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+  }
+
+  .print-text-title {
+    color: #0284c7 !important; /*Sky 600 - corporate accent blue */
+    font-family: 'Inter', sans-serif !important;
+    font-size: 13pt !important;
+    font-weight: 600 !important;
+    margin-top: 4px !important;
+  }
+
+  .print-section-title {
+    color: #0f172a !important; /* Slate 900 */
+    border-bottom: 1.5px solid #0284c7 !important; /* Sky Blue accent line */
+    padding-bottom: 3px !important;
+    margin-bottom: 10px !important;
+    font-size: 11pt !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  /* Double-column printable corporate template */
+  .print-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 2.1fr !important;
+    gap: 24px !important;
+  }
+
+  .print-col-sidebar {
+    border-right: 1.5px solid #f1f5f9 !important;
+    padding-right: 16px !important;
+  }
+
+  .print-col-main {
+    padding-left: 4px !important;
+  }
+
+  /* Work Experience timeline styles */
+  .print-exp-item {
+    margin-bottom: 16px !important;
+  }
+
+  .print-exp-title {
+    color: #0f172a !important;
+    font-size: 10.5pt !important;
+    font-weight: 700 !important;
+  }
+
+  .print-exp-meta {
+    color: #0284c7 !important;
+    font-size: 9.5pt !important;
+    font-weight: 600 !important;
+  }
+
+  .print-exp-period {
+    color: #64748b !important; /* Slate 500 */
+    font-size: 9pt !important;
+    font-weight: 500 !important;
+  }
+
+  /* List bullet styling */
+  .print-bullet-list {
+    list-style-type: disc !important;
+    margin-top: 6px !important;
+    padding-left: 14px !important;
+  }
+
+  .print-bullet-list li {
+    margin-bottom: 4px !important;
+    padding-left: 2px !important;
+    font-size: 9.5pt !important;
+    color: #475569 !important; /* Slate 600 for print readability */
+  }
+
+  /* Page break safeguards */
+  .print-break-inside-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}

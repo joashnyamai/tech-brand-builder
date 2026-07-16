@@ -4,26 +4,27 @@ import { ChevronDown, MapPin, Calendar } from "lucide-react";
 
 const experiences = [
   {
-    role: "Co-Founder",
-    company: "RemboGlow",
-    location: "Nairobi County, Kenya",
-    period: "Aug 2025 to Present",
-    type: "Co-Founder",
-    overview: "Co-founded RemboGlow.com, a beauty and skincare platform, overseeing product development, quality assurance, and technology strategy to drive operational scale and user growth.",
+    role: "Senior Software Quality Assurance Engineer",
+    company: "Annex Technologies Limited",
+    location: "Kenya",
+    period: "Jan 2024 – Present",
+    type: "Hybrid",
+    overview: "Performed API testing using Postman and validated backend functionality with SQL queries, ensuring data integrity and system compliance.",
     highlights: [
-      "Established the initial product roadmap and architectural vision for the web platform.",
-      "Managed Agile sprint delivery and cross-functional collaborations between designers and developers.",
-      "Enforced security, privacy, and usability standards across customer-facing application flows."
+      "Performed API testing using Postman and validated backend functionality with SQL queries, ensuring data integrity and system compliance.",
+      "Assisted in automation testing, reducing manual testing effort and contributing to CI/CD quality pipelines.",
+      "Provided first-line application support to internal users, escalating complex incidents through proper channels.",
+      "Documented workflows, test procedures, and QA processes to support knowledge retention and operational continuity."
     ],
-    tech: ["React", "TypeScript", "Usability Design", "Product Strategy", "Security Best Practices"],
+    tech: ["Postman", "SQL Database Testing", "Automation Testing", "Jira", "CI/CD Pipelines", "Technical Support"],
   },
   {
-    role: "Software Testing Specialist",
+    role: "Software Testing Intern",
     company: "Kiwami Tech Solutions",
     location: "Nairobi, Kenya",
-    period: "Aug 2025 to Present",
-    type: "Part Time",
-    overview: "Responsible for frontend testing, REST API validation, Agile delivery, and real-time analytics dashboard design to support quality assurance monitoring.",
+    period: "Aug 2025 – Present",
+    type: "Part-time",
+    overview: "Designed and maintained reusable test case management components, execution workflow interfaces, and real-time analytics dashboards to support performance monitoring.",
     highlights: [
       "Designed and maintained reusable test case management components, execution workflow interfaces, and real-time analytics dashboards to support performance monitoring.",
       "Collaborated with backend engineers to validate REST API integrations, verifying accurate display of live test execution results, logs, and dashboards.",
@@ -32,69 +33,55 @@ const experiences = [
     tech: ["React", "TypeScript", "REST APIs", "Test Case Management", "Agile Sprints", "Analytics Dashboards"],
   },
   {
-    role: "Senior Software Quality Assurance Engineer",
-    company: "Annex Technologies Limited",
-    location: "Kenya",
-    period: "Jan 2024 to Present",
-    type: "Full Time",
-    overview: "Leading software quality assurance initiatives, designing comprehensive test plans and executing test cases across web and mobile projects to ensure software reliability and performance.",
+    role: "Co-Founder & Lead Engineer",
+    company: "RemboGlow",
+    location: "Nairobi, Kenya",
+    period: "Aug 2025 – Present",
+    type: "Full-time",
+    overview: "Co-founded and engineered a beauty-tech digital platform owning architecture design, frontend development, deployment, and monitoring of pilot solutions.",
     highlights: [
-      "Developed and executed detailed test plans, test cases, and test scripts for web and mobile applications to ensure software reliability and performance.",
-      "Conducted manual, functional, regression, integration, and user acceptance testing (UAT) across multiple software development projects.",
-      "Collaborated closely with developers, product managers, and cross-functional teams in Agile/Scrum environments to identify, document, and resolve software defects.",
-      "Performed API testing using Postman and validated backend functionality with SQL queries and database testing techniques.",
-      "Assisted in automation testing initiatives using Selenium/Cypress to improve testing efficiency and reduce repetitive manual testing efforts.",
-      "Verified software compliance with business requirements, usability standards, and security best practices before deployment."
+      "Co-founded and engineered a beauty-tech digital platform owning architecture design, frontend development, deployment, and monitoring of pilot solutions.",
+      "Conducted user research and feedback collection to iterate UI/UX and align product development with user needs.",
+      "Documented learnings, case studies, and operational processes to support knowledge transfer and future scaling."
     ],
-    tech: ["Selenium", "Cypress", "Postman", "API Testing", "SQL Database Testing", "Jira", "UAT", "Agile/Scrum"],
+    tech: ["React", "TypeScript", "Node.js", "PostgreSQL", "System Architecture", "UI/UX Research"],
   },
   {
-    role: "Co-Founder",
-    company: "Facefit-ke",
-    location: "Kenya",
-    period: "Aug 2025 to Oct 2025",
-    type: "Co-Founder",
-    overview: "Co-founded Facefit-ke, a health and fitness startup, building the digital presence, defining operational strategies, and managing initial software development lifecycles.",
+    role: "Software Engineer",
+    company: "Tari Africa Platforms",
+    location: "Nairobi, Kenya",
+    period: "Jan 2025 – Jun 2025",
+    type: "Contract",
+    overview: "Designed and managed relational databases in MySQL, supporting data entry, cleanup, and migration tasks.",
     highlights: [
-      "Collaborated on defining business workflows and translation of business logic to digital platforms.",
-      "Enforced quality and usability benchmarks for early prototype builds."
+      "Designed and managed relational databases in MySQL, supporting data entry, cleanup, and migration tasks.",
+      "Built real-time dashboards centralizing compliance and financial reporting supporting performance monitoring responsibilities.",
+      "Maintained configuration and integration documentation ensuring compliance and knowledge continuity.",
+      "Managed Agile sprint delivery during peak transaction periods, contributing to parallel project execution."
     ],
-    tech: ["Co-Founder", "Usability Design", "Product Roadmap", "Business Strategy"],
+    tech: ["MySQL", "Node.js", "PHP", "Agile Sprint", "KRA eTIMS", "M-Pesa API"],
   },
   {
     role: "Freelance IT Consultant & Software Developer",
     company: "Malila Tech Consultancies",
     location: "Kenya",
-    period: "Apr 2023 to Oct 2025",
-    type: "Freelance",
-    overview: "Provided independent IT consultancy, database optimization, and customized software development services to SMEs and NGOs.",
+    period: "Apr 2023 – Oct 2025",
+    type: "Full-time",
+    overview: "Provided remote and on-site IT support, handling low-to-medium complexity technical issues and escalating complex incidents appropriately.",
     highlights: [
-      "Designed customized database structures and optimized data pipelines for local businesses.",
-      "Advised clients on basic cybersecurity protocols including password policies and secure endpoint configurations.",
-      "Created digital spreadsheets, automated trackers, and custom payroll systems for business efficiency."
+      "Provided remote and on-site IT support, handling low-to-medium complexity technical issues and escalating complex incidents appropriately.",
+      "Supported SMEs in data migration from manual to digital systems, improving data accuracy and cutting processing time by up to 40%.",
+      "Advised clients on cybersecurity best practices password policies, phishing awareness, and endpoint protection.",
+      "Delivered digital literacy workshops for community groups and NGOs, building capacity in IT tools and web technologies.",
+      "Researched and recommended emerging technologies and digital tools aligned with client operational needs."
     ],
-    tech: ["IT Consulting", "Database Design", "SQL", "Cybersecurity", "MS Excel Automation"],
+    tech: ["IT Support", "Data Migration", "Cybersecurity", "Digital Literacy", "Emerging Tech"],
   },
   {
-    role: "Software Engineer",
-    company: "Tari Africa Platforms",
-    location: "Nairobi County, Kenya",
-    period: "Jan 2025 to Jun 2025",
-    type: "Contract",
-    overview: "Developed and maintained full-stack web applications, integrating external systems and optimizing data storage schemas.",
-    highlights: [
-      "Developed and maintained full-stack web applications, including Kodii and Tari Socials, utilizing HTML, CSS, JavaScript, Node.js, and PHP.",
-      "Integrated external systems like KRA eTIMS and M-Pesa to enhance business operations and user experience.",
-      "Designed relational databases in MySQL, optimizing data structures for transactions and user logs.",
-      "Implemented secure authentication systems, ensuring data protection through hashed passwords and role-based access control."
-    ],
-    tech: ["HTML", "CSS", "JavaScript", "Node.js", "PHP", "MySQL", "KRA eTIMS", "M-Pesa", "Auth Security"],
-  },
-  {
-    role: "Attache",
+    role: "Quality Assurance Attaché",
     company: "Kiwami Tech Solutions",
     location: "Nairobi, Kenya",
-    period: "Jun 2025 to Aug 2025",
+    period: "Jun 2025 – Aug 2025",
     type: "Attachment",
     overview: "Conducted manual and automated testing, defect reporting, and release readiness planning for mobile banking applications.",
     highlights: [
@@ -103,34 +90,34 @@ const experiences = [
       "Participated in sprint reviews, presenting QA findings and contributing to technology roadmap and release decisions.",
       "Developed a post-release monitoring checklist enabling early detection of post-launch issues."
     ],
-    tech: ["Manual Testing", "Automated Scripting", "Mobile UI Testing", "Post-Release Checklists", "Jira"],
+    tech: ["Manual Testing", "Automated Scripting", "Mobile UI Testing", "Jira", "Roadmap Decisions"],
   },
   {
-    role: "Image Specialist / Annotator",
+    role: "Image Annotator & AI Data Specialist",
     company: "Remotasks",
     location: "Nairobi, Kenya",
-    period: "Jun 2021 to Apr 2024",
+    period: "Jun 2021 – Apr 2024",
     type: "Freelance",
-    overview: "Applied high-precision data annotation and quality assurance to support computer vision model training and AI pipelines.",
+    overview: "Applied data annotation, QA, and image processing skills to support AI/ML model training contributing to machine learning pipelines at scale.",
     highlights: [
       "Applied data annotation, QA, and image processing skills to support AI/ML model training contributing to machine learning pipelines at scale.",
       "Maintained high accuracy across object detection, segmentation, and classification tasks relevant to AI/ML knowledge advantage."
     ],
-    tech: ["Image Processing", "Data Annotation", "Object Detection", "Segmentation", "AI/ML QA"],
+    tech: ["Data Annotation", "QA", "Image Processing", "Object Detection", "Machine Learning Pipelines"],
   },
   {
-    role: "IT Attache",
+    role: "IT Attaché",
     company: "JKUAT (Jomo Kenyatta University)",
-    location: "Juja, Kiambu, Kenya",
-    period: "Sep 2023 to Nov 2023",
+    location: "Juja, Kenya",
+    period: "Sep 2023 – Nov 2023",
     type: "Attachment",
-    overview: "Assisted in managing computer lab networks and infrastructure, auditing security logs, and delivering IT literacy training.",
+    overview: "Assisted in upgrading computer lab infrastructure, improving system stability and boot-up times by 50%.",
     highlights: [
       "Assisted in upgrading computer lab infrastructure, improving system stability and boot-up times by 50%.",
       "Conducted digital literacy training sessions; authored IT support guides that reduced repeat service requests.",
       "Audited system logs for unauthorized access attempts and reported vulnerabilities supporting compliance and security documentation."
     ],
-    tech: ["Network Infrastructure", "System Log Auditing", "IT Support Guides", "Digital Literacy"],
+    tech: ["Infrastructure Upgrades", "Digital Literacy", "IT Support Guides", "Security Audit", "Compliance Docs"],
   },
 ];
 

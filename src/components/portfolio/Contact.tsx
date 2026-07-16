@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Mail, Linkedin, Github, Phone, MapPin, ArrowUpRight, Download } from "lucide-react";
+import { Mail, Linkedin, Github, Phone, MapPin, ArrowUpRight, FileText } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const contactLinks = [
   {
@@ -18,8 +19,8 @@ const contactLinks = [
   {
     icon: Linkedin,
     label: "LinkedIn",
-    value: "malilanyamai-0b2711221",
-    href: "https://www.linkedin.com/in/malilanyamai-0b2711221",
+    value: "malila-nyamai-0b2711221",
+    href: "https://www.linkedin.com/in/malila-nyamai-0b2711221",
   },
   {
     icon: Github,
@@ -30,7 +31,7 @@ const contactLinks = [
   {
     icon: MapPin,
     label: "Location",
-    value: "Juja, Kiambu, Kenya",
+    value: "Nairobi, Kenya",
     href: null,
   },
 ];
@@ -55,8 +56,8 @@ export default function Contact() {
           </h2>
           <div className="section-divider mx-auto mb-8" />
           <p className="max-w-xl mx-auto text-muted-foreground leading-relaxed">
-            Whether you're looking for a cybersecurity analyst, a frontend developer, or a technology
-            consultant, I'd love to hear about what you're building. Let's make it happen.
+            Whether you're looking for a software engineer, a QA engineer, or an IT consultant,
+            I'd love to hear about what you're building. Let's make it happen.
           </p>
         </motion.div>
 
@@ -119,7 +120,7 @@ export default function Contact() {
               Send Me a Message
             </motion.a>
             <motion.a
-              href="https://www.linkedin.com/in/malilanyamai-0b2711221"
+              href="https://www.linkedin.com/in/malila-nyamai-0b2711221"
               target="_blank"
               rel="noopener noreferrer"
               initial={{ opacity: 0, y: 10 }}
@@ -130,17 +131,20 @@ export default function Contact() {
               <Linkedin size={16} />
               Connect on LinkedIn
             </motion.a>
-            <motion.a
-              href="/Malila_Nyamai_Resume.pdf"
-              download
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.4, delay: 0.9 }}
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl border border-cyan/40 text-cyan font-display font-semibold text-sm tracking-wide hover:bg-cyan/10 transition-all duration-200"
+              className="inline-flex"
             >
-              <Download size={16} />
-              Download CV
-            </motion.a>
+              <Link
+                to="/resume"
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl border border-cyan/40 text-cyan font-display font-semibold text-sm tracking-wide hover:bg-cyan/10 transition-all duration-200"
+              >
+                <FileText size={16} />
+                View CV
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
       </div>
