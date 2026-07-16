@@ -5,34 +5,34 @@ import { Code2, TestTube2, Building2, Shield, Wrench } from "lucide-react";
 
 const skillGroups = [
   {
-    icon: Code2,
-    category: "Full Stack Development",
-    tagline: "Building end to end web solutions that scale",
-    skills: ["React", "TypeScript", "JavaScript (ES6+)", "Svelte / SvelteKit", "Tailwind CSS", "ASP.NET Core / C#", "Node.js", "PostgreSQL", "Firebase", "Docker", "WebPack"],
+    icon: Shield,
+    category: "Cybersecurity & Threat Mitigation",
+    tagline: "Identifying, analyzing, and mitigating cyber threats",
+    skills: ["Incident Response", "Threat Intelligence", "Security Auditing", "Vulnerability Detection", "CCNA: Enterprise Networking", "Endpoint Protection", "Network Security", "Compliance & Logging", "The Complete Cyber Security Course", "Cyberthreats by Malware"],
   },
   {
-    icon: TestTube2,
-    category: "QA & Testing",
-    tagline: "Ensuring quality before every release",
-    skills: ["Jest", "Cypress", "Manual Test Case Design", "Automated Test Scripting", "Load Testing", "Bug Tracking & Debugging", "Performance Optimization", "Post-Release Monitoring"],
+    icon: Code2,
+    category: "Frontend Development & Usability",
+    tagline: "Building secure, responsive, and user-centric interfaces",
+    skills: ["React", "TypeScript", "JavaScript (ES6+)", "HTML / CSS", "Tailwind CSS", "Usability Design", "Responsive Web Design", "UI Debugging", "Mobile UI Testing"],
   },
   {
     icon: Building2,
-    category: "IT Consulting & Digital Transformation",
-    tagline: "Modernizing operations for SMEs and NGOs",
-    skills: ["Digital Workflow Design", "MS Excel Automation", "Payroll & Financial Dashboards", "CRM Systems", "User Onboarding", "Instructional Design", "Training Documentation", "Remote & On site Support"],
+    category: "Project & Operations Implementation",
+    tagline: "Executing technology strategies and managing Agile workflows",
+    skills: ["Project Implementation", "Agile / Scrum Sprints", "QA Test Planning", "Manual/Automated Testing", "Test Case Management", "Defect Tracking (Jira)", "Post-release Checklist"],
   },
   {
-    icon: Shield,
-    category: "Networking & Cybersecurity",
-    tagline: "Securing systems and networks at every layer",
-    skills: ["CCNA: Enterprise Networking", "Network Troubleshooting (LAN/Wi-Fi)", "Wireshark", "Penetration Testing Fundamentals", "Phishing Awareness", "Endpoint Protection", "Password Security Policy", "Cybersecurity Best Practices"],
+    icon: TestTube2,
+    category: "AI/ML & Data Operations",
+    tagline: "Annotating data and integrating smart systems",
+    skills: ["Data Annotation", "Quality Assurance (QA)", "Image Processing", "Object Detection & Segmentation", "Generative AI at SAP", "n8n / Automations"],
   },
   {
     icon: Wrench,
-    category: "Tools & Platforms",
-    tagline: "The tech stack powering my daily work",
-    skills: ["Git / GitHub", "Jira", "AWS", "Docker", "Langchain", "n8n", "RAG / Agent Architectures", "SAP", "Microsoft Office Suite", "Oracle DB / SQL", "PHP"],
+    category: "Tools, Platforms & Databases",
+    tagline: "The tech stack powering my engineering work",
+    skills: ["Git / GitHub", "Postman", "MySQL", "Oracle DB / SQL", "PHP", "Node.js", "Microsoft Excel Automation", "Digital Literacy"],
   },
 ];
 

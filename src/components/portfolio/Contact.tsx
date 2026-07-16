@@ -18,8 +18,8 @@ const contactLinks = [
   {
     icon: Linkedin,
     label: "LinkedIn",
-    value: "malila-nyamai",
-    href: "https://www.linkedin.com/in/malila-nyamai-0b2711221",
+    value: "malilanyamai-0b2711221",
+    href: "https://www.linkedin.com/in/malilanyamai-0b2711221",
   },
   {
     icon: Github,
@@ -30,7 +30,7 @@ const contactLinks = [
   {
     icon: MapPin,
     label: "Location",
-    value: "Nairobi, Kenya",
+    value: "Juja, Kiambu, Kenya",
     href: null,
   },
 ];
@@ -55,8 +55,8 @@ export default function Contact() {
           </h2>
           <div className="section-divider mx-auto mb-8" />
           <p className="max-w-xl mx-auto text-muted-foreground leading-relaxed">
-            Whether you're looking for a full stack engineer, a QA specialist, an IT consultant,
-            or a digital trainer, I'd love to hear about what you're building. Let's make it happen.
+            Whether you're looking for a cybersecurity analyst, a frontend developer, or a technology
+            consultant, I'd love to hear about what you're building. Let's make it happen.
           </p>
         </motion.div>
 
@@ -119,7 +119,7 @@ export default function Contact() {
               Send Me a Message
             </motion.a>
             <motion.a
-              href="https://www.linkedin.com/in/malila-nyamai-0b2711221"
+              href="https://www.linkedin.com/in/malilanyamai-0b2711221"
               target="_blank"
               rel="noopener noreferrer"
               initial={{ opacity: 0, y: 10 }}

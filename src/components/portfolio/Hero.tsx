@@ -71,7 +71,7 @@ export default function Hero() {
           {...fadeUp(0.65)}
           className="font-display text-lg md:text-2xl text-muted-foreground font-light tracking-wide mb-6"
         >
-          Full Stack Engineer | QA Specialist | IT Consultant
+          Cybersecurity Analyst | Frontend Developer | Co-founder, remboglow.com
         </motion.p>
 
         {/* Value proposition */}
@@ -79,9 +79,7 @@ export default function Hero() {
           {...fadeUp(0.55)}
           className="max-w-2xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed mb-10"
         >
-          I build scalable web applications, automate quality assurance pipelines, and transform
-          organizations through targeted digital training, delivering real, measurable impact
-          across Kenya's tech ecosystem and beyond.
+          I identify, analyze, and mitigate cyber threats, build secure frontend interfaces, and co-found digital solutions like eFoleni that drive real-world impact from Juja, Kiambu, Kenya.
         </motion.p>
 
         {/* CTAs */}
@@ -118,7 +116,7 @@ export default function Hero() {
             <Mail size={20} />
           </a>
           <a
-            href="https://www.linkedin.com/in/malila-nyamai-0b2711221"
+            href="https://www.linkedin.com/in/malilanyamai-0b2711221"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-cyan transition-colors duration-200"

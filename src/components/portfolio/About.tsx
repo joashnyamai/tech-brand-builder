@@ -5,24 +5,24 @@ import { Code2, Shield, Users, Zap } from "lucide-react";
 
 const differentiators = [
   {
-    icon: Code2,
-    title: "Full Stack Depth",
-    desc: "From React frontends to ASP.NET Core backends, I architect end to end solutions with production grade quality.",
+    icon: Shield,
+    title: "Cybersecurity Analyst",
+    desc: "Passion for identifying, analyzing, and mitigating threats. Proactively detecting and responding to security incidents.",
   },
   {
-    icon: Shield,
-    title: "Quality-First Mindset",
-    desc: "QA is built into my development DNA. Every product I touch is tested, secured, and optimized before it ships.",
+    icon: Code2,
+    title: "Frontend & Usability",
+    desc: "Designing and building secure, responsive web and mobile interfaces with a focus on usability and modern aesthetics.",
   },
   {
     icon: Users,
-    title: "Digital Empowerment",
-    desc: "I've trained hundreds of entrepreneurs, students, and youth groups, turning technology into lasting opportunity.",
+    title: "Co-Founder & Leader",
+    desc: "Co-founder of RemboGlow.com and Facefit-ke, driving product quality, Agile execution, and business operations.",
   },
   {
     icon: Zap,
-    title: "Automation & Efficiency",
-    desc: "I identify workflow bottlenecks and eliminate them, reducing processing time by up to 40% for organizations I serve.",
+    title: "AI & Data Operations",
+    desc: "2+ years of experience in data annotation, quality assurance, and image processing supporting ML pipelines at scale.",
   },
 ];
 
@@ -56,20 +56,20 @@ export default function About() {
             className="space-y-5 text-muted-foreground leading-relaxed text-base"
           >
             <p>
-              My journey in technology began not in a classroom, but in curiosity, a relentless drive to understand how systems work and how they can be made better. Today, I operate at the intersection of software engineering, quality assurance, and digital transformation as a practitioner who has seen both the code and the people it serves.
+              I am a Freelance IT Consultant and Cybersecurity Analyst with a passion for identifying, analyzing, and mitigating cyber threats. As an Incident Response Specialist and Threat Intelligence Expert, I excel in proactively detecting and responding to security incidents, safeguarding critical systems and data from malicious actors.
             </p>
             <p>
-              With over <span className="text-foreground font-medium">3 years of hands on experience</span>, I've shipped production applications at Kiwami Tech Solutions, architected digital tax infrastructure at Tari Africa Platforms, and independently consulted dozens of SMEs and NGOs across Kenya, helping them escape spreadsheet chaos and embrace scalable digital workflows.
+              With hands-on experience spanning software engineering, security analysis, and co-founding ventures like <span className="text-foreground font-medium">RemboGlow.com</span> and <span className="text-foreground font-medium">Facefit-ke</span>, I operate at the intersection of robust security practices and high-fidelity frontend development.
             </p>
             <p>
-              I hold a <span className="text-foreground font-medium">BSc in Information Technology</span> from Zetech University, complemented by Cisco CCNA, Cybersecurity, and Generative AI certifications. But what defines my career isn't credentials, it's the measurable impact I create for every team, client, and community I engage with.
+              I am currently pursuing a <span className="text-foreground font-medium">Bachelor of Science in Information Technology</span> at Zetech University, expanding my expertise in software engineering, database management, and web development. I also leverage over two years of experience as an Image Annotator at Remotasks supporting ML pipelines.
             </p>
             <p>
-              When I'm not building software, I'm mentoring the next generation of Kenyan engineers, writing instructional content, or exploring the frontier of AI powered automation.
+              When I'm not auditing system logs or refining frontend interfaces, I contribute to technology roadmaps, mentor peers, and monitor the threat landscape to share actionable intelligence with stakeholders.
             </p>
 
             <div className="flex flex-wrap gap-3 pt-4">
-              {["Nairobi, Kenya", "English & Swahili", "Open to Remote", "Cisco CCNA Certified"].map((tag) => (
+              {["Juja, Kiambu, Kenya", "English & Swahili", "Open to Remote", "CCNA Certified"].map((tag) => (
                 <span
                   key={tag}
                   className="px-3 py-1.5 rounded-full border border-navy-border text-xs text-muted-foreground bg-navy-elevated"
