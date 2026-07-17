@@ -46,7 +46,7 @@ export default function AiLabTeaser() {
               <span className="text-gradient">AI Heuristics</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
-              To prove my work in **LangChain**, **RAG models**, and **Agent Architectures**, I built an online sandbox where you can test live LLM integrations directly against my resume.
+              To prove my work in <strong>LangChain</strong>, <strong>RAG models</strong>, and <strong>Agent Architectures</strong>, I built an online sandbox where you can test live LLM integrations directly against my resume.
             </p>
             <div className="pt-2">
               <Link

@@ -1145,7 +1145,7 @@ ${customCode}`;
 
             <form onSubmit={saveKey} className="p-6 space-y-4">
               <p className="text-xs text-muted-foreground leading-relaxed">
-                To unlock custom AI queries, paste a personal **Google Gemini API Key** below. The key is securely saved in your browser's local memory (\`localStorage\`) and is only dispatched client-side straight to the Gemini API endpoint.
+                To unlock custom AI queries, paste a personal <strong>Google Gemini API Key</strong> below. The key is securely saved in your browser's local memory (\`localStorage\`) and is only dispatched client-side straight to the Gemini API endpoint.
               </p>
               
               <div className="space-y-1.5">
