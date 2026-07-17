@@ -16,7 +16,8 @@ import {
   Settings,
   X,
   Play,
-  RotateCcw
+  RotateCcw,
+  Paperclip
 } from "lucide-react";
 
 // Context for Gemini Queries
@@ -139,40 +140,127 @@ function getMockChatResponse(text: string): string {
   return "Malila is a Software and QA Engineer with expertise in React, TypeScript, Node.js, and CI/CD automation pipelines. I'd be happy to share details about his projects, experience, or certifications. What would you like to explore?";
 }
 
-function getMockJdResponse(jdText: string) {
+export function getMockJdResponse(jdText: string) {
   const jd = jdText.toLowerCase();
-  let score = 50;
-  const strengths = ["General IT literacy"];
-  const gaps = [];
 
-  if (jd.includes("react") || jd.includes("frontend")) {
-    score += 15;
-    strengths.push("Frontend React/TypeScript UI development");
-  } else {
-    gaps.push("Deep frontend customization framework requirements");
+  // Define keywords for domain detection
+  const techKeywords = [
+    "react", "vue", "angular", "node", "php", "c#", ".net", "python", "java", "javascript",
+    "typescript", "sql", "database", "mysql", "postgresql", "qa", "test", "quality",
+    "software", "developer", "engineer", "programmer", "aws", "azure", "cloud",
+    "cybersecurity", "ccna", "network", "support", "it ", "information technology",
+    "systems", "code", "coder", "git", "devops", "api", "selenium", "cypress",
+    "jest", "postman", "docker", "kubernetes", "k8s", "flutter", "react native",
+    "ios", "android", "swift", "kotlin", "laravel", "django", "flask", "spring", "rust", "golang", "go "
+  ];
+
+  // Check if it's completely unrelated to tech/QA/IT
+  const hasTechKeyword = techKeywords.some(keyword => jd.includes(keyword));
+  
+  // Non-tech indicator keywords
+  const nonTechIndicators = [
+    "doctor", "nurse", "surgeon", "medical", "dentist", "chef", "cooking", "driver", 
+    "sales representative", "marketing manager", "accountant", "finance", "legal", 
+    "lawyer", "therapist", "cashier", "waiter", "bartender"
+  ];
+  const isExplicitlyUnrelated = nonTechIndicators.some(kw => jd.includes(kw));
+
+  if (!hasTechKeyword || isExplicitlyUnrelated || jd.trim().length < 15) {
+    return {
+      score: 5,
+      fit: "Unsatisfactory fit. The role description does not align with software engineering, quality assurance, or IT domains.",
+      strengths: [],
+      gaps: [
+        "Role is in an unrelated domain (non-IT/Software/QA)",
+        "Requires domain-specific qualifications and experience outside Malila's core competencies"
+      ]
+    };
   }
-  if (jd.includes("qa") || jd.includes("test") || jd.includes("quality")) {
-    score += 15;
+
+  let score = 10; // Start with a very strict base for technical alignment
+  const strengths: string[] = [];
+  const gaps: string[] = [];
+
+  // 1. Evaluate QA & Testing
+  if (jd.includes("qa") || jd.includes("test") || jd.includes("quality") || jd.includes("selenium") || jd.includes("cypress") || jd.includes("jest") || jd.includes("postman")) {
+    score += 25;
     strengths.push("Senior QA manual & automated test suite design");
-  } else {
-    gaps.push("Strict QA automation pipelines specification");
   }
-  if (jd.includes("sql") || jd.includes("mysql") || jd.includes("database")) {
+
+  // 2. Evaluate Frontend
+  if (jd.includes("react") || jd.includes("typescript") || jd.includes("javascript")) {
+    score += 25;
+    strengths.push("Frontend React/TypeScript UI development");
+  } else if (jd.includes("frontend") || jd.includes("front-end")) {
+    // transferrable skills
     score += 10;
+    strengths.push("General frontend engineering principles");
+  }
+
+  // 3. Evaluate Backend & Databases
+  if (jd.includes("node") || jd.includes("php") || jd.includes("c#") || jd.includes(".net")) {
+    score += 15;
+    strengths.push("Backend software engineering (Node.js, PHP, C#)");
+  }
+  if (jd.includes("sql") || jd.includes("mysql") || jd.includes("postgresql") || jd.includes("database")) {
+    score += 15;
     strengths.push("Relational Database Schema design (MySQL/PostgreSQL)");
   }
-  if (jd.includes("aws") || jd.includes("cloud")) {
-    score += 5;
-    strengths.push("AWS cloud exposure & server monitoring");
+
+  // 4. Evaluate Cloud & DevOps & Networking
+  if (jd.includes("aws") || jd.includes("azure") || jd.includes("cloud")) {
+    score += 10;
+    strengths.push("AWS/Azure cloud resource provisioning & CI/CD deployment");
+  }
+  if (jd.includes("ccna") || jd.includes("network") || jd.includes("security") || jd.includes("cybersecurity")) {
+    score += 10;
+    strengths.push("CCNA-certified networking & security skills");
+  }
+
+  // 5. Evaluate Gaps for Technologies Malila lacks but are requested
+  if (jd.includes("python") || jd.includes("django") || jd.includes("flask")) {
+    score -= 15;
+    gaps.push("Python/Django/Flask backend development");
+  }
+  if (jd.includes("java") || jd.includes("spring")) {
+    score -= 15;
+    gaps.push("Java/Spring Boot enterprise development");
+  }
+  if (jd.includes("kubernetes") || jd.includes("k8s")) {
+    score -= 10;
+    gaps.push("Kubernetes container orchestration");
+  }
+  if (jd.includes("angular") || jd.includes("vue")) {
+    score -= 10;
+    gaps.push("Angular/Vue frontend framework experience");
+  }
+  if (jd.includes("flutter") || jd.includes("react native") || jd.includes("ios") || jd.includes("android") || jd.includes("swift") || jd.includes("kotlin")) {
+    score -= 15;
+    gaps.push("Mobile application development (Flutter/React Native/iOS/Android)");
+  }
+  if (jd.includes("rust") || jd.includes("golang") || jd.includes("go ")) {
+    score -= 10;
+    gaps.push("Systems programming (Go/Rust)");
+  }
+
+  // Bound score
+  const finalScore = Math.max(5, Math.min(score, 98));
+
+  // Determine fit descriptor
+  let fit = "";
+  if (finalScore >= 80) {
+    fit = `Excellent match fit. Strong alignment with ${strengths.slice(0, 2).join(" and ")}.`;
+  } else if (finalScore >= 50) {
+    fit = `Moderate match fit. Fits key areas such as ${strengths.slice(0, 1).join("") || "general development"}, but has notable gaps.`;
   } else {
-    gaps.push("Direct AWS Cloud DevOps certification");
+    fit = `Low match fit. Malila does not meet several major requirements of this role.`;
   }
 
   return {
-    score: Math.min(score, 98),
-    fit: `Highly responsive fit. Strong intersection with ${strengths.slice(0, 2).join(" and ")}.`,
-    strengths,
-    gaps: gaps.length ? gaps : ["No major gaps identified."]
+    score: finalScore,
+    fit,
+    strengths: strengths.length > 0 ? strengths.slice(0, 3) : ["General IT knowledge"],
+    gaps: gaps.length > 0 ? gaps.slice(0, 2) : ["No major gaps identified."]
   };
 }
 
@@ -306,6 +394,63 @@ async function queryGeminiWithRetry(
   throw new Error("All models in the fallback cascade failed to contact Gemini API.");
 }
 
+// Helper to dynamically load PDF.js client-side
+const loadPdfJs = (): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    if ((window as any).pdfjsLib) {
+      resolve((window as any).pdfjsLib);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js";
+    script.onload = () => {
+      const pdfjsLib = (window as any).pdfjsLib;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+      resolve(pdfjsLib);
+    };
+    script.onerror = () => reject(new Error("Failed to load PDF parsing engine."));
+    document.head.appendChild(script);
+  });
+};
+
+// Helper to extract text from PDF file using PDF.js
+const extractTextFromPdf = async (file: File): Promise<string> => {
+  const pdfjsLib = await loadPdfJs();
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let text = "";
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const textContent = await page.getTextContent();
+    const pageText = textContent.items.map((item: any) => item.str).join(" ");
+    text += pageText + "\n";
+  }
+  return text;
+};
+
+// Helper to dynamically load Mammoth.js for Word document parsing
+const loadMammoth = (): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    if ((window as any).mammoth) {
+      resolve((window as any).mammoth);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js";
+    script.onload = () => resolve((window as any).mammoth);
+    script.onerror = () => reject(new Error("Failed to load Word document parsing engine."));
+    document.head.appendChild(script);
+  });
+};
+
+// Helper to extract text from Word document using Mammoth
+const extractTextFromDocx = async (file: File): Promise<string> => {
+  const mammoth = await loadMammoth();
+  const arrayBuffer = await file.arrayBuffer();
+  const result = await mammoth.extractRawText({ arrayBuffer });
+  return result.value;
+};
+
 export default function AiLab() {
   // Key state
   const [apiKey, setApiKey] = useState("");
@@ -400,6 +545,43 @@ User inquiry: "${text}"`;
 
   // --- TOOL 2: CV MATCHER (JD ANALYZER) ---
   const [jdInput, setJdInput] = useState("");
+  const [fileParsing, setFileParsing] = useState(false);
+  const [fileError, setFileError] = useState("");
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setFileParsing(true);
+    setFileError("");
+    try {
+      let extractedText = "";
+      const extension = file.name.split(".").pop()?.toLowerCase();
+
+      if (extension === "txt" || extension === "md") {
+        extractedText = await file.text();
+      } else if (extension === "pdf") {
+        extractedText = await extractTextFromPdf(file);
+      } else if (extension === "docx") {
+        extractedText = await extractTextFromDocx(file);
+      } else {
+        throw new Error("Unsupported file type. Please upload a PDF, DOCX, or text file.");
+      }
+
+      if (!extractedText.trim()) {
+        throw new Error("No text content could be extracted from the file.");
+      }
+
+      setJdInput(extractedText);
+    } catch (err: any) {
+      console.error(err);
+      setFileError(err.message || "Failed to parse document.");
+    } finally {
+      setFileParsing(false);
+      // Reset input value so same file can be uploaded again
+      e.target.value = "";
+    }
+  };
   const [matchLoading, setMatchLoading] = useState(false);
   const [matchResult, setMatchResult] = useState<{
     score: number;
@@ -416,8 +598,19 @@ User inquiry: "${text}"`;
 
     try {
       if (apiKey && !fallbackActive) {
-        const prompt = `Analyze this job description against Malila Nyamai's resume below.
-Output EXACTLY a JSON block with the keys "score" (a number from 0 to 100 representing match fit), "fit" (a short 2-sentence fit summary), "strengths" (array of 3 matched skills/experiences), and "gaps" (array of 2 missing items or areas for growth).
+        const prompt = `You are a strict, objective recruitment systems analyst.
+Analyze the following Job Description (JD) against Malila Nyamai's resume below.
+Determine a precise match fit score from 0 to 100 based strictly on actual skills, certifications, and experience listed in the resume.
+
+Rules:
+1. If the Job Description is in an unrelated field (e.g. medicine, sales, marketing, finance, mechanical engineering, etc.) or requires qualifications completely outside software engineering, QA, or IT, the score MUST be below 20%.
+2. If the role requires technical skills/languages/frameworks that Malila does NOT have (e.g. Python, Java, Angular, Kubernetes, Mobile/iOS/Android development, Flutter, React Native, Rust, Go, C++), you must penalize the score significantly and list these explicitly as gaps.
+3. Be highly critical. Do not stretch general skills (like "IT support" or "fast learner") to match highly specialized roles he is not qualified for.
+4. Output EXACTLY a JSON block (no markdown wrappers, no backticks, no other text) with the keys:
+   - "score": a number from 0 to 100 representing match fit
+   - "fit": a short, objective 2-sentence summary explaining why this score was given
+   - "strengths": an array of up to 3 matched skills or experiences from the resume that directly align with the JD
+   - "gaps": an array of up to 2 significant missing items or areas for growth relative to the JD requirements
 
 Job Description:
 "${jdInput}"
@@ -721,6 +914,35 @@ ${customCode}`;
               </h2>
               
               <div className="flex-1 flex flex-col gap-3 min-h-0">
+                <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                  <span>Paste text below or:</span>
+                  <label className="flex items-center gap-1 cursor-pointer text-cyan hover:opacity-85 font-semibold">
+                    <Paperclip size={10} />
+                    <span>Upload JD File (PDF/Word/Text)</span>
+                    <input
+                      type="file"
+                      accept=".pdf,.docx,.txt,.md"
+                      onChange={handleFileUpload}
+                      disabled={fileParsing}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+                
+                {fileParsing && (
+                  <div className="text-[10px] text-cyan animate-pulse flex items-center gap-1 font-semibold">
+                    <span className="w-1.5 h-1.5 bg-cyan rounded-full animate-ping" />
+                    Parsing uploaded document...
+                  </div>
+                )}
+                
+                {fileError && (
+                  <div className="text-[10px] text-red-500 font-semibold flex items-center gap-1">
+                    <AlertCircle size={10} />
+                    {fileError}
+                  </div>
+                )}
+
                 <textarea
                   value={jdInput}
                   onChange={(e) => setJdInput(e.target.value)}
