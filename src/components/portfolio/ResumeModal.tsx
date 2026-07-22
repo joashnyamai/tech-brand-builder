@@ -172,17 +172,20 @@ User inquiry about Malila's CV: "${text}"`;
         const response = await queryGeminiWithRetry(prompt, savedKey);
         setMessages(prev => [...prev, { sender: "bot", text: response }]);
       } else {
-        throw new Error("No Gemini API key configured.");
+        throw new Error("No active key configured. Using Sandbox Heuristics.");
       }
     } catch (err: any) {
-      console.error("Mini-chatbot API failed:", err.message);
-      setMessages(prev => [
-        ...prev,
-        {
-          sender: "bot",
-          text: `⚠️ Chatbot error: ${err.message}. Please check your connection or API key settings.`
-        }
-      ]);
+      console.warn("Mini-chatbot fallback triggered:", err.message);
+      // Custom mock overrides for the CV viewer
+      let mockResponse = getMockChatResponse(text);
+      if (text.toLowerCase().includes("education")) {
+        mockResponse = "Malila is a finalist at Zetech University completing a BSc in Information Technology (graduating Nov 2026) and holds a Diploma in Computer Software Engineering, along with Power Learn Project software development certification.";
+      } else if (text.toLowerCase().includes("experience") || text.toLowerCase().includes("summarize")) {
+        mockResponse = "Malila has 3+ years of technical experience in Software Engineering and QA testing. He is currently a Senior Software QA Engineer at Annex Technologies and a Software Testing Intern at Kiwami Tech Solutions.";
+      } else if (text.toLowerCase().includes("rails")) {
+        mockResponse = "Malila doesn't have direct Ruby on Rails projects listed, but he has worked extensively on TypeScript/React frontends and Node.js/PHP/C# backend infrastructures (e.g., E-Foleni, RemboGlow).";
+      }
+      setMessages(prev => [...prev, { sender: "bot", text: mockResponse }]);
     } finally {
       setChatLoading(false);
     }
