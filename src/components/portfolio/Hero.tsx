@@ -11,7 +11,11 @@ const fadeUp = (delay = 0) => ({
   transition: { duration: 0.7, ease: EASE, delay },
 });
 
-export default function Hero() {
+interface HeroProps {
+  onViewResume: () => void;
+}
+
+export default function Hero({ onViewResume }: HeroProps) {
   return (
     <section
       id="hero"
@@ -98,13 +102,13 @@ export default function Hero() {
             <Cpu size={16} />
             Ava AI Lab
           </Link>
-          <Link
-            to="/resume"
+          <button
+            onClick={onViewResume}
             className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide border border-cyan/40 text-cyan hover:bg-cyan/10 transition-all duration-200"
           >
             <FileText size={16} />
             View CV
-          </Link>
+          </button>
           <a
             href="#contact"
             className="px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide border border-navy-border text-foreground hover:border-cyan hover:text-cyan transition-all duration-200"

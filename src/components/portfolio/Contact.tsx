@@ -36,7 +36,11 @@ const contactLinks = [
   },
 ];
 
-export default function Contact() {
+interface ContactProps {
+  onViewResume: () => void;
+}
+
+export default function Contact({ onViewResume }: ContactProps) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -137,13 +141,13 @@ export default function Contact() {
               transition={{ duration: 0.4, delay: 0.9 }}
               className="inline-flex"
             >
-              <Link
-                to="/resume"
+              <button
+                onClick={onViewResume}
                 className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl border border-cyan/40 text-cyan font-display font-semibold text-sm tracking-wide hover:bg-cyan/10 transition-all duration-200"
               >
                 <FileText size={16} />
                 View CV
-              </Link>
+              </button>
             </motion.div>
           </div>
         </motion.div>

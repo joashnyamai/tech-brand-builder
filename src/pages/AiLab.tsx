@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 
 // Context for Gemini Queries
-const RESUME_CONTEXT = `
+export const RESUME_CONTEXT = `
 Name: Malila Nyamai
 Role: Software Engineer · QA Engineer · IT Consultant
 Location: Nairobi, Kenya
@@ -124,7 +124,7 @@ function CommentSection({ rawCommentText }) {
 
 // --- MOCK LOGIC UTILITIES FOR SEAMLESS OFFLINE FALLBACK ---
 
-function getMockChatResponse(text: string): string {
+export function getMockChatResponse(text: string): string {
   const q = text.toLowerCase();
   if (q.includes("qa") || q.includes("test")) {
     return "Malila has 3+ years of QA experience, currently serving as Senior QA Engineer at Annex Technologies. He designs test suites, runs manual/automated test pipelines (Selenium/Cypress), does Postman API testing, and database verification.";
@@ -300,7 +300,7 @@ function CommentSection({ rawCommentText }) {
 /**
  * Resilient Gemini API Caller with Exponential Backoff Retry and Error Handling Heuristics
  */
-async function queryGeminiWithRetry(
+export async function queryGeminiWithRetry(
   prompt: string,
   apiKey: string,
   responseMimeType?: string,
@@ -308,7 +308,7 @@ async function queryGeminiWithRetry(
   delay = 1000
 ): Promise<string> {
   // Cascading list of models to try in sequence to survive quota/region deprecations
-  const modelsCascade = ["gemini-3.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+  const modelsCascade = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
 
   for (const model of modelsCascade) {
     let currentDelay = delay;
@@ -347,9 +347,10 @@ async function queryGeminiWithRetry(
           throw new Error(`Rate limit exceeded for model ${model}.`);
         }
 
-        // If returned 404 or 403, it means the key lacks access to this specific model, move to next model in cascade
+        // If returned 404 or 403 or 400, it means the key lacks access to this specific model, cascade immediately
         if (response.status === 404 || response.status === 403 || response.status === 400) {
-          throw new Error(`Model ${model} is not supported or key is restricted (HTTP ${response.status}).`);
+          console.warn(`Model ${model} is not supported or key is restricted (HTTP ${response.status}). Cascading immediately.`);
+          break;
         }
 
         if (!response.ok) {
@@ -457,9 +458,6 @@ export default function AiLab() {
   const [showKeyModal, setShowKeyModal] = useState(false);
   const [keyInput, setKeyInput] = useState("");
   
-  // Track whether fallback simulations are currently active in the background
-  const [fallbackActive, setFallbackActive] = useState(false);
-
   // Load key on mount - support local .env variables VITE_GEMINI_API_KEY as permanent fallback
   useEffect(() => {
     const saved = localStorage.getItem("GEMINI_API_KEY") || import.meta.env.VITE_GEMINI_API_KEY || "";
@@ -472,14 +470,12 @@ export default function AiLab() {
     localStorage.setItem("GEMINI_API_KEY", keyInput);
     setApiKey(keyInput);
     setShowKeyModal(false);
-    setFallbackActive(false); // Reset fallback on key change
   };
 
   const clearKey = () => {
     localStorage.removeItem("GEMINI_API_KEY");
     setApiKey("");
     setKeyInput("");
-    setFallbackActive(false);
   };
 
   // --- TOOL 1: CAREER CHATBOT ---
@@ -506,7 +502,7 @@ export default function AiLab() {
     setChatLoading(true);
 
     try {
-      if (apiKey && !fallbackActive) {
+      if (apiKey) {
         // Query Gemini API with Retry Heuristics
         const prompt = `You are Ava, Malila Nyamai's personal guide and assistant.
 Answer the user's question completely, accurately, and concisely. Speak about Malila in the third person ("he", "him", "his").
@@ -522,20 +518,16 @@ User inquiry: "${text}"`;
         const ans = await queryGeminiWithRetry(prompt, apiKey);
         setMessages((prev) => [...prev, { sender: "bot", text: ans, isLlm: true }]);
       } else {
-        // Run standard mock logic
-        throw new Error("No active key configured. Using Sandbox Heuristics.");
+        throw new Error("No Gemini API key configured.");
       }
     } catch (err: any) {
-      console.warn("Chat API call failed, executing graceful sandbox fallback:", err.message);
-      setFallbackActive(true);
-      
-      const mockAns = getMockChatResponse(text);
+      console.error("Chat API call failed:", err.message);
       setMessages((prev) => [
         ...prev,
         { 
           sender: "bot", 
-          text: mockAns, 
-          isLlm: true // Mark as LLM output to keep the visual design identical
+          text: `⚠️ Chatbot error: ${err.message}. Please verify your network or Gemini API key in configuration settings.`, 
+          isLlm: false
         }
       ]);
     } finally {
@@ -597,7 +589,7 @@ User inquiry: "${text}"`;
     setMatchResult(null);
 
     try {
-      if (apiKey && !fallbackActive) {
+      if (apiKey) {
         const prompt = `You are a strict, objective recruitment systems analyst.
 Analyze the following Job Description (JD) against Malila Nyamai's resume below.
 Determine a precise match fit score from 0 to 100 based strictly on actual skills, certifications, and experience listed in the resume.
@@ -628,19 +620,16 @@ ${RESUME_CONTEXT}`;
           isLlm: true
         });
       } else {
-        throw new Error("No active key configured. Using Sandbox Heuristics.");
+        throw new Error("No Gemini API key configured.");
       }
     } catch (err: any) {
-      console.warn("Matcher API call failed, executing graceful sandbox fallback:", err.message);
-      setFallbackActive(true);
-
-      const parsed = getMockJdResponse(jdInput);
+      console.error("Matcher API call failed:", err.message);
       setMatchResult({
-        score: parsed.score,
-        fit: parsed.fit,
-        strengths: parsed.strengths,
-        gaps: parsed.gaps,
-        isLlm: true // Keep identical styling
+        score: 0,
+        fit: `⚠️ Matcher analysis error: ${err.message}. Please verify your API key and connection.`,
+        strengths: [],
+        gaps: ["Analysis failed"],
+        isLlm: false
       });
     } finally {
       setMatchLoading(false);
@@ -672,7 +661,7 @@ ${RESUME_CONTEXT}`;
     setAuditResult(null);
 
     try {
-      if (apiKey && !fallbackActive) {
+      if (apiKey) {
         const prompt = `Analyze this code snippet for security vulnerabilities.
 Return ONLY a JSON object with:
 "vulnerability" (the vulnerability name),
@@ -695,20 +684,17 @@ ${customCode}`;
           isLlm: true
         });
       } else {
-        throw new Error("No active key configured. Using Sandbox Heuristics.");
+        throw new Error("No Gemini API key configured.");
       }
     } catch (err: any) {
-      console.warn("Auditor API call failed, executing graceful sandbox fallback:", err.message);
-      setFallbackActive(true);
-
-      const parsed = getMockAuditResponse(selectedSnippetKey);
+      console.error("Auditor API call failed:", err.message);
       setAuditResult({
-        vulnerability: parsed.vulnerability,
-        severity: parsed.severity,
-        description: parsed.description,
-        recommendation: parsed.recommendation,
-        fixedCode: parsed.fixedCode,
-        isLlm: true // Keep identical styling
+        vulnerability: "Audit Execution Error",
+        severity: "Info",
+        description: `⚠️ Security Auditor error: ${err.message}. Please check API key status.`,
+        recommendation: "Ensure internet connectivity and API keys are verified.",
+        fixedCode: "// Audit execution failed.",
+        isLlm: false
       });
     } finally {
       setAuditLoading(false);
