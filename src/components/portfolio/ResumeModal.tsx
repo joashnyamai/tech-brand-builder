@@ -135,9 +135,103 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
     }
   };
 
-  // Open print preview in new window
+  // Open print preview in new window without routing
   const handlePrint = () => {
-    window.open("/resume", "_blank");
+    const printContent = document.getElementById("printable-cv");
+    if (!printContent) return;
+    
+    const uniqueName = new Date().getTime();
+    const printWindow = window.open("about:blank", uniqueName.toString(), "left=50,top=50,width=850,height=900");
+    if (!printWindow) return;
+    
+    // Inject self-contained print style definitions mimicking the main CV styles
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Malila Nyamai - Resume</title>
+          <style>
+            body {
+              font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+              background: white !important;
+              color: black !important;
+              padding: 40px !important;
+              font-size: 14px;
+              line-height: 1.5;
+            }
+            /* Colors & Typography overrides */
+            .text-cyan { color: #0891b2 !important; }
+            .text-gradient { background: none !important; -webkit-text-fill-color: initial !important; color: black !important; font-size: 32px; font-weight: bold; }
+            .bg-navy-surface\\/40 { background: white !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
+            .border-navy-border { border-color: #e5e7eb !important; }
+            .border-b { border-bottom-width: 1px !important; border-bottom-style: solid !important; }
+            .text-muted-foreground { color: #4b5563 !important; }
+            .text-xs { font-size: 12px !important; }
+            .text-sm { font-size: 14px !important; }
+            .text-lg { font-size: 18px !important; }
+            .text-xl { font-size: 20px !important; }
+            .font-bold { font-weight: 700 !important; }
+            .font-semibold { font-weight: 600 !important; }
+            .font-medium { font-weight: 500 !important; }
+            .uppercase { text-transform: uppercase !important; }
+            .tracking-wider { letter-spacing: 0.05em !important; }
+            .tracking-widest { letter-spacing: 0.1em !important; }
+            .mb-2 { margin-bottom: 8px !important; }
+            .mb-3 { margin-bottom: 12px !important; }
+            .mb-4 { margin-bottom: 16px !important; }
+            .mb-6 { margin-bottom: 24px !important; }
+            .mb-8 { margin-bottom: 32px !important; }
+            .mt-1 { margin-top: 4px !important; }
+            .mt-2 { margin-top: 8px !important; }
+            .pb-8 { padding-bottom: 32px !important; }
+            .pl-3 { padding-left: 12px !important; }
+            .pr-4 { padding-right: 16px !important; }
+            .py-0\\.5 { padding-top: 2px !important; padding-bottom: 2px !important; }
+            .px-2 { padding-left: 8px !important; padding-right: 8px !important; }
+            .rounded { border-radius: 4px !important; }
+            .border { border-width: 1px !important; border-style: solid !important; }
+            .border-l { border-left-width: 1px !important; border-left-style: solid !important; }
+            
+            /* Print layouts */
+            .grid { display: grid !important; }
+            .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+            @media (min-width: 768px) {
+              .md\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+              .md\\:col-span-1 { grid-column: span 1 / span 1 !important; }
+              .md\\:col-span-2 { grid-column: span 2 / span 2 !important; }
+            }
+            .gap-2\\.5 { gap: 10px !important; }
+            .gap-6 { gap: 24px !important; }
+            .gap-8 { gap: 32px !important; }
+            .flex { display: flex !important; }
+            .flex-col { flex-direction: column !important; }
+            .justify-between { justify-content: space-between !important; }
+            .items-start { align-items: flex-start !important; }
+            .items-center { align-items: center !important; }
+            .space-y-1 > * + * { margin-top: 4px !important; }
+            .space-y-2 > * + * { margin-top: 8px !important; }
+            .space-y-4 > * + * { margin-top: 16px !important; }
+            .space-y-6 > * + * { margin-top: 24px !important; }
+            .list-disc { list-style-type: disc !important; }
+            .pl-4 { padding-left: 16px !important; }
+            
+            .no-print { display: none !important; }
+            a { text-decoration: none !important; color: inherit !important; }
+          </style>
+        </head>
+        <body>
+          <div class="bg-navy-surface/40">
+            ${printContent.innerHTML}
+          </div>
+          <script>
+            setTimeout(function() {
+              window.print();
+              window.close();
+            }, 300);
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
   };
 
   // Auto-scroll chat to bottom
@@ -297,7 +391,7 @@ User inquiry about Malila's CV: "${text}"`;
                   className="mx-auto origin-top transition-all duration-100 ease-out"
                   style={{ zoom: scale }}
                 >
-                  <article className="max-w-4xl mx-auto bg-navy-surface/40 border border-navy-border rounded-3xl p-6 sm:p-12 shadow-2xl text-foreground">
+                  <article id="printable-cv" className="max-w-4xl mx-auto bg-navy-surface/40 border border-navy-border rounded-3xl p-6 sm:p-12 shadow-2xl text-foreground">
                     {/* Header Block */}
                     <header className="border-b border-navy-border pb-8 mb-8">
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
