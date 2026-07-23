@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bot, ChevronRight, Code2, Command, FileText, FolderGit2, Github, Mail, MapPin, Play, Search, Terminal, UserRound, Zap, Calendar, Briefcase, Award, Sliders } from "lucide-react";
 import { usePortfolioData } from "@/hooks/use-portfolio-data";
@@ -22,6 +22,7 @@ const appList: { id: AppName; label: string; icon: typeof Bot; tone: string }[] 
 export default function OperatingSystem({ onOpenResume }: { onOpenResume: () => void }) {
   const { projects, experiences, skills, certifications } = usePortfolioData();
   const [active, setActive] = useState<AppName>("home");
+  const workspaceRef = useRef<HTMLElement>(null);
   const [palette, setPalette] = useState(false);
   const [query, setQuery] = useState("");
   const [year, setYear] = useState(2026);
@@ -181,15 +182,15 @@ export default function OperatingSystem({ onOpenResume }: { onOpenResume: () => 
         <div className="fixed bottom-2 left-1/2 -translate-x-1/2 w-36 h-1 rounded-full bg-white/35 z-50 pointer-events-none md:hidden" />
 
         {/* Workspace content container */}
-        <section className="relative w-full h-[calc(100vh-96px)] md:overflow-hidden overflow-y-auto flex flex-col p-4 md:p-6 select-none md:justify-center justify-start">
+        <section ref={workspaceRef} className="relative w-full h-[calc(100vh_-_48px)] md:h-[calc(100vh_-_120px)] overflow-y-auto flex flex-col p-4 md:p-6 select-none md:justify-center justify-start">
           <AnimatePresence mode="wait">
             <motion.div
               key={active}
               className="flex-1 relative overflow-hidden flex flex-col justify-center max-w-[1400px] mx-auto w-full"
-              initial={{ opacity: 0, y: 10, filter: "blur(5px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0)" }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25 }}
+              initial={{ opacity: 0, scale: 0.94, y: 15, filter: "blur(6px)" }}
+              animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, scale: 0.94, y: -10, filter: "blur(6px)" }}
+              transition={{ type: "spring", stiffness: 240, damping: 24 }}
             >
 
               {active === "home" && <Home setActive={setActive} onOpenResume={onOpenResume} />}
@@ -363,10 +364,19 @@ function Home({
             );
           })}
         </div>
+
       </div>
 
       {/* Desktop macOS Dashboard Layout */}
-      <div className="max-md:hidden grid h-full gap-4 lg:grid-cols-[1.4fr_.8fr]">
+      <div className="max-md:hidden grid h-full gap-4 lg:grid-cols-[1.4fr_.8fr] relative">
+        {/* Vertical Laser Scan Divider (Top to Bottom) */}
+        <div className="absolute left-[62.5%] top-0 bottom-0 w-[1px] bg-white/5 overflow-hidden max-lg:hidden pointer-events-none z-20">
+          <motion.div 
+            className="w-full h-32 bg-gradient-to-b from-transparent via-cyan to-transparent"
+            animate={{ y: ["-128px", "720px"] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
       {/* Welcome Card */}
       <Window eyebrow="HOME" title="welcome">
         <div className="p-8 md:p-10 flex flex-col justify-between h-full min-h-[480px]">

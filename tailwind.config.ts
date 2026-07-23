@@ -13,6 +13,9 @@ export default {
       },
     },
     extend: {
+      screens: {
+        "max-md": { max: "767px" },
+      },
       fontFamily: {
         display: ["Space Grotesk", "sans-serif"],
         body: ["Inter", "sans-serif"],
