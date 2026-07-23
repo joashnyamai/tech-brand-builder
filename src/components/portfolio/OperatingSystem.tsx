@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bot, ChevronRight, Code2, Command, FileText, FolderGit2, Github, Mail, MapPin, Play, Search, Terminal, UserRound, Zap } from "lucide-react";
+import { Bot, ChevronRight, Code2, Command, FileText, FolderGit2, Github, Mail, MapPin, Play, Search, Terminal, UserRound, Zap, Calendar, Briefcase, Award, Sliders } from "lucide-react";
 import { usePortfolioData } from "@/hooks/use-portfolio-data";
 import { Articles, Certificates, CodeExplorer, GithubActivity, Sandbox, XRay } from "@/components/portfolio/OSExtras";
 import About from "@/components/portfolio/About";
@@ -246,10 +246,13 @@ export default function OperatingSystem({ onOpenResume }: { onOpenResume: () => 
 
 function Window({ eyebrow, title, children, onClose }: { eyebrow:string; title:string; children:React.ReactNode; onClose?:()=>void }) {
   return (
-    <section className="os-window bg-[#12131e]/85 border border-white/10 rounded-xl shadow-2xl backdrop-blur-md overflow-hidden flex flex-col h-full relative">
-      <div className="window-bar bg-[#1e1e1e] border-b border-black/30 px-4 py-2.5 flex items-center justify-between select-none relative">
-        {/* macOS Traffic Lights on the Left */}
-        <div className="flex items-center gap-1.5 shrink-0 z-10 group/controls">
+    <section className="os-window bg-[#12131e]/85 border border-white/10 rounded-xl shadow-2xl backdrop-blur-md overflow-hidden flex flex-col h-full relative max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:h-[85vh] max-md:bg-[#12131e]/95 max-md:border-t max-md:border-white/10 max-md:rounded-t-[24px] max-md:z-40">
+      {/* iOS Drag Handle Bar (Mobile Only) */}
+      <div className="w-9 h-1 rounded-full bg-white/20 mx-auto mt-3 mb-1 shrink-0 md:hidden" />
+
+      <div className="window-bar bg-[#1e1e1e] border-b border-black/30 px-4 py-2.5 flex items-center justify-between select-none relative max-md:bg-transparent max-md:border-b-0 max-md:px-5 max-md:py-2">
+        {/* macOS Traffic Lights on the Left (Desktop Only) */}
+        <div className="flex items-center gap-1.5 shrink-0 z-10 group/controls max-md:hidden">
           <button 
             onClick={onClose}
             className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] hover:bg-[#FF5F56]/80 flex items-center justify-center text-[6px] text-[#4c0000] font-bold select-none cursor-pointer" 
@@ -264,16 +267,31 @@ function Window({ eyebrow, title, children, onClose }: { eyebrow:string; title:s
             <span className="opacity-0 group-hover/controls:opacity-100 transition-opacity">+</span>
           </button>
         </div>
+
+        {/* iOS Left-aligned eyebrow category (Mobile Only) */}
+        <span className="text-xs font-mono uppercase tracking-wider text-white/50 md:hidden shrink-0">
+          {eyebrow}
+        </span>
         
-        {/* Centered Title */}
-        <span className="text-[10px] font-bold text-white/80 font-mono tracking-wide uppercase absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
-          {eyebrow} <b className="text-white/30">/</b> {title}
+        {/* Centered Title (Desktop: center, Mobile: center) */}
+        <span className="text-[10px] font-bold text-white/80 font-mono tracking-wide uppercase absolute left-1/2 -translate-x-1/2 flex items-center gap-1 max-md:text-sm max-md:font-bold max-md:text-white max-md:max-w-[45%] max-md:truncate">
+          <span className="max-md:hidden">{eyebrow} <b className="text-white/30">/</b></span> {title}
         </span>
 
-        {/* Empty space matching height */}
-        <div className="w-12 h-2.5" />
+        {/* macOS spacer on the right on Desktop, iOS "Done" button on Mobile */}
+        <div className="shrink-0 z-10">
+          <button 
+            onClick={onClose} 
+            className="md:hidden text-cyan text-sm font-semibold hover:opacity-80 cursor-pointer"
+          >
+            Done
+          </button>
+          <div className="max-md:hidden w-12 h-2.5" />
+        </div>
       </div>
-      <div className="flex-1 overflow-y-auto">
+
+      {/* Content area */}
+      <div className="flex-1 overflow-y-auto max-md:p-4 max-md:pb-24">
         {children}
       </div>
     </section>
@@ -286,29 +304,23 @@ function Home({
   setActive: (app: AppName) => void;
   onOpenResume: () => void;
 }) {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  const iosApps = [
+    { id: "profile", label: "Profile", icon: UserRound, color: "bg-blue-500" },
+    { id: "projects", label: "Projects", icon: FolderGit2, color: "bg-emerald-500" },
+    { id: "graph", label: "Skills", icon: Zap, color: "bg-amber-500" },
+    { id: "timeline", label: "Roadmap", icon: Calendar, color: "bg-indigo-500" },
+    { id: "terminal", label: "Terminal", icon: Terminal, color: "bg-zinc-800" },
+    { id: "resume", label: "Resume", icon: Briefcase, color: "bg-red-500" },
+    { id: "ai", label: "Ava Guide", icon: Bot, color: "bg-violet-600" },
+    { id: "certificates", label: "Verify", icon: Award, color: "bg-teal-500" },
+    { id: "sandbox", label: "Sandbox", icon: Sliders, color: "bg-orange-500" },
+    { id: "contact", label: "Contact", icon: Mail, color: "bg-sky-600" }
+  ];
 
-  if (isMobile) {
-    const iosApps = [
-      { id: "profile", label: "Profile", icon: UserRound, color: "bg-blue-500" },
-      { id: "projects", label: "Projects", icon: FolderGit2, color: "bg-emerald-500" },
-      { id: "graph", label: "Skills", icon: Zap, color: "bg-amber-500" },
-      { id: "timeline", label: "Roadmap", icon: Calendar, color: "bg-indigo-500" },
-      { id: "terminal", label: "Terminal", icon: Terminal, color: "bg-zinc-800" },
-      { id: "resume", label: "Resume", icon: Briefcase, color: "bg-red-500" },
-      { id: "ai", label: "Ava Guide", icon: Bot, color: "bg-violet-600" },
-      { id: "certificates", label: "Verify", icon: Award, color: "bg-teal-500" },
-      { id: "sandbox", label: "Sandbox", icon: Sliders, color: "bg-orange-500" },
-      { id: "contact", label: "Contact", icon: Mail, color: "bg-sky-600" }
-    ];
-    return (
-      <div className="flex flex-col h-full w-full max-w-md mx-auto select-none pt-4">
+  return (
+    <>
+      {/* Mobile iOS Home Screen Layout */}
+      <div className="md:hidden flex flex-col h-full w-full max-w-md mx-auto select-none pt-4">
         {/* iOS Clock/Welcome Widget */}
         <div className="bg-white/5 border border-white/10 rounded-[24px] p-5 backdrop-blur-md mb-6 space-y-4 shadow-xl">
           <div className="flex justify-between items-center pb-2 border-b border-white/5">
@@ -342,10 +354,10 @@ function Home({
                     setActive("resume");
                     onOpenResume();
                   } else {
-                    setActive(app.id);
+                    setActive(app.id as AppName);
                   }
                 }}
-                className="flex flex-col items-center group cursor-pointer"
+                className="flex flex-col items-center group cursor-pointer animate-none"
               >
                 <div className={`w-14 h-14 rounded-2xl ${app.color} flex items-center justify-center shadow-lg transform active:scale-90 transition-transform`}>
                   <Icon size={24} className="text-white" />
@@ -358,11 +370,9 @@ function Home({
           })}
         </div>
       </div>
-    );
-  }
 
-  return (
-    <div className="grid h-full gap-4 lg:grid-cols-[1.4fr_.8fr]">
+      {/* Desktop macOS Dashboard Layout */}
+      <div className="max-md:hidden grid h-full gap-4 lg:grid-cols-[1.4fr_.8fr]">
       {/* Welcome Card */}
       <Window eyebrow="HOME" title="welcome">
         <div className="p-8 md:p-10 flex flex-col justify-between h-full min-h-[480px]">
@@ -499,6 +509,7 @@ function Home({
         </Window>
       </div>
     </div>
+    </>
   );
 }
 function LegacyProjects({projects,openXray}:{projects:ReturnType<typeof usePortfolioData>["projects"];openXray:(project:ReturnType<typeof usePortfolioData>["projects"][number])=>void}) { return <Window eyebrow="ARCHIVE" title="selected projects"><div className="flex items-end justify-between p-7"><div><div className="eyebrow"><span/> PROJECT ARCHIVE</div><h2 className="mt-3 text-3xl font-semibold">Work with intention.</h2></div><Pill>{projects.length} visible</Pill></div><div className="grid gap-3 border-t border-white/10 p-5 md:grid-cols-3">{projects.slice(0,6).map((project,index)=><article className="project-card" key={project.name}><div className={`project-visual ${["violet","cyan","orange"][index%3]}`}><span>0{index+1}</span><Code2 size={26}/></div><div className="p-5"><p className="text-xs text-white/45">{project.period}</p><h3 className="mt-2 text-xl font-semibold">{project.name}</h3><p className="mt-3 text-sm leading-6 text-white/50">{project.objective}</p><div className="mt-5 flex flex-wrap gap-2">{project.stack.slice(0,3).map(item=><Pill key={item}>{item}</Pill>)}</div><button onClick={()=>openXray(project)} className="mt-6 flex items-center gap-1 text-sm text-violet-300">Open X-Ray <ChevronRight size={15}/></button></div></article>)}</div></Window> }
