@@ -1,14 +1,13 @@
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import type { Easing } from "framer-motion";
-import { ArrowDown, Github, Linkedin, Mail, FileText, Cpu } from "lucide-react";
-import { Link } from "react-router-dom";
-import heroBg from "@/assets/hero-bg.jpg";
+import { ArrowDown, FileText, Cpu, Bot, Play } from "lucide-react";
 
 const EASE: Easing = "easeOut";
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 40 },
+  initial: { opacity: 0, y: 30 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, ease: EASE, delay },
+  transition: { duration: 0.6, ease: EASE, delay },
 });
 
 interface HeroProps {
@@ -16,149 +15,221 @@ interface HeroProps {
 }
 
 export default function Hero({ onViewResume }: HeroProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [tagline, setTagline] = useState("");
+  const fullTagline = "Building Premium Software · Engineering Automated Quality · Architecting AI Workflows";
+
+  // Typewriter effect
+  useEffect(() => {
+    let currentIdx = 0;
+    const typingInterval = setInterval(() => {
+      setTagline(fullTagline.slice(0, currentIdx));
+      currentIdx++;
+      if (currentIdx > fullTagline.length) {
+        clearInterval(typingInterval);
+      }
+    }, 35);
+    return () => clearInterval(typingInterval);
+  }, []);
+
+  // Particle background logic
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let particles: Array<{
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      radius: number;
+      color: string;
+    }> = [];
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
+    };
+
+    const initParticles = () => {
+      particles = [];
+      const particleCount = Math.min(Math.floor(window.innerWidth / 15), 80);
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          radius: Math.random() * 2 + 1,
+          color: `rgba(6, 182, 212, ${Math.random() * 0.15 + 0.05})`
+        });
+      }
+    };
+
+    const drawParticles = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Update and draw
+      particles.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        // Connect particles close to each other
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(6, 182, 212, ${0.1 * (1 - dist / 100)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      });
+
+      animationFrameId = requestAnimationFrame(drawParticles);
+    };
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+    drawParticles();
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  const openAva = () => {
+    const btn = document.querySelector('[aria-label="Toggle Ava Assistant"]') as HTMLButtonElement;
+    btn?.click();
+  };
+
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#05080e]"
     >
-      {/* Background image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroBg})` }}
+      {/* Interactive canvas backdrop */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 pointer-events-none z-0"
       />
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/70 to-background" />
 
-      {/* Animated glow orbs */}
-      <div className="absolute top-1/3 right-1/4 w-72 h-72 rounded-full bg-cyan/5 blur-3xl animate-pulse-glow pointer-events-none" />
-      <div className="absolute bottom-1/3 left-1/5 w-56 h-56 rounded-full bg-primary/8 blur-3xl animate-float pointer-events-none" />
+      {/* Dark gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#05080e]/40 via-[#05080e]/60 to-[#05080e] z-1" />
+
+      {/* Glow orbs */}
+      <div className="absolute top-1/4 right-1/4 w-80 h-80 rounded-full bg-cyan/5 blur-3xl animate-pulse pointer-events-none z-1" />
+      <div className="absolute bottom-1/4 left-1/4 w-64 h-64 rounded-full bg-cyan/5 blur-3xl animate-pulse pointer-events-none z-1" />
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-        {/* Badge */}
-        <motion.div {...fadeUp(0.1)} className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan/30 bg-cyan/5 text-cyan text-xs tracking-widest uppercase font-medium mb-8">
+        {/* Available Badge */}
+        <motion.div
+          {...fadeUp(0.1)}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan/20 bg-cyan/5 text-cyan text-[10px] tracking-widest uppercase font-semibold mb-8 select-none"
+        >
           <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
           Available for Opportunities
         </motion.div>
 
-        {/* Profile Image */}
+        {/* Profile Image with Ring Interaction */}
         <motion.div
-          {...fadeUp(0.2)}
-          className="relative inline-block mb-10 group"
+          {...fadeUp(0.25)}
+          className="relative inline-block mb-10 group cursor-pointer"
         >
-          {/* Animated Gradient Ring */}
-          <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-cyan/40 via-blue-500/40 to-purple-500/40 opacity-70 blur-sm group-hover:opacity-100 group-hover:blur-md transition-all duration-500" />
-
-          {/* Image Container */}
-          <div className="relative w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-[6px] border-background shadow-2xl mx-auto">
+          <div className="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-cyan/50 via-blue-500/30 to-purple-500/50 opacity-70 blur group-hover:opacity-100 group-hover:blur-md transition-all duration-700" />
+          <div className="relative w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-[6px] border-[#070b13] shadow-2xl mx-auto">
             <img
               src="/profile.jpg"
               alt="Malila Nyamai"
               className="w-full h-full object-cover object-[center_15%] transform transition-transform duration-700 group-hover:scale-105"
               onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                e.currentTarget.parentElement?.classList.add('bg-muted');
+                e.currentTarget.style.display = "none";
+                e.currentTarget.parentElement?.classList.add("bg-navy-surface");
               }}
             />
           </div>
         </motion.div>
 
-        {/* Main headline */}
+        {/* Title Stagger Reveal */}
         <motion.h1
-          {...fadeUp(0.3)}
-          className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.05] tracking-tight mb-6"
+          {...fadeUp(0.4)}
+          className="font-display text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-6"
         >
           <span className="text-foreground">Malila</span>{" "}
           <span className="text-gradient">Nyamai</span>
         </motion.h1>
 
-        {/* Title */}
-        <motion.p
-          {...fadeUp(0.65)}
-          className="font-display text-lg md:text-2xl text-muted-foreground font-light tracking-wide mb-6"
-        >
-          Software Engineer · QA Engineer · IT Consultant
-        </motion.p>
+        {/* Typewriter Tagline */}
+        <div className="h-8 md:h-10 mb-6 flex items-center justify-center">
+          <p className="font-display text-xs md:text-lg text-cyan font-bold tracking-wider uppercase font-mono">
+            {tagline}
+            <span className="inline-block w-1.5 h-4 bg-cyan ml-1 animate-pulse" />
+          </p>
+        </div>
 
-        {/* Value proposition */}
+        {/* Concise Description */}
         <motion.p
           {...fadeUp(0.55)}
-          className="max-w-2xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed mb-10"
+          className="max-w-2xl mx-auto text-sm md:text-base text-muted-foreground leading-relaxed mb-10"
         >
-          I am a Software Engineer, QA Engineer, and IT Consultant with 3+ years of hands-on experience in software development, quality assurance, system support, and digital training.
+          I am a Software Engineer, QA Specialist, and IT Consultant with 3+ years of experience building secure React/Node frameworks, engineering Cypress/Postman automation pipelines, and co-founding utility products.
         </motion.p>
 
-        {/* CTAs */}
-        <motion.div {...fadeUp(0.65)} className="flex flex-wrap items-center justify-center gap-4 mb-12">
+        {/* Interactive CTA Controls */}
+        <motion.div {...fadeUp(0.7)} className="flex flex-wrap items-center justify-center gap-4 mb-16">
           <a
             href="#projects"
-            className="px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide gradient-accent text-primary-foreground hover:opacity-90 transition-all duration-200 animate-pulse-glow shadow-lg"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase gradient-accent text-primary-foreground hover:opacity-95 hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-[0_0_15px_rgba(6,182,212,0.25)]"
           >
-            View My Work
+            <Play size={12} fill="currentColor" />
+            Explore Projects
           </a>
-          <Link
-            to="/ai-lab"
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide bg-cyan/10 border border-cyan hover:bg-cyan hover:text-primary-foreground transition-all duration-200 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]"
-          >
-            <Cpu size={16} />
-            Ava AI Lab
-          </Link>
           <button
             onClick={onViewResume}
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide border border-cyan/40 text-cyan hover:bg-cyan/10 transition-all duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase bg-navy-surface hover:bg-navy-elevated text-cyan hover:text-cyan-glow border border-cyan/20 hover:border-cyan/40 hover:scale-[1.02] active:scale-95 transition-all duration-200"
           >
-            <FileText size={16} />
-            View CV
+            <FileText size={12} />
+            View Resume
           </button>
-          <a
-            href="#contact"
-            className="px-7 py-3.5 rounded-xl font-display font-semibold text-sm tracking-wide border border-navy-border text-foreground hover:border-cyan hover:text-cyan transition-all duration-200"
+          <button
+            onClick={openAva}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground border border-white/5 hover:border-white/10 hover:scale-[1.02] active:scale-95 transition-all duration-200"
           >
-            Get In Touch
-          </a>
+            <Bot size={12} className="animate-pulse" />
+            Talk to Ava
+          </button>
         </motion.div>
 
-        {/* Social links */}
-        <motion.div {...fadeUp(0.75)} className="flex items-center justify-center gap-6 mb-16">
-          <a
-            href="mailto:jamesmnyamai9@gmail.com"
-            className="text-muted-foreground hover:text-cyan transition-colors duration-200"
-            aria-label="Email"
-          >
-            <Mail size={20} />
-          </a>
-          <a
-            href="https://www.linkedin.com/in/malila-nyamai-0b2711221"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-cyan transition-colors duration-200"
-            aria-label="LinkedIn"
-          >
-            <Linkedin size={20} />
-          </a>
-          <a
-            href="https://github.com/joashnyamai"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-cyan transition-colors duration-200"
-            aria-label="GitHub"
-          >
-            <Github size={20} />
-          </a>
-        </motion.div>
-
-        {/* Scroll indicator */}
+        {/* Scroll down mouse indicator */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={{ opacity: 0.5 }}
           transition={{ delay: 1.2 }}
-          className="flex flex-col items-center gap-2 text-muted-foreground/50"
+          className="flex flex-col items-center gap-2 text-muted-foreground/30 select-none cursor-pointer"
+          onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
         >
-          <span className="text-xs tracking-widest uppercase">Scroll</span>
+          <span className="text-[9px] tracking-widest uppercase font-mono font-bold">Scroll Down</span>
           <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.6, repeat: Infinity }}
           >
-            <ArrowDown size={16} />
+            <ArrowDown size={14} />
           </motion.div>
         </motion.div>
       </div>

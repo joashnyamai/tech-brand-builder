@@ -17,8 +17,21 @@ import {
   X,
   Play,
   RotateCcw,
-  Paperclip
+  Paperclip,
+  FileText,
+  RefreshCw,
+  Github,
+  Linkedin,
+  PlusCircle,
+  TrendingUp,
+  CheckCircle2,
+  AlertTriangle,
+  ArrowRight,
+  Trash2,
+  Plus,
+  Undo
 } from "lucide-react";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 // Context for Gemini Queries
 export const RESUME_CONTEXT = `
@@ -248,19 +261,36 @@ export function getMockJdResponse(jdText: string) {
 
   // Determine fit descriptor
   let fit = "";
+  const recommendations: string[] = [];
   if (finalScore >= 80) {
     fit = `Excellent match fit. Strong alignment with ${strengths.slice(0, 2).join(" and ")}.`;
+    recommendations.push(
+      "Highlight your lead engineering work at RemboGlow in the introductory resume overview.",
+      "Add detail about your eTIMS compliance API flows under Tari Africa platforms.",
+      "Consider mentioning your CCNA certificate in connection with deployment security."
+    );
   } else if (finalScore >= 50) {
     fit = `Moderate match fit. Fits key areas such as ${strengths.slice(0, 1).join("") || "general development"}, but has notable gaps.`;
+    recommendations.push(
+      `Emphasize your testing automation checklists to close any potential gaps in ${jd.includes("selenium") ? "Selenium" : "automation framework"} knowledge.`,
+      "Highlight system integration capabilities in React dashboard pages.",
+      "Detail your PostgreSQL schema modeling under RemboGlow projects."
+    );
   } else {
     fit = `Low match fit. Malila does not meet several major requirements of this role.`;
+    recommendations.push(
+      "Focus your portfolio projects on the specific languages (e.g. Node.js or C#) requested in the JD.",
+      "Earn relevant certifications matching the domain to bridge standard software engineering gaps.",
+      "Ensure you emphasize transferrable QA testing methodologies and API validation schemas."
+    );
   }
 
   return {
     score: finalScore,
     fit,
     strengths: strengths.length > 0 ? strengths.slice(0, 3) : ["General IT knowledge"],
-    gaps: gaps.length > 0 ? gaps.slice(0, 2) : ["No major gaps identified."]
+    gaps: gaps.length > 0 ? gaps.slice(0, 2) : ["No major gaps identified."],
+    recommendations
   };
 }
 
@@ -295,6 +325,102 @@ function CommentSection({ rawCommentText }) {
 }`
     };
   }
+}
+
+export const JD_PRESETS: Record<string, string> = {
+  "Senior QA Automation": "Looking for a Senior QA Automation Engineer with 3+ years experience. Strong skills in Postman API testing, database validation using SQL queries, and writing test case management suites. Experience building React dashboard views and integrating CI/CD quality pipelines is a huge plus.",
+  "Full-Stack Developer": "Seeking a Full-Stack Engineer proficient in React, TypeScript, and Node.js. Must have experience building SaaS platforms with relational databases like PostgreSQL. Experience implementing M-Pesa API (Daraja) or similar payment options is highly desirable.",
+  "IT Specialist / Support": "We are hiring an IT Specialist to manage corporate networks, configure client endpoints, handle data migrations, and advise on cybersecurity standards (CCNA preferred)."
+};
+
+export function getMockSyncResponse(text: string) {
+  const t = text.toLowerCase();
+  const result: any = {
+    newProjects: [],
+    newExperiences: [],
+    newCertifications: [],
+    newSkills: [],
+    summary: ""
+  };
+
+  if (t.includes("project") || t.includes("built") || t.includes("created")) {
+    let projName = "TaskForge QA Suite";
+    if (t.includes("taskforge")) projName = "TaskForge QA Suite";
+    else if (t.includes("documind")) projName = "DocuMind RAG";
+    else if (t.includes("portfolio")) projName = "AI Portfolio Sync";
+
+    result.newProjects.push({
+      name: projName,
+      period: "Feb 2026 – Present",
+      url: "https://github.com/joashnyamai",
+      objective: "An automated workflow validator that parses live events and updates portfolio records.",
+      stack: ["React", "TypeScript", "Vite", "Playwright", "Tailwind CSS"],
+      summary: "Built a reactive parser that scans repository metadata and updates client-side states dynamically.",
+      value: "Reduced manual portfolio maintenance by 100% and automated deployment checks.",
+      highlight: false
+    });
+    result.summary += "Detected 1 new project from GitHub. ";
+  }
+
+  if (t.includes("certified") || t.includes("certification") || t.includes("cert")) {
+    let certName = "AWS Certified Solutions Architect";
+    let issuer = "Amazon Web Services";
+    let icon = "🔐";
+    let category = "Cloud & Infrastructure";
+
+    if (t.includes("security") || t.includes("ceh")) {
+      certName = "Certified Ethical Hacker (CEH)";
+      issuer = "EC-Council";
+      icon = "🛡️";
+      category = "Security";
+    } else if (t.includes("ai") || t.includes("ml")) {
+      certName = "Generative AI Developer Certification";
+      issuer = "Google Cloud";
+      icon = "🤖";
+      category = "AI/ML";
+    }
+
+    result.newCertifications.push({
+      name: certName,
+      issuer: issuer,
+      icon: icon,
+      category: category
+    });
+    result.summary += "Detected 1 new certification from LinkedIn. ";
+  }
+
+  if (t.includes("experience") || t.includes("job") || t.includes("role") || t.includes("work") || t.includes("promoted")) {
+    result.newExperiences.push({
+      role: "Lead QA Automation Engineer",
+      company: "Kiwami Tech Solutions",
+      location: "Nairobi, Kenya",
+      period: "Feb 2026 – Present",
+      type: "Full-time",
+      overview: "Oversaw the transition from manual regression runs to fully automated CI/CD-integrated testing frameworks.",
+      highlights: [
+        "Architected automated test suites in Cypress, reducing deployment bugs by 45%.",
+        "Mentored junior QA associates and established test case checklists for all sprints."
+      ],
+      tech: ["Cypress", "JavaScript", "CI/CD Pipelines", "Agile Leadership"]
+    });
+    result.summary += "Detected 1 new professional experience from LinkedIn. ";
+  }
+
+  if (result.newProjects.length === 0 && result.newCertifications.length === 0 && result.newExperiences.length === 0) {
+    result.newProjects.push({
+      name: "GitHub Sync Hub",
+      period: "Jan 2026 – Present",
+      url: null,
+      objective: "An automated sync connector between GitHub events and portfolio pages.",
+      stack: ["React", "TypeScript", "Gemini API", "LocalStorage"],
+      summary: "Designed a clean tabbed panel inside the AI Lab to extract achievements and sync them.",
+      value: "Streamlined portfolio updates with real-time reactive rendering.",
+      highlight: false
+    });
+    result.summary = "No specific updates found. Generated a default sample sync item for preview.";
+  }
+
+  return result;
 }
 
 /**
@@ -544,17 +670,33 @@ User inquiry: "${text}"`;
     }
   };
 
+  // Hook into our dynamic portfolio data store
+  const { addProject, addExperience, addCertification, addSkill, resetToDefaults } = usePortfolioData();
+
+  // Unified console active tab state
+  const [activeTab, setActiveTab] = useState<"matcher" | "sync" | "auditor">("matcher");
+
+  // Logger helper to report actions directly to n8n console
+  const addLog = (message: string, type: "INFO" | "SUCCESS" | "ERROR" = "INFO") => {
+    const timestamp = new Date().toTimeString().split(" ")[0];
+    const logText = `[${timestamp} ${type}] ${message}`;
+    setLogs((prev) => [...prev.slice(-30), logText]);
+  };
+
   // --- TOOL 2: CV MATCHER (JD ANALYZER) ---
   const [jdInput, setJdInput] = useState("");
   const [fileParsing, setFileParsing] = useState(false);
   const [fileError, setFileError] = useState("");
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setUploadedFile(file);
     setFileParsing(true);
     setFileError("");
+    addLog(`[CV Parser Agent] File upload triggered: ${file.name} (${(file.size / 1024).toFixed(1)} KB)...`, "INFO");
     try {
       let extractedText = "";
       const extension = file.name.split(".").pop()?.toLowerCase();
@@ -574,21 +716,32 @@ User inquiry: "${text}"`;
       }
 
       setJdInput(extractedText);
+      addLog(`[CV Parser Agent] Successfully extracted text from ${file.name}.`, "SUCCESS");
     } catch (err: any) {
       console.error(err);
       setFileError(err.message || "Failed to parse document.");
+      addLog(`[CV Parser Agent] Error parsing file: ${err.message}`, "ERROR");
     } finally {
       setFileParsing(false);
       // Reset input value so same file can be uploaded again
       e.target.value = "";
     }
   };
+
+  const clearFile = () => {
+    setUploadedFile(null);
+    setJdInput("");
+    setMatchResult(null);
+    addLog("[CV Parser Agent] Uploaded file cleared.", "INFO");
+  };
+
   const [matchLoading, setMatchLoading] = useState(false);
   const [matchResult, setMatchResult] = useState<{
     score: number;
     fit: string;
     strengths: string[];
     gaps: string[];
+    recommendations?: string[];
     isLlm?: boolean;
   } | null>(null);
 
@@ -596,9 +749,11 @@ User inquiry: "${text}"`;
     if (!jdInput.trim() || matchLoading) return;
     setMatchLoading(true);
     setMatchResult(null);
+    addLog("[CV Parser Agent] Initializing Job Description matching review...", "INFO");
 
     try {
       if (apiKey && !fallbackActive) {
+        addLog("[CV Parser Agent] Dispatching keyword payloads to Gemini AI Engine...", "INFO");
         const prompt = `You are a strict, objective recruitment systems analyst.
 Analyze the following Job Description (JD) against Malila Nyamai's resume below.
 Determine a precise match fit score from 0 to 100 based strictly on actual skills, certifications, and experience listed in the resume.
@@ -612,6 +767,7 @@ Rules:
    - "fit": a short, objective 2-sentence summary explaining why this score was given
    - "strengths": an array of up to 3 matched skills or experiences from the resume that directly align with the JD
    - "gaps": an array of up to 2 significant missing items or areas for growth relative to the JD requirements
+   - "recommendations": an array of up to 3 actionable, highly specific bullet points outlining what updates Malila should make to his resume or portfolio to better match this JD.
 
 Job Description:
 "${jdInput}"
@@ -626,14 +782,17 @@ ${RESUME_CONTEXT}`;
           fit: parsed.fit || "Matches critical parameters.",
           strengths: parsed.strengths || [],
           gaps: parsed.gaps || [],
+          recommendations: parsed.recommendations || [],
           isLlm: true
         });
+        addLog(`[CV Parser Agent] Keyword comparison completed. Synthesis complete. Match Score: ${parsed.score}%`, "SUCCESS");
       } else {
         throw new Error("No active key configured. Using Sandbox Heuristics.");
       }
     } catch (err: any) {
       console.warn("Matcher API call failed, executing graceful sandbox fallback:", err.message);
       setFallbackActive(true);
+      addLog("[CV Parser Agent] Local sandbox model activated for analysis...", "INFO");
 
       const parsed = getMockJdResponse(jdInput);
       setMatchResult({
@@ -641,14 +800,151 @@ ${RESUME_CONTEXT}`;
         fit: parsed.fit,
         strengths: parsed.strengths,
         gaps: parsed.gaps,
+        recommendations: parsed.recommendations,
         isLlm: true // Keep identical styling
       });
+      addLog(`[CV Parser Agent] Sandbox parsing completed. Simulated Match Score: ${parsed.score}%`, "SUCCESS");
     } finally {
       setMatchLoading(false);
     }
   };
 
-  // --- TOOL 3: SECURITY CODE AUDITOR ---
+  // --- TOOL 3: AI PROFILE SYNC HUB ---
+  const [githubUrl, setGithubUrl] = useState("github.com/joashnyamai");
+  const [linkedinUrl, setLinkedinUrl] = useState("linkedin.com/in/malila-nyamai-0b2711221");
+  const [syncUpdatesInput, setSyncUpdatesInput] = useState("");
+  const [syncLoading, setSyncLoading] = useState(false);
+  const [suggestedChanges, setSuggestedChanges] = useState<{
+    newProjects?: any[];
+    newExperiences?: any[];
+    newCertifications?: any[];
+    newSkills?: { category: string; skill: string }[];
+    summary: string;
+  } | null>(null);
+
+  const handleSyncScan = async () => {
+    if (!syncUpdatesInput.trim() || syncLoading) return;
+    setSyncLoading(true);
+    setSuggestedChanges(null);
+    addLog(`[GitHub Scraping Worker] Scraping profile: ${githubUrl}...`, "INFO");
+    addLog(`[LinkedIn Integration] Scraping updates: ${linkedinUrl}...`, "INFO");
+
+    try {
+      if (apiKey && !fallbackActive) {
+        addLog("[Profile Parser] Dispatching sync request to Gemini AI Engine...", "INFO");
+        const prompt = `You are Malila Nyamai's personal AI Brand Architect.
+Analyze the following inputs from his GitHub (${githubUrl}), LinkedIn (${linkedinUrl}), and his description of recent accomplishments/updates:
+"${syncUpdatesInput}"
+
+Your job is to identify if there are any NEW projects, professional experiences, skills, or certifications mentioned in his updates that should be added to his portfolio.
+Compare this against his current resume context:
+${RESUME_CONTEXT}
+
+Rules:
+1. ONLY extract items that are explicitly new and NOT already present in his resume.
+2. Structure any new item EXACTLY according to these JSON schemas:
+   - For Projects (newProjects):
+     {
+       "name": "Project Name",
+       "period": "e.g. Feb 2026 – Present",
+       "url": "Project URL or null",
+       "objective": "1-sentence project objective description",
+       "stack": ["Tech1", "Tech2"],
+       "summary": "1-sentence summary of what he did/engineered",
+       "value": "1-sentence description of impact/value saved",
+       "highlight": false
+     }
+   - For Experiences (newExperiences):
+     {
+       "role": "Job Role Title",
+       "company": "Company Name",
+       "location": "e.g. Nairobi, Kenya or Remote",
+       "period": "e.g. Jan 2026 – Present",
+       "type": "Full-time" | "Part-time" | "Contract" | "Hybrid" | "Remote",
+       "overview": "1-sentence general overview of the role",
+       "highlights": ["Highlight achievement 1", "Highlight achievement 2"],
+       "tech": ["Tech1", "Tech2"]
+     }
+   - For Certifications (newCertifications):
+     {
+       "name": "Certification Name",
+       "issuer": "Issuing Organization",
+       "icon": "A single emoji representing the category (e.g. 🔐, 🛡️, 🤖, ⚡, 💻, 📊)",
+       "category": "Networking" | "Security" | "AI/ML" | "Development" | "Productivity"
+     }
+   - For Skills (newSkills):
+     {
+       "category": "Frontend Development" | "Application Testing & QA" | "Cloud & Infrastructure" | "Backend & Databases" | "AI, ML & IT Support",
+       "skill": "Skill name to append"
+     }
+
+3. Return ONLY a valid JSON object (no markdown backticks, no wrapper text) with these keys:
+   {
+     "newProjects": Array of Project objects,
+     "newExperiences": Array of Experience objects,
+     "newCertifications": Array of Certification objects,
+     "newSkills": Array of Skill objects,
+     "summary": "A 1-2 sentence human-friendly summary of the updates detected."
+   }`;
+
+        const rawJson = await queryGeminiWithRetry(prompt, apiKey, "application/json");
+        const parsed = JSON.parse(rawJson);
+        setSuggestedChanges(parsed);
+        addLog("[Profile Parser] Synthesizing updates using Gemini LLM...", "INFO");
+        addLog("[Profile Parser] Updates successfully extracted.", "SUCCESS");
+      } else {
+        throw new Error("No active key configured. Using Sandbox Heuristics.");
+      }
+    } catch (err: any) {
+      console.warn("Sync scan failed, executing graceful sandbox fallback:", err.message);
+      setFallbackActive(true);
+      addLog("[Profile Parser] Activating local sandbox heuristic model...", "INFO");
+      
+      const parsed = getMockSyncResponse(syncUpdatesInput);
+      setSuggestedChanges(parsed);
+      addLog("[Profile Parser] Synthesizing updates using local parser...", "INFO");
+      addLog("[Profile Parser] Updates successfully simulated.", "SUCCESS");
+    } finally {
+      setSyncLoading(false);
+    }
+  };
+
+  const handleApproveSync = () => {
+    if (!suggestedChanges) return;
+
+    addLog("[Portfolio Updater] Ingesting extracted records into database...", "INFO");
+
+    if (suggestedChanges.newProjects) {
+      suggestedChanges.newProjects.forEach(p => {
+        addProject(p);
+        addLog(`[Portfolio Updater] Ingested project: ${p.name}`, "SUCCESS");
+      });
+    }
+    if (suggestedChanges.newExperiences) {
+      suggestedChanges.newExperiences.forEach(e => {
+        addExperience(e);
+        addLog(`[Portfolio Updater] Ingested experience: ${e.role} @ ${e.company}`, "SUCCESS");
+      });
+    }
+    if (suggestedChanges.newCertifications) {
+      suggestedChanges.newCertifications.forEach(c => {
+        addCertification(c);
+        addLog(`[Portfolio Updater] Ingested certification: ${c.name}`, "SUCCESS");
+      });
+    }
+    if (suggestedChanges.newSkills) {
+      suggestedChanges.newSkills.forEach(s => {
+        addSkill(s.category, s.skill);
+        addLog(`[Portfolio Updater] Appended skill: ${s.skill} to ${s.category}`, "SUCCESS");
+      });
+    }
+
+    addLog("[Portfolio Updater] Dynamic portfolio synchronization complete.", "SUCCESS");
+    setSuggestedChanges(null);
+    setSyncUpdatesInput("");
+  };
+
+  // --- TOOL 4: SECURITY CODE AUDITOR ---
   const [selectedSnippetKey, setSelectedSnippetKey] = useState<"sql" | "xss">("sql");
   const [customCode, setCustomCode] = useState(SAMPLE_VULNERABLE_CODE.sql);
   const [auditLoading, setAuditLoading] = useState(false);
@@ -665,15 +961,18 @@ ${RESUME_CONTEXT}`;
     setSelectedSnippetKey(key);
     setCustomCode(SAMPLE_VULNERABLE_CODE[key]);
     setAuditResult(null);
+    addLog(`[Security Auditor] Snippet preset changed to: ${key.toUpperCase()}`, "INFO");
   };
 
   const handleRunAudit = async () => {
     if (!customCode.trim() || auditLoading) return;
     setAuditLoading(true);
     setAuditResult(null);
+    addLog("[Security Auditor] Beginning vulnerability audit of code block...", "INFO");
 
     try {
       if (apiKey && !fallbackActive) {
+        addLog("[Security Auditor] Analyzing AST and syntax patterns with Gemini AI...", "INFO");
         const prompt = `Analyze this code snippet for security vulnerabilities.
 Return ONLY a JSON object with:
 "vulnerability" (the vulnerability name),
@@ -695,12 +994,14 @@ ${customCode}`;
           fixedCode: parsed.fixedCode || "// Fix code not provided.",
           isLlm: true
         });
+        addLog(`[Security Auditor] Security audit completed. Vulnerability: ${parsed.vulnerability} (${parsed.severity})`, "SUCCESS");
       } else {
         throw new Error("No active key configured. Using Sandbox Heuristics.");
       }
     } catch (err: any) {
       console.warn("Auditor API call failed, executing graceful sandbox fallback:", err.message);
       setFallbackActive(true);
+      addLog("[Security Auditor] Auditor fallback: running sandbox analysis...", "INFO");
 
       const parsed = getMockAuditResponse(selectedSnippetKey);
       setAuditResult({
@@ -711,6 +1012,7 @@ ${customCode}`;
         fixedCode: parsed.fixedCode,
         isLlm: true // Keep identical styling
       });
+      addLog(`[Security Auditor] Sandbox audit completed. Simulated Vulnerability: ${parsed.vulnerability} (High)`, "SUCCESS");
     } finally {
       setAuditLoading(false);
     }
@@ -904,166 +1206,485 @@ ${customCode}`;
         {/* Right Column: Matcher, Auditor, and n8n Logs */}
         <div className="lg:col-span-2 space-y-8 flex flex-col h-[650px] justify-between">
           
-          {/* Top Half: CV Matcher & Auditor Side by Side */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 min-h-0">
-            
-            {/* Dynamic CV Matcher */}
-            <section className="bg-navy-surface/40 border border-navy-border rounded-2xl p-5 flex flex-col overflow-hidden backdrop-blur-md">
-              <h2 className="text-xs font-bold tracking-wider uppercase font-display flex items-center gap-2 mb-3 text-foreground">
-                <FileCheck size={16} className="text-cyan" />
-                Dynamic CV Matcher
-              </h2>
+          {/* Unified Console with Tabs */}
+          <div className="bg-navy-surface/40 border border-navy-border rounded-2xl p-6 flex flex-col overflow-hidden backdrop-blur-md flex-1 min-h-0">
+            {/* Tab Headers */}
+            <div className="flex border-b border-navy-border/60 mb-5 overflow-x-auto scrollbar-none flex-shrink-0">
+              <button
+                onClick={() => setActiveTab("matcher")}
+                className={`pb-3 px-4 text-xs font-bold uppercase tracking-wider transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
+                  activeTab === "matcher"
+                    ? "border-cyan text-cyan"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <FileCheck size={14} />
+                CV Matcher
+              </button>
+              <button
+                onClick={() => setActiveTab("sync")}
+                className={`pb-3 px-4 text-xs font-bold uppercase tracking-wider transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
+                  activeTab === "sync"
+                    ? "border-cyan text-cyan"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <RefreshCw size={14} className={syncLoading ? "animate-spin" : ""} />
+                Profile Sync Hub
+              </button>
+              <button
+                onClick={() => setActiveTab("auditor")}
+                className={`pb-3 px-4 text-xs font-bold uppercase tracking-wider transition-all border-b-2 whitespace-nowrap flex items-center gap-2 ${
+                  activeTab === "auditor"
+                    ? "border-cyan text-cyan"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <ShieldAlert size={14} />
+                Code Auditor
+              </button>
+            </div>
+
+            {/* Tab Body */}
+            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin">
               
-              <div className="flex-1 flex flex-col gap-3 min-h-0">
-                <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                  <span>Paste text below or:</span>
-                  <label className="flex items-center gap-1 cursor-pointer text-cyan hover:opacity-85 font-semibold">
-                    <Paperclip size={10} />
-                    <span>Upload JD File (PDF/Word/Text)</span>
-                    <input
-                      type="file"
-                      accept=".pdf,.docx,.txt,.md"
-                      onChange={handleFileUpload}
-                      disabled={fileParsing}
-                      className="hidden"
+              {/* TAB 1: CV MATCHER */}
+              {activeTab === "matcher" && (
+                <div className="h-full flex flex-col gap-4">
+                  <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                    <span className="font-semibold text-foreground">Analyze JD Alignment</span>
+                    
+                    {uploadedFile ? (
+                      <button
+                        onClick={clearFile}
+                        className="text-red-400 hover:text-red-300 font-semibold flex items-center gap-1"
+                      >
+                        <Trash2 size={12} />
+                        Clear Document
+                      </button>
+                    ) : (
+                      <label className="flex items-center gap-1 cursor-pointer text-cyan hover:opacity-85 font-semibold">
+                        <Paperclip size={11} />
+                        <span>Upload PDF/Word/Text</span>
+                        <input
+                          type="file"
+                          accept=".pdf,.docx,.txt,.md"
+                          onChange={handleFileUpload}
+                          disabled={fileParsing}
+                          className="hidden"
+                        />
+                      </label>
+                    )}
+                  </div>
+
+                  {uploadedFile && (
+                    <div className="flex items-center justify-between bg-navy-elevated/40 border border-navy-border p-3 rounded-xl">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <FileText className="text-cyan animate-pulse flex-shrink-0" size={20} />
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-foreground truncate">{uploadedFile.name}</p>
+                          <p className="text-[10px] text-muted-foreground">{(uploadedFile.size / 1024).toFixed(1)} KB • Document</p>
+                        </div>
+                      </div>
+                      <span className="text-[10px] bg-green-500/10 border border-green-500/20 text-green-400 px-2 py-0.5 rounded-full font-semibold">Ready</span>
+                    </div>
+                  )}
+
+                  {fileParsing && (
+                    <div className="text-[10px] text-cyan animate-pulse flex items-center gap-1.5 font-semibold bg-cyan/5 border border-cyan/10 p-3 rounded-xl">
+                      <RefreshCw size={12} className="animate-spin" />
+                      Parsing uploaded document...
+                    </div>
+                  )}
+
+                  {fileError && (
+                    <div className="text-[10px] text-red-500 font-semibold flex items-center gap-1.5 bg-red-500/5 border border-red-500/10 p-3 rounded-xl">
+                      <AlertCircle size={12} />
+                      {fileError}
+                    </div>
+                  )}
+
+                  {!uploadedFile && (
+                    <textarea
+                      value={jdInput}
+                      onChange={(e) => setJdInput(e.target.value)}
+                      placeholder="Paste a Job Description (JD) here to analyze fit score and skill matches..."
+                      className="flex-1 min-h-[140px] w-full bg-navy-surface border border-navy-border focus:border-cyan/50 focus:outline-none rounded-xl p-3.5 text-xs placeholder:text-muted-foreground/50 resize-none overflow-y-auto scrollbar-thin text-muted-foreground"
                     />
-                  </label>
-                </div>
-                
-                {fileParsing && (
-                  <div className="text-[10px] text-cyan animate-pulse flex items-center gap-1 font-semibold">
-                    <span className="w-1.5 h-1.5 bg-cyan rounded-full animate-ping" />
-                    Parsing uploaded document...
-                  </div>
-                )}
-                
-                {fileError && (
-                  <div className="text-[10px] text-red-500 font-semibold flex items-center gap-1">
-                    <AlertCircle size={10} />
-                    {fileError}
-                  </div>
-                )}
+                  )}
 
-                <textarea
-                  value={jdInput}
-                  onChange={(e) => setJdInput(e.target.value)}
-                  placeholder="Paste a Job Description (JD) here to analyze fit score and skill matches..."
-                  className="flex-1 w-full bg-navy-surface border border-navy-border focus:border-cyan/50 focus:outline-none rounded-xl p-3 text-xs placeholder:text-muted-foreground/50 resize-none overflow-y-auto scrollbar-thin"
-                />
-                
-                <button
-                  disabled={!jdInput.trim() || matchLoading}
-                  onClick={handleAnalyzeJd}
-                  className="w-full py-2 bg-cyan text-primary-foreground font-semibold rounded-xl hover:opacity-90 transition-opacity text-xs disabled:opacity-40 flex items-center justify-center gap-2"
-                >
-                  <Sparkles size={14} className={matchLoading ? "animate-pulse" : ""} />
-                  {matchLoading ? "Analyzing..." : "Analyze JD Match"}
-                </button>
-
-                {/* Score results */}
-                {matchResult && (
-                  <div className="border border-navy-border/80 bg-navy-elevated/40 rounded-xl p-3.5 space-y-2 mt-1 overflow-y-auto max-h-[140px] text-xs scrollbar-thin font-medium text-muted-foreground">
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-foreground">Match Fit Score:</span>
-                      <span className={`font-mono text-sm font-bold ${
-                        matchResult.score >= 80 ? "text-green-500" : "text-cyan"
-                      }`}>{matchResult.score}%</span>
+                  {!uploadedFile && (
+                    <div className="flex flex-wrap items-center gap-2 bg-navy-elevated/20 p-2.5 border border-navy-border/40 rounded-xl">
+                      <span className="text-[10px] text-muted-foreground font-semibold">Presets:</span>
+                      {Object.keys(JD_PRESETS).map((p) => (
+                        <button
+                          key={p}
+                          onClick={() => {
+                            setJdInput(JD_PRESETS[p]);
+                            addLog(`[CV Parser Agent] Loaded preset: ${p}`, "INFO");
+                          }}
+                          className="text-[9px] px-2.5 py-1 rounded bg-navy-surface border border-navy-border text-muted-foreground hover:text-cyan hover:border-cyan/40 transition-colors font-medium"
+                        >
+                          {p}
+                        </button>
+                      ))}
                     </div>
-                    <p className="text-[11px] leading-relaxed font-semibold text-muted-foreground">{matchResult.fit}</p>
-                    {matchResult.strengths.length > 0 && (
-                      <div>
-                        <div className="font-semibold text-foreground text-[10px] uppercase tracking-wider mb-1">Key Matches:</div>
-                        <ul className="list-disc pl-4 text-[10px] space-y-0.5">
-                          {matchResult.strengths.map((str, idx) => <li key={idx}>{str}</li>)}
-                        </ul>
-                      </div>
-                    )}
-                    {matchResult.gaps.length > 0 && (
-                      <div className="mt-1">
-                        <div className="font-semibold text-foreground text-[10px] uppercase tracking-wider mb-1">Areas of focus:</div>
-                        <ul className="list-disc pl-4 text-[10px] space-y-0.5">
-                          {matchResult.gaps.map((gp, idx) => <li key={idx}>{gp}</li>)}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </section>
+                  )}
 
-            {/* Interactive Security Auditor */}
-            <section className="bg-navy-surface/40 border border-navy-border rounded-2xl p-5 flex flex-col overflow-hidden backdrop-blur-md">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-xs font-bold tracking-wider uppercase font-display flex items-center gap-2 text-foreground">
-                  <ShieldAlert size={16} className="text-cyan" />
-                  Code Security Auditor
-                </h2>
-                
-                {/* Vulnerability presets */}
-                <div className="flex gap-1.5">
                   <button
-                    onClick={() => handleSelectSnippet("sql")}
-                    className={`text-[9px] px-2 py-0.5 rounded border transition-colors ${
-                      selectedSnippetKey === "sql"
-                        ? "bg-cyan/15 border-cyan text-cyan"
-                        : "border-navy-border text-muted-foreground hover:text-foreground"
-                    }`}
+                    disabled={!jdInput.trim() || matchLoading}
+                    onClick={handleAnalyzeJd}
+                    className="w-full py-2.5 bg-cyan text-primary-foreground font-bold rounded-xl hover:opacity-95 transition-opacity text-xs disabled:opacity-40 flex items-center justify-center gap-2 shadow-lg"
                   >
-                    SQLi
+                    <Sparkles size={14} className={matchLoading ? "animate-spin" : ""} />
+                    {matchLoading ? "Analyzing Match..." : "Analyze JD Match"}
                   </button>
-                  <button
-                    onClick={() => handleSelectSnippet("xss")}
-                    className={`text-[9px] px-2 py-0.5 rounded border transition-colors ${
-                      selectedSnippetKey === "xss"
-                        ? "bg-cyan/15 border-cyan text-cyan"
-                        : "border-navy-border text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    XSS
-                  </button>
-                </div>
-              </div>
 
-              <div className="flex-1 flex flex-col gap-3 min-h-0">
-                <textarea
-                  value={customCode}
-                  onChange={(e) => setCustomCode(e.target.value)}
-                  className="flex-1 w-full bg-navy-surface border border-navy-border focus:border-cyan/50 focus:outline-none rounded-xl p-3 text-[10px] font-mono placeholder:text-muted-foreground/50 resize-none overflow-y-auto scrollbar-thin text-muted-foreground"
-                />
+                  {/* Redesigned Match Score Results Display */}
+                  {matchResult && (
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-2 bg-navy-elevated/20 border border-navy-border/80 rounded-xl p-4">
+                      {/* Left side score circle */}
+                      <div className="md:col-span-4 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-navy-border/80 pb-4 md:pb-0 md:pr-4">
+                        <div className="relative w-24 h-24 flex items-center justify-center">
+                          <svg className="w-full h-full transform -rotate-90">
+                            <circle
+                              cx="48"
+                              cy="48"
+                              r="40"
+                              className="stroke-navy-border/50"
+                              strokeWidth="7"
+                              fill="transparent"
+                            />
+                            <circle
+                              cx="48"
+                              cy="48"
+                              r="40"
+                              className="stroke-cyan transition-all duration-1000 ease-out"
+                              strokeWidth="7"
+                              fill="transparent"
+                              strokeDasharray={2 * Math.PI * 40}
+                              strokeDashoffset={(2 * Math.PI * 40) - (matchResult.score / 100) * (2 * Math.PI * 40)}
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                          <span className="absolute font-mono text-2xl font-black text-foreground">
+                            {matchResult.score}%
+                          </span>
+                        </div>
+                        <span className={`mt-3 px-3 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                          matchResult.score >= 80
+                            ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
+                            : matchResult.score >= 60
+                            ? "bg-cyan/10 border border-cyan/20 text-cyan"
+                            : matchResult.score >= 40
+                            ? "bg-amber-500/10 border border-amber-500/20 text-amber-400"
+                            : "bg-red-500/10 border border-red-500/20 text-red-500"
+                        }`}>
+                          {matchResult.score >= 80 ? "Strong Fit" : matchResult.score >= 60 ? "Good Fit" : matchResult.score >= 40 ? "Moderate Fit" : "Low Alignment"}
+                        </span>
+                      </div>
 
-                <button
-                  disabled={!customCode.trim() || auditLoading}
-                  onClick={handleRunAudit}
-                  className="w-full py-2 border border-cyan/40 text-cyan hover:bg-cyan/15 font-semibold rounded-xl transition-all text-xs disabled:opacity-40 flex items-center justify-center gap-2"
-                >
-                  <Terminal size={14} />
-                  {auditLoading ? "Auditing Code..." : "Run Security Audit"}
-                </button>
+                      {/* Right side stats/lists */}
+                      <div className="md:col-span-8 space-y-3.5 text-xs text-muted-foreground overflow-y-auto max-h-[220px] scrollbar-thin">
+                        <div>
+                          <span className="text-[10px] text-foreground font-bold uppercase tracking-wider">Analysis Overview</span>
+                          <p className="text-[11px] leading-relaxed text-muted-foreground mt-1 font-medium">{matchResult.fit}</p>
+                        </div>
+                        
+                        {matchResult.strengths.length > 0 && (
+                          <div>
+                            <span className="text-[10px] text-green-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                              <CheckCircle2 size={12} />
+                              Key Matches
+                            </span>
+                            <ul className="list-none pl-0 mt-1 space-y-1 text-[11px]">
+                              {matchResult.strengths.map((str, idx) => (
+                                <li key={idx} className="flex gap-2 items-start">
+                                  <span className="text-green-500 font-bold">✓</span>
+                                  <span>{str}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
 
-                {/* Audit results */}
-                {auditResult && (
-                  <div className="border border-navy-border/80 bg-navy-elevated/40 rounded-xl p-3.5 space-y-2 mt-1 overflow-y-auto max-h-[140px] text-xs scrollbar-thin text-muted-foreground">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-foreground flex items-center gap-1.5">
-                        <AlertCircle size={14} className="text-red-500" />
-                        {auditResult.vulnerability}
-                      </span>
-                      <span className="text-[10px] bg-red-500/10 border border-red-500/20 text-red-500 px-1.5 py-0.5 rounded font-mono font-bold uppercase">
-                        {auditResult.severity}
-                      </span>
+                        {matchResult.gaps.length > 0 && (
+                          <div>
+                            <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                              <AlertTriangle size={12} />
+                              Areas of Focus
+                            </span>
+                            <ul className="list-none pl-0 mt-1 space-y-1 text-[11px]">
+                              {matchResult.gaps.map((gp, idx) => (
+                                <li key={idx} className="flex gap-2 items-start">
+                                  <span className="text-amber-500 font-bold">•</span>
+                                  <span>{gp}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {matchResult.recommendations && matchResult.recommendations.length > 0 && (
+                          <div className="border-t border-navy-border/60 pt-3">
+                            <span className="text-[10px] text-cyan font-bold uppercase tracking-wider flex items-center gap-1">
+                              <Sparkles size={12} />
+                              Resume Tailoring Tips
+                            </span>
+                            <ul className="list-none pl-0 mt-1.5 space-y-1.5 text-[11px]">
+                              {matchResult.recommendations.map((rec, idx) => (
+                                <li key={idx} className="flex gap-2 items-start bg-cyan/5 border border-cyan/10 p-2 rounded-lg text-muted-foreground/90 font-medium leading-relaxed">
+                                  <ArrowRight size={12} className="text-cyan shrink-0 mt-0.5" />
+                                  <span>{rec}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-[11px] leading-relaxed">{auditResult.description}</p>
-                    <div className="bg-navy-surface p-2 rounded border border-navy-border/60">
-                      <div className="text-[9px] text-cyan font-bold uppercase tracking-wider mb-1">Fixed Code Refactor:</div>
-                      <pre className="text-[9px] font-mono text-muted-foreground/90 overflow-x-auto whitespace-pre">
-                        {auditResult.fixedCode}
-                      </pre>
+                  )}
+                </div>
+              )}
+
+              {/* TAB 2: PROFILE SYNC HUB */}
+              {activeTab === "sync" && (
+                <div className="h-full flex flex-col gap-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                        <Github size={12} className="text-cyan" />
+                        GitHub Repository URL
+                      </label>
+                      <input
+                        type="text"
+                        value={githubUrl}
+                        onChange={(e) => setGithubUrl(e.target.value)}
+                        placeholder="github.com/username/repo"
+                        className="w-full bg-navy-surface border border-navy-border focus:border-cyan/50 focus:outline-none rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/30 transition-colors"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                        <Linkedin size={12} className="text-cyan" />
+                        LinkedIn Profile URL
+                      </label>
+                      <input
+                        type="text"
+                        value={linkedinUrl}
+                        onChange={(e) => setLinkedinUrl(e.target.value)}
+                        placeholder="linkedin.com/in/username"
+                        className="w-full bg-navy-surface border border-navy-border focus:border-cyan/50 focus:outline-none rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/30 transition-colors"
+                      />
                     </div>
                   </div>
-                )}
-              </div>
-            </section>
 
+                  <div className="space-y-1.5 flex-1 min-h-0 flex flex-col">
+                    <label className="text-[10px] font-bold text-foreground uppercase tracking-wider flex items-center justify-between">
+                      <span>Add Recent Accomplishments / Commits / Certifications</span>
+                      <span className="text-[9px] text-muted-foreground lowercase normal-case">(LLM parses and updates your portfolio)</span>
+                    </label>
+                    <textarea
+                      value={syncUpdatesInput}
+                      onChange={(e) => setSyncUpdatesInput(e.target.value)}
+                      placeholder="e.g. 'I just created a project called DocuMind: a document search engine built with Vite, React, and LangChain, saving QA teams 50 hours of research time' or 'Received AWS Solutions Architect Certification...'"
+                      className="flex-1 min-h-[80px] w-full bg-navy-surface border border-navy-border focus:border-cyan/50 focus:outline-none rounded-xl p-3 text-xs placeholder:text-muted-foreground/50 resize-none overflow-y-auto scrollbar-thin text-muted-foreground"
+                    />
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        resetToDefaults();
+                        addLog("[Portfolio Updater] Portfolio reset to default resume database.", "INFO");
+                        alert("Portfolio database has been reset to defaults!");
+                      }}
+                      className="px-4 py-2 border border-navy-border hover:border-cyan/50 hover:text-cyan text-xs text-muted-foreground font-semibold rounded-xl transition-all"
+                      title="Reset database to hardcoded defaults"
+                    >
+                      <Undo size={14} className="inline mr-1" />
+                      Reset Defaults
+                    </button>
+                    
+                    <button
+                      disabled={!syncUpdatesInput.trim() || syncLoading}
+                      onClick={handleSyncScan}
+                      className="flex-1 py-2 bg-cyan text-primary-foreground font-bold rounded-xl hover:opacity-95 transition-opacity text-xs disabled:opacity-40 flex items-center justify-center gap-2 shadow-lg"
+                    >
+                      <RefreshCw size={14} className={syncLoading ? "animate-spin" : ""} />
+                      {syncLoading ? "Scraping & Synthesizing..." : "Scan & Extract Profile Updates"}
+                    </button>
+                  </div>
+
+                  {/* Sync Changes Diff / Suggestions Preview */}
+                  {suggestedChanges && (
+                    <div className="border border-navy-border bg-navy-elevated/40 rounded-xl p-4 space-y-3 mt-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] text-foreground font-bold uppercase tracking-wider flex items-center gap-1.5">
+                          <CheckCircle2 size={12} className="text-green-400" />
+                          Detected Sync Changes
+                        </span>
+                        <span className="text-[9px] bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded font-mono uppercase font-semibold">New Additions</span>
+                      </div>
+
+                      <p className="text-[11px] leading-relaxed text-muted-foreground font-semibold bg-navy/20 p-2 rounded-lg border border-navy-border/50">
+                        {suggestedChanges.summary}
+                      </p>
+
+                      <div className="space-y-3 max-h-[160px] overflow-y-auto scrollbar-thin">
+                        {/* Suggested Projects */}
+                        {suggestedChanges.newProjects && suggestedChanges.newProjects.map((p, idx) => (
+                          <div key={idx} className="bg-navy-elevated/60 border border-l-2 border-l-green-500 border-navy-border p-3 rounded-lg text-xs space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-foreground flex items-center gap-1.5">
+                                <Plus size={12} className="text-green-500" />
+                                Project: {p.name}
+                              </span>
+                              <span className="text-[9px] text-muted-foreground">{p.period}</span>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground leading-relaxed">{p.objective}</p>
+                            <div className="flex flex-wrap gap-1 mt-1.5">
+                              {p.stack.map((t: string) => (
+                                <span key={t} className="text-[8px] px-1.5 py-0.5 bg-navy border border-navy-border text-muted-foreground rounded">{t}</span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* Suggested Experience */}
+                        {suggestedChanges.newExperiences && suggestedChanges.newExperiences.map((e, idx) => (
+                          <div key={idx} className="bg-navy-elevated/60 border border-l-2 border-l-green-500 border-navy-border p-3 rounded-lg text-xs space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-foreground flex items-center gap-1.5">
+                                <Plus size={12} className="text-green-500" />
+                                Role: {e.role} @ {e.company}
+                              </span>
+                              <span className="text-[9px] text-muted-foreground">{e.period}</span>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground leading-relaxed">{e.overview}</p>
+                          </div>
+                        ))}
+
+                        {/* Suggested Certifications */}
+                        {suggestedChanges.newCertifications && suggestedChanges.newCertifications.map((c, idx) => (
+                          <div key={idx} className="bg-navy-elevated/60 border border-l-2 border-l-green-500 border-navy-border p-2.5 rounded-lg text-xs flex items-center gap-3">
+                            <span className="text-xl">{c.icon}</span>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-bold text-foreground leading-tight">{c.name}</p>
+                              <p className="text-[9px] text-muted-foreground">{c.issuer}</p>
+                            </div>
+                            <span className="text-[8px] bg-navy border border-navy-border text-muted-foreground px-1.5 py-0.5 rounded uppercase">{c.category}</span>
+                          </div>
+                        ))}
+
+                        {/* Suggested Skills */}
+                        {suggestedChanges.newSkills && suggestedChanges.newSkills.length > 0 && (
+                          <div className="bg-navy-elevated/60 border border-l-2 border-l-green-500 border-navy-border p-3 rounded-lg text-xs">
+                            <span className="font-bold text-foreground mb-1 block">New Skill Badges</span>
+                            <div className="flex flex-wrap gap-1.5 mt-1.5">
+                              {suggestedChanges.newSkills.map((s, idx) => (
+                                <span key={idx} className="text-[9px] px-2 py-0.5 bg-green-500/10 border border-green-500/20 text-green-400 font-semibold rounded-md">
+                                  +{s.skill} ({s.category.split(" ")[0]})
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          handleApproveSync();
+                          alert("Successfully synchronized your portfolio pages! Scroll down or visit the home page to see your new cards.");
+                        }}
+                        className="w-full py-2 bg-green-500 text-primary-foreground font-bold rounded-xl hover:opacity-95 transition-opacity text-xs flex items-center justify-center gap-1.5 shadow-lg"
+                      >
+                        <PlusCircle size={14} />
+                        Approve & Ingest to Portfolio
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* TAB 3: CODE AUDITOR */}
+              {activeTab === "auditor" && (
+                <div className="h-full flex flex-col gap-4">
+                  <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                    <span className="font-semibold text-foreground">Paste custom snippet or run presets:</span>
+                    
+                    {/* Vulnerability presets */}
+                    <div className="flex gap-1.5">
+                      <button
+                        onClick={() => handleSelectSnippet("sql")}
+                        className={`text-[9px] px-2.5 py-1 rounded border font-semibold transition-all ${
+                          selectedSnippetKey === "sql"
+                            ? "bg-cyan/15 border-cyan text-cyan"
+                            : "border-navy-border text-muted-foreground hover:text-foreground hover:border-navy-border/80"
+                        }`}
+                      >
+                        SQLi Preset
+                      </button>
+                      <button
+                        onClick={() => handleSelectSnippet("xss")}
+                        className={`text-[9px] px-2.5 py-1 rounded border font-semibold transition-all ${
+                          selectedSnippetKey === "xss"
+                            ? "bg-cyan/15 border-cyan text-cyan"
+                            : "border-navy-border text-muted-foreground hover:text-foreground hover:border-navy-border/80"
+                        }`}
+                      >
+                        XSS Preset
+                      </button>
+                    </div>
+                  </div>
+
+                  <textarea
+                    value={customCode}
+                    onChange={(e) => setCustomCode(e.target.value)}
+                    className="flex-1 min-h-[140px] w-full bg-navy-surface border border-navy-border focus:border-cyan/50 focus:outline-none rounded-xl p-3 text-[10px] font-mono placeholder:text-muted-foreground/50 resize-none overflow-y-auto scrollbar-thin text-muted-foreground"
+                  />
+
+                  <button
+                    disabled={!customCode.trim() || auditLoading}
+                    onClick={handleRunAudit}
+                    className="w-full py-2.5 border border-cyan/40 text-cyan hover:bg-cyan/15 font-bold rounded-xl transition-all text-xs disabled:opacity-40 flex items-center justify-center gap-2"
+                  >
+                    <Terminal size={14} className={auditLoading ? "animate-pulse" : ""} />
+                    {auditLoading ? "Auditing Code..." : "Run Security Audit"}
+                  </button>
+
+                  {/* Audit results */}
+                  {auditResult && (
+                    <div className="border border-navy-border/80 bg-navy-elevated/40 rounded-xl p-4 space-y-3.5 mt-1 overflow-y-auto max-h-[220px] text-xs scrollbar-thin text-muted-foreground">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-foreground flex items-center gap-1.5">
+                          <AlertCircle size={14} className="text-red-500" />
+                          {auditResult.vulnerability}
+                        </span>
+                        <span className="text-[10px] bg-red-500/10 border border-red-500/20 text-red-500 px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider">
+                          {auditResult.severity}
+                        </span>
+                      </div>
+                      <p className="text-[11px] leading-relaxed">{auditResult.description}</p>
+                      
+                      <div className="bg-navy-surface p-3 rounded-lg border border-navy-border/60 space-y-1.5">
+                        <div className="text-[9px] text-cyan font-bold uppercase tracking-wider">Remediation Blueprint:</div>
+                        <p className="text-[10px] text-muted-foreground leading-relaxed">{auditResult.recommendation}</p>
+                      </div>
+
+                      <div className="bg-navy-surface p-3 rounded-lg border border-navy-border/60">
+                        <div className="text-[9px] text-cyan font-bold uppercase tracking-wider mb-2">Fixed Code Refactor:</div>
+                        <pre className="text-[9px] font-mono text-muted-foreground/90 overflow-x-auto whitespace-pre p-2 bg-navy/40 rounded border border-navy-border">
+                          {auditResult.fixedCode}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+            </div>
           </div>
 
           {/* Bottom Half: n8n Log workflows terminal */}

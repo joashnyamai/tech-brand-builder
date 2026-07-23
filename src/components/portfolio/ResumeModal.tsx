@@ -11,14 +11,28 @@ import {
   Cpu,
   Bot,
   Sparkles,
-  Printer,
   Mail,
   Phone,
   MapPin,
   Linkedin,
-  Github
+  Github,
+  Search,
+  Award,
+  BookOpen,
+  Terminal,
+  Sliders,
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  Monitor,
+  PlayCircle,
+  User,
+  TrendingUp,
+  Briefcase,
+  FolderGit
 } from "lucide-react";
 import { queryGeminiWithRetry, getMockChatResponse, RESUME_CONTEXT } from "../../pages/AiLab";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 interface ResumeModalProps {
   isOpen: boolean;
@@ -26,6 +40,38 @@ interface ResumeModalProps {
 }
 
 export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
+  // Load dynamic resume data from the reactive store
+  const { projects, experiences, skills: skillGroups, certifications, education } = usePortfolioData();
+
+  // Interactive CV highlighting & filtering states
+  const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
+  const [careerFocus, setCareerFocus] = useState<"all" | "swe" | "qa" | "it">("all");
+  
+  // Dynamic visual parameters
+  const [cvTheme, setCvTheme] = useState<"dark" | "light" | "terminal" | "minimal">("dark");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [expandedRoles, setExpandedRoles] = useState<Record<string, boolean>>({});
+  
+  // Count-up stats indicators
+  const [projectsCount, setProjectsCount] = useState(0);
+  const [yearsCount, setYearsCount] = useState(0);
+  const [techCount, setTechCount] = useState(0);
+  const [uptimeCount, setUptimeCount] = useState(0);
+
+  // Easter eggs & shortcut state
+  const [konamiActive, setKonamiActive] = useState(false);
+  const [konamiIndex, setKonamiIndex] = useState(0);
+  const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
+  const [downloadToastActive, setDownloadToastActive] = useState(false);
+
+  // Local logger helper for interactive events
+  const addLog = (message: string) => {
+    const timestamp = new Date().toTimeString().split(" ")[0];
+    const logText = `[${timestamp} INFO] [Interactive CV] ${message}`;
+    // Dispatch event to log it in n8n live console if currently open
+    window.dispatchEvent(new CustomEvent("n8n-live-log", { detail: logText }));
+  };
+
   // Viewer state
   const [scale, setScale] = useState<number>(1.0);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
@@ -36,7 +82,7 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   const [messages, setMessages] = useState<Array<{ sender: "user" | "bot"; text: string }>>([
     {
       sender: "bot",
-      text: "Hi, I'm Ava 👋\nI'm Malila's portfolio guide. Ask me anything about his CV, skills, or projects!"
+      text: "Hi, I'm Ava 👋\nI'm Malila's CV Assistant. Ask me anything about his credentials, or try clicking on any skill badge or career filter on the CV to see how it highlights relevant work experience and projects in real-time!"
     }
   ]);
   const [inputVal, setInputVal] = useState<string>("");
@@ -46,6 +92,47 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Matching logic for CV highlighting
+  const isExperienceMatched = (exp: any) => {
+    let focusMatch = true;
+    if (careerFocus === "swe") {
+      focusMatch = ["Software Engineer", "Lead Engineer", "Developer", "Co-Founder"].some(r => exp.role.includes(r));
+    } else if (careerFocus === "qa") {
+      focusMatch = ["QA", "Quality Assurance", "Testing", "Annotator", "Attaché"].some(r => exp.role.includes(r));
+    } else if (careerFocus === "it") {
+      focusMatch = ["IT", "Consultant", "Network", "Support", "Attaché"].some(r => exp.role.includes(r));
+    }
+
+    let skillMatch = true;
+    if (selectedSkill) {
+      skillMatch = exp.tech.some((t: string) => t.toLowerCase() === selectedSkill.toLowerCase()) ||
+                   exp.role.toLowerCase().includes(selectedSkill.toLowerCase()) ||
+                   exp.company.toLowerCase().includes(selectedSkill.toLowerCase());
+    }
+
+    return focusMatch && skillMatch;
+  };
+
+  const isProjectMatched = (proj: any) => {
+    let focusMatch = true;
+    if (careerFocus === "swe") {
+      focusMatch = !proj.name.toLowerCase().includes("test") && !proj.name.toLowerCase().includes("compliance");
+    } else if (careerFocus === "qa") {
+      focusMatch = proj.stack.some((s: string) => ["test", "qa", "cypress", "playwright", "jest"].some(k => s.toLowerCase().includes(k))) || proj.name.toLowerCase().includes("test");
+    } else if (careerFocus === "it") {
+      focusMatch = proj.stack.some((s: string) => ["network", "security", "infra", "cloud", "etims", "compliance"].some(k => s.toLowerCase().includes(k)));
+    }
+
+    let skillMatch = true;
+    if (selectedSkill) {
+      skillMatch = proj.stack.some((t: string) => t.toLowerCase() === selectedSkill.toLowerCase()) ||
+                   proj.name.toLowerCase().includes(selectedSkill.toLowerCase());
+    }
+
+    return focusMatch && skillMatch;
+  };
 
   // Setup auto-fit on load
   const fitWidth = () => {
@@ -80,6 +167,9 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      const activeEl = document.activeElement;
+      const isTyping = activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA");
+
       if (e.key === "Escape") {
         onClose();
       } else if (e.key === "ArrowUp") {
@@ -92,6 +182,27 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
       } else if ((e.ctrlKey || e.metaKey) && e.key === "-") {
         e.preventDefault();
         setScale(s => Math.max(s - 0.1, 0.5));
+      } else if (!isTyping) {
+        if (e.key.toLowerCase() === "a") {
+          e.preventDefault();
+          setIsChatOpen(prev => !prev);
+          addLog("Toggled chatbot panel via keyboard hotkey.");
+        } else if (e.key.toLowerCase() === "d") {
+          e.preventDefault();
+          addLog("Initiated resume download file via hotkey.");
+          document.getElementById("download-cv-btn")?.click();
+        } else if (e.key.toLowerCase() === "t") {
+          e.preventDefault();
+          const themes: Array<"dark" | "light" | "terminal" | "minimal"> = ["dark", "light", "terminal", "minimal"];
+          setCvTheme(curr => {
+            const nextIdx = (themes.indexOf(curr) + 1) % themes.length;
+            addLog(`Cycled resume visual theme to: ${themes[nextIdx].toUpperCase()} via hotkey.`);
+            return themes[nextIdx];
+          });
+        } else if (e.key.toLowerCase() === "h") {
+          e.preventDefault();
+          setShowShortcutsHelp(curr => !curr);
+        }
       }
     };
 
@@ -101,7 +212,260 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
     };
   }, [isOpen, onClose]);
 
-  // Fullscreen support
+  // Konami Code sequence tracker
+  const konamiSequence = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKonami = (e: KeyboardEvent) => {
+      const key = e.key;
+      const expectedKey = konamiSequence[konamiIndex];
+      if (key.toLowerCase() === expectedKey.toLowerCase()) {
+        if (konamiIndex + 1 === konamiSequence.length) {
+          setKonamiActive(prev => !prev);
+          setKonamiIndex(0);
+          addLog("Matrix digital rain easter egg activated!");
+        } else {
+          setKonamiIndex(prev => prev + 1);
+        }
+      } else {
+        setKonamiIndex(0);
+      }
+    };
+    window.addEventListener("keydown", handleKonami);
+    return () => window.removeEventListener("keydown", handleKonami);
+  }, [isOpen, konamiIndex]);
+
+  // Statistics Count-Up Animation
+  useEffect(() => {
+    if (isOpen) {
+      const duration = 1500;
+      const startTime = performance.now();
+      let animationFrameId: number;
+
+      const animate = (now: number) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const ease = progress * (2 - progress);
+
+        setProjectsCount(Math.floor(ease * 15));
+        setYearsCount(Math.floor(ease * 3));
+        setTechCount(Math.floor(ease * 25));
+        setUptimeCount(parseFloat((ease * 99.9).toFixed(1)));
+
+        if (progress < 1) {
+          animationFrameId = requestAnimationFrame(animate);
+        }
+      };
+
+      animationFrameId = requestAnimationFrame(animate);
+      return () => cancelAnimationFrame(animationFrameId);
+    } else {
+      setProjectsCount(0);
+      setYearsCount(0);
+      setTechCount(0);
+      setUptimeCount(0);
+    }
+  }, [isOpen]);
+
+  // Matrix code rain canvas effect renderer
+  useEffect(() => {
+    if (!konamiActive || !canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
+    canvas.height = canvas.parentElement?.clientHeight || window.innerHeight;
+
+    const columns = Math.floor(canvas.width / 20);
+    const yPositions = Array(columns).fill(0);
+
+    let animationFrameId: number;
+
+    const render = () => {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#06b6d4"; // Cyan digital rain
+      ctx.font = "12px monospace";
+
+      for (let i = 0; i < yPositions.length; i++) {
+        const char = String.fromCharCode(33 + Math.floor(Math.random() * 93));
+        const x = i * 20;
+        const y = yPositions[i];
+
+        ctx.fillText(char, x, y);
+
+        if (y > canvas.height && Math.random() > 0.975) {
+          yPositions[i] = 0;
+        } else {
+          yPositions[i] = y + 15;
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    const handleResize = () => {
+      canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
+      canvas.height = canvas.parentElement?.clientHeight || window.innerHeight;
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [konamiActive]);
+
+  // Real-time text search high-lighting helper
+  const highlightText = (text: string) => {
+    if (!searchTerm.trim()) return text;
+    try {
+      const escapedTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const regex = new RegExp(`(${escapedTerm})`, "gi");
+      const parts = text.split(regex);
+      return parts.map((part, index) => 
+        regex.test(part) ? (
+          <mark key={index} className="bg-cyan/40 text-foreground font-bold rounded px-0.5 animate-pulse shadow-[0_0_8px_rgba(6,182,212,0.3)]">
+            {part}
+          </mark>
+        ) : (
+          part
+        )
+      );
+    } catch (e) {
+      return text;
+    }
+  };
+
+  // Visual Theme CSS styling helpers
+  const getThemeClasses = () => {
+    switch (cvTheme) {
+      case "light":
+        return "bg-white border border-slate-200 text-slate-800 font-sans shadow-lg p-6 sm:p-12";
+      case "terminal":
+        return "bg-[#0b0f17]/90 border border-green-500/20 text-green-400 font-mono shadow-[0_0_25px_rgba(34,197,94,0.1)] p-6 sm:p-12";
+      case "minimal":
+        return "bg-[#fafaf9] border-none text-neutral-800 font-serif leading-relaxed shadow-none max-w-3xl p-6 sm:p-8";
+      case "dark":
+      default:
+        return "bg-navy-surface/40 border border-navy-border text-foreground font-sans shadow-2xl p-6 sm:p-12";
+    }
+  };
+
+  const getHeaderColor = () => {
+    switch (cvTheme) {
+      case "light": return "text-slate-900";
+      case "terminal": return "text-green-300 font-bold uppercase tracking-wider";
+      case "minimal": return "text-neutral-900 font-bold";
+      case "dark":
+      default: return "text-foreground";
+    }
+  };
+
+  const getSubheaderColor = () => {
+    switch (cvTheme) {
+      case "light": return "text-cyan-700 font-semibold";
+      case "terminal": return "text-amber-500 font-bold";
+      case "minimal": return "text-neutral-600 italic";
+      case "dark":
+      default: return "text-cyan";
+    }
+  };
+
+  const getBodyTextColor = () => {
+    switch (cvTheme) {
+      case "light": return "text-slate-600";
+      case "terminal": return "text-green-400/90";
+      case "minimal": return "text-neutral-700";
+      case "dark":
+      default: return "text-muted-foreground";
+    }
+  };
+
+  const getCardClasses = (matched: boolean) => {
+    const dim = (selectedSkill || careerFocus !== "all") && !matched;
+    if (dim) return "opacity-15 blur-[0.3px] scale-[0.98] transition-all duration-300 pointer-events-none";
+
+    const activeHighlight = (selectedSkill || careerFocus !== "all") && matched;
+    
+    switch (cvTheme) {
+      case "light":
+        return `p-5 rounded-2xl border transition-all duration-300 ${
+          activeHighlight 
+            ? "border-cyan bg-cyan-50/50 shadow-md scale-[1.01]" 
+            : "border-slate-100 bg-slate-50/30 hover:border-slate-200"
+        }`;
+      case "terminal":
+        return `p-4 rounded-lg border border-dashed transition-all duration-300 ${
+          activeHighlight 
+            ? "border-green-400 bg-green-950/20 shadow-[0_0_12px_rgba(34,197,94,0.2)] scale-[1.01]" 
+            : "border-green-900/40 bg-black/40 hover:border-green-800/60 text-green-400"
+        }`;
+      case "minimal":
+        return `py-4 transition-all duration-300 border-b border-neutral-100 ${
+          activeHighlight 
+            ? "bg-neutral-50 px-2 scale-[1.01]" 
+            : "bg-transparent"
+        }`;
+      case "dark":
+      default:
+        return `p-5 rounded-2xl border transition-all duration-300 ${
+          activeHighlight 
+            ? "border-cyan/45 bg-cyan/5 shadow-[0_0_15px_rgba(6,182,212,0.15)] scale-[1.01]" 
+            : "border-white/5 bg-navy-elevated/20 hover:border-white/10"
+        }`;
+    }
+  };
+
+  const getSkillBadgeClasses = (skill: string) => {
+    const isSelected = selectedSkill?.toLowerCase() === skill.toLowerCase();
+    
+    switch (cvTheme) {
+      case "light":
+        return `cursor-pointer px-2 py-0.5 rounded text-[10px] font-semibold border transition-all ${
+          isSelected
+            ? "bg-cyan-600 border-cyan-600 text-white shadow-sm"
+            : "bg-slate-100 border-slate-200 text-slate-600 hover:border-cyan hover:text-cyan-600"
+        }`;
+      case "terminal":
+        return `cursor-pointer px-1.5 py-0.5 rounded text-[9px] font-mono border transition-all ${
+          isSelected
+            ? "bg-green-500/20 border-green-400 text-green-300"
+            : "bg-black border-green-955 text-green-500 hover:border-green-400 hover:text-green-300"
+        }`;
+      case "minimal":
+        return `cursor-pointer px-1 py-0.5 rounded text-[9px] font-serif transition-all ${
+          isSelected
+            ? "underline text-neutral-900 font-bold"
+            : "text-neutral-500 hover:text-neutral-800"
+        }`;
+      case "dark":
+      default:
+        return `cursor-pointer px-2 py-0.5 rounded text-[10px] font-semibold border transition-all ${
+          isSelected
+            ? "bg-cyan/20 border-cyan text-cyan scale-[1.05]"
+            : "bg-navy-elevated/40 border-white/5 hover:border-cyan/30 text-muted-foreground hover:text-cyan"
+        }`;
+    }
+  };
+
+  const getSkillCardClasses = () => {
+    switch (cvTheme) {
+      case "light":
+        return "bg-slate-50/60 border-slate-200/60 text-slate-800 hover:border-cyan/40 shadow-sm";
+      case "terminal":
+        return "bg-black/30 border-green-900/40 text-green-400 hover:border-green-400/40";
+      case "minimal":
+        return "bg-transparent border-neutral-200 text-neutral-800 border-b";
+      case "dark":
+      default:
+        return "bg-navy-elevated/10 border-white/5 text-muted-foreground hover:border-cyan/20";
+    }
+  };
+
   const toggleFullscreen = () => {
     if (!containerRef.current) return;
     if (!document.fullscreenElement) {
@@ -116,17 +480,6 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
     }
   };
 
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-    };
-  }, []);
-
-  // Track scroll position
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.currentTarget;
     const totalHeight = target.scrollHeight - target.clientHeight;
@@ -144,7 +497,6 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
     const printWindow = window.open("about:blank", uniqueName.toString(), "left=50,top=50,width=850,height=900");
     if (!printWindow) return;
     
-    // Inject self-contained print style definitions mimicking the main CV styles
     printWindow.document.write(`
       <html>
         <head>
@@ -153,73 +505,79 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
             body {
               font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
               background: white !important;
-              color: black !important;
-              padding: 40px !important;
-              font-size: 14px;
-              line-height: 1.5;
+              color: #1f2937 !important;
+              padding: 30px !important;
+              font-size: 11px;
+              line-height: 1.4;
             }
-            /* Colors & Typography overrides */
-            .text-cyan { color: #0891b2 !important; }
-            .text-gradient { background: none !important; -webkit-text-fill-color: initial !important; color: black !important; font-size: 32px; font-weight: bold; }
-            .bg-navy-surface\\/40 { background: white !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
-            .border-navy-border { border-color: #e5e7eb !important; }
+            h1, h2, h3, h4, p, span, li, a {
+              color: #1f2937 !important;
+            }
+            .text-cyan, .text-cyan-700 { color: #0891b2 !important; }
+            .text-gradient { background: none !important; -webkit-text-fill-color: initial !important; color: #111827 !important; font-size: 28px; font-weight: 800; }
+            .border-navy-border, .border-white\\/5, .border-slate-200 { border-color: #e5e7eb !important; }
             .border-b { border-bottom-width: 1px !important; border-bottom-style: solid !important; }
-            .text-muted-foreground { color: #4b5563 !important; }
-            .text-xs { font-size: 12px !important; }
-            .text-sm { font-size: 14px !important; }
-            .text-lg { font-size: 18px !important; }
-            .text-xl { font-size: 20px !important; }
+            .border-t { border-top-width: 1px !important; border-top-style: solid !important; }
+            .text-muted-foreground, .text-slate-600 { color: #4b5563 !important; }
+            .text-xs { font-size: 10px !important; }
+            .text-sm { font-size: 11px !important; }
+            .text-lg { font-size: 14px !important; }
+            .text-xl { font-size: 16px !important; }
             .font-bold { font-weight: 700 !important; }
             .font-semibold { font-weight: 600 !important; }
             .font-medium { font-weight: 500 !important; }
             .uppercase { text-transform: uppercase !important; }
             .tracking-wider { letter-spacing: 0.05em !important; }
             .tracking-widest { letter-spacing: 0.1em !important; }
-            .mb-2 { margin-bottom: 8px !important; }
-            .mb-3 { margin-bottom: 12px !important; }
-            .mb-4 { margin-bottom: 16px !important; }
-            .mb-6 { margin-bottom: 24px !important; }
-            .mb-8 { margin-bottom: 32px !important; }
-            .mt-1 { margin-top: 4px !important; }
-            .mt-2 { margin-top: 8px !important; }
-            .pb-8 { padding-bottom: 32px !important; }
-            .pl-3 { padding-left: 12px !important; }
-            .pr-4 { padding-right: 16px !important; }
-            .py-0\\.5 { padding-top: 2px !important; padding-bottom: 2px !important; }
-            .px-2 { padding-left: 8px !important; padding-right: 8px !important; }
+            .mb-2 { margin-bottom: 6px !important; }
+            .mb-3 { margin-bottom: 8px !important; }
+            .mb-4 { margin-bottom: 12px !important; }
+            .mb-6 { margin-bottom: 16px !important; }
+            .mb-8 { margin-bottom: 20px !important; }
+            .mt-1 { margin-top: 3px !important; }
+            .mt-2 { margin-top: 6px !important; }
+            .pb-6 { padding-bottom: 16px !important; }
+            .pb-8 { padding-bottom: 20px !important; }
+            .pt-8 { padding-top: 20px !important; }
+            .pl-3 { padding-left: 10px !important; }
+            .pl-6 { padding-left: 16px !important; }
+            .pl-8 { padding-left: 20px !important; }
             .rounded { border-radius: 4px !important; }
-            .border { border-width: 1px !important; border-style: solid !important; }
-            .border-l { border-left-width: 1px !important; border-left-style: solid !important; }
-            
-            /* Print layouts */
+            .rounded-xl, .rounded-2xl { border-radius: 8px !important; }
+            .border { border-width: 1px !important; border-style: solid !important; border-color: #e5e7eb !important; }
+            .border-l { border-left-width: 1px !important; border-left-style: solid !important; border-left-color: #e5e7eb !important; }
+            .bg-navy-elevated\\/10, .bg-navy-surface\\/30, .bg-slate-50\\/60, .bg-navy-elevated\\/20 { background-color: #f9fafb !important; background: #f9fafb !important; }
             .grid { display: grid !important; }
             .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
-            @media (min-width: 768px) {
+            .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+            .sm\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+            @media (min-width: 600px) {
               .md\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+              .md\\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
               .md\\:col-span-1 { grid-column: span 1 / span 1 !important; }
               .md\\:col-span-2 { grid-column: span 2 / span 2 !important; }
             }
-            .gap-2\\.5 { gap: 10px !important; }
-            .gap-6 { gap: 24px !important; }
-            .gap-8 { gap: 32px !important; }
+            .gap-4 { gap: 12px !important; }
+            .gap-6 { gap: 16px !important; }
+            .gap-8 { gap: 20px !important; }
             .flex { display: flex !important; }
             .flex-col { flex-direction: column !important; }
+            .flex-wrap { flex-wrap: wrap !important; }
             .justify-between { justify-content: space-between !important; }
             .items-start { align-items: flex-start !important; }
             .items-center { align-items: center !important; }
-            .space-y-1 > * + * { margin-top: 4px !important; }
-            .space-y-2 > * + * { margin-top: 8px !important; }
-            .space-y-4 > * + * { margin-top: 16px !important; }
-            .space-y-6 > * + * { margin-top: 24px !important; }
+            .space-y-1 > * + * { margin-top: 3px !important; }
+            .space-y-2 > * + * { margin-top: 6px !important; }
+            .space-y-4 > * + * { margin-top: 12px !important; }
+            .space-y-6 > * + * { margin-top: 16px !important; }
+            .space-y-8 > * + * { margin-top: 20px !important; }
             .list-disc { list-style-type: disc !important; }
-            .pl-4 { padding-left: 16px !important; }
-            
+            .pl-4 { padding-left: 12px !important; }
             .no-print { display: none !important; }
-            a { text-decoration: none !important; color: inherit !important; }
           </style>
         </head>
         <body>
-          <div class="bg-navy-surface/40">
+          <div>
             ${printContent.innerHTML}
           </div>
           <script>
@@ -270,7 +628,6 @@ User inquiry about Malila's CV: "${text}"`;
       }
     } catch (err: any) {
       console.warn("Mini-chatbot fallback triggered:", err.message);
-      // Custom mock overrides for the CV viewer
       let mockResponse = getMockChatResponse(text);
       if (text.toLowerCase().includes("education")) {
         mockResponse = "Malila is a finalist at Zetech University completing a BSc in Information Technology (graduating Nov 2026) and holds a Diploma in Computer Software Engineering, along with Power Learn Project software development certification.";
@@ -319,378 +676,610 @@ User inquiry about Malila's CV: "${text}"`;
             </div>
 
             {/* LEFT AREA: HTML CV VIEWER */}
-            <div className="flex-1 flex flex-col h-full overflow-hidden border-r border-white/5">
+            <div className="flex-1 flex flex-col h-full overflow-hidden border-r border-white/5 relative">
               {/* Header inside viewer */}
-              <div className="px-6 py-4 flex items-center justify-between border-b border-white/5 bg-navy-elevated/40 backdrop-blur-sm z-10">
-                <div className="flex items-center gap-2">
+              <div className="px-4 sm:px-6 py-3.5 flex flex-col lg:flex-row gap-4 items-center justify-between border-b border-white/5 bg-[#0b0f19]/90 backdrop-blur-md z-20 shrink-0">
+                <div className="flex items-center gap-2.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-cyan animate-pulse" />
-                  <h2 className="font-display font-bold text-base tracking-wide text-foreground">
+                  <h2 className="font-display font-bold text-sm sm:text-base tracking-wide text-foreground">
                     Malila Nyamai - Curriculum Vitae
                   </h2>
                 </div>
 
-                {/* Controls */}
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handlePrint}
-                    className="p-2 rounded-xl border border-white/5 text-muted-foreground hover:text-cyan hover:bg-white/5 transition-all text-xs flex items-center gap-1.5"
-                    title="Print CV"
-                  >
-                    <Printer size={15} />
-                    <span className="hidden sm:inline">Print / Save PDF</span>
-                  </button>
+                <div className="flex items-center flex-wrap justify-center lg:justify-end gap-2 w-full lg:w-auto">
+                  {/* Search inside CV */}
+                  <div className="relative w-full sm:w-44 no-print mr-2">
+                    <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-muted-foreground/60">
+                      <Search size={11} />
+                    </span>
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        addLog(`Searched CV for: "${e.target.value}"`);
+                      }}
+                      placeholder="Search..."
+                      className="w-full bg-navy-surface/80 border border-white/10 rounded-xl pl-7 pr-7 py-1.5 text-xs text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-cyan/60 transition-colors"
+                    />
+                    {searchTerm && (
+                      <button
+                        onClick={() => setSearchTerm("")}
+                        className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-muted-foreground hover:text-cyan"
+                      >
+                        <X size={11} />
+                      </button>
+                    )}
+                  </div>
 
-                  <a
-                    href="/Malila_Nyamai_Resume.pdf"
-                    download="Malila_Nyamai_Resume.pdf"
-                    className="p-2 rounded-xl border border-white/5 text-muted-foreground hover:text-cyan hover:bg-white/5 transition-all text-xs flex items-center gap-1.5"
-                    title="Download precompiled PDF"
-                  >
-                    <Download size={15} />
-                    <span className="hidden sm:inline">Download</span>
-                  </a>
+                  {/* Actions Group */}
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {/* Theme */}
+                    <button
+                      onClick={() => {
+                        const themes: Array<"dark" | "light" | "terminal" | "minimal"> = ["dark", "light", "terminal", "minimal"];
+                        setCvTheme(curr => {
+                          const nextIdx = (themes.indexOf(curr) + 1) % themes.length;
+                          addLog(`Cycled resume theme to: ${themes[nextIdx].toUpperCase()}`);
+                          return themes[nextIdx];
+                        });
+                      }}
+                      className="p-1.5 rounded-lg border border-white/10 text-muted-foreground hover:text-cyan hover:bg-white/5 transition-all text-[11px] flex items-center gap-1"
+                      title="Theme (Press T)"
+                    >
+                      <Terminal size={12} />
+                      <span>{cvTheme.toUpperCase()}</span>
+                    </button>
 
-                  <button
-                    onClick={toggleFullscreen}
-                    className="p-2 rounded-xl border border-white/5 text-muted-foreground hover:text-cyan hover:bg-white/5 transition-all"
-                    title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-                  >
-                    {isFullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
-                  </button>
+                    {/* Shortcuts Help */}
+                    <button
+                      onClick={() => setShowShortcutsHelp(curr => !curr)}
+                      className="p-1.5 rounded-lg border border-white/10 text-[11px] text-muted-foreground hover:text-cyan hover:bg-white/5 transition-all"
+                      title="Shortcuts Help (Press H)"
+                    >
+                      Help
+                    </button>
 
-                  <button
-                    onClick={() => setIsChatOpen(!isChatOpen)}
-                    className={`p-2 rounded-xl border transition-all flex items-center gap-1.5 ${
-                      isChatOpen
-                        ? "border-cyan/30 text-cyan bg-cyan/5"
-                        : "border-white/5 text-muted-foreground hover:text-cyan hover:bg-white/5"
-                    }`}
-                    title="Ask Ava AI"
-                  >
-                    <Cpu size={15} />
-                    <span className="hidden sm:inline">Ask Ava</span>
-                  </button>
+                    {/* Download */}
+                    <a
+                      id="download-cv-btn"
+                      href="/Malila_Nyamai_Resume.pdf"
+                      download="Malila_Nyamai_Resume.pdf"
+                      onClick={() => {
+                        addLog("User downloaded resume document PDF.");
+                        setDownloadToastActive(true);
+                        setTimeout(() => setDownloadToastActive(false), 5000);
+                      }}
+                      className="p-1.5 rounded-lg border border-white/10 text-muted-foreground hover:text-cyan hover:bg-white/5 transition-all text-[11px] flex items-center gap-1"
+                      title="Download PDF (Press D)"
+                    >
+                      <Download size={12} />
+                      <span>PDF</span>
+                    </a>
 
-                  <button
-                    onClick={onClose}
-                    className="p-2 rounded-xl border border-white/5 text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all"
-                    title="Close Viewer"
-                  >
-                    <X size={15} />
-                  </button>
+                    {/* Fullscreen */}
+                    <button
+                      onClick={toggleFullscreen}
+                      className="p-1.5 rounded-lg border border-white/10 text-muted-foreground hover:text-cyan hover:bg-white/5 transition-all flex items-center justify-center"
+                      title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                    >
+                      {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
+                    </button>
+
+                    {/* Ask Ava */}
+                    <button
+                      onClick={() => setIsChatOpen(!isChatOpen)}
+                      className={`p-1.5 rounded-lg border transition-all text-[11px] flex items-center gap-1 ${
+                        isChatOpen
+                          ? "border-cyan/30 text-cyan bg-cyan/5"
+                          : "border-white/10 text-muted-foreground hover:text-cyan hover:bg-white/5"
+                      }`}
+                      title="Ask Ava (Press A)"
+                    >
+                      <Cpu size={12} />
+                      <span>Ask Ava</span>
+                    </button>
+
+                    {/* Close */}
+                    <button
+                      onClick={onClose}
+                      className="p-1.5 rounded-lg border border-white/10 text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all flex items-center justify-center"
+                      title="Close"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
                 </div>
+              </div>
+
+              {/* Side Floating Jump indicators (Thumbnails Navigation) */}
+              <div className="no-print hidden xl:flex flex-col gap-3.5 absolute left-4 top-1/4 z-30 bg-navy-surface/60 border border-white/5 p-3 rounded-2xl backdrop-blur-md shadow-2xl">
+                {[
+                  { id: "cv-summary", label: "About Me", icon: <User size={14} /> },
+                  { id: "cv-roadmap", label: "Career Map", icon: <TrendingUp size={14} /> },
+                  { id: "cv-skills", label: "Core Skills", icon: <Cpu size={14} /> },
+                  { id: "cv-experience", label: "Experience", icon: <Briefcase size={14} /> },
+                  { id: "cv-projects", label: "Projects", icon: <FolderGit size={14} /> },
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => {
+                      const el = document.getElementById(s.id);
+                      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+                      addLog(`Sidebar navigated to section: ${s.label}`);
+                    }}
+                    className="w-8 h-8 rounded-xl border border-white/10 hover:border-cyan/45 hover:bg-cyan/5 text-muted-foreground hover:text-cyan transition-all flex items-center justify-center"
+                    title={s.label}
+                  >
+                    {s.icon}
+                  </button>
+                ))}
               </div>
 
               {/* HTML CV Render Viewport */}
               <div
                 ref={scrollContainerRef}
                 onScroll={handleScroll}
-                className="flex-1 overflow-y-auto p-4 sm:p-8 bg-navy/20 scroll-smooth"
+                className="flex-1 overflow-y-auto p-4 sm:p-8 bg-navy/20 scroll-smooth relative"
               >
                 <div
                   className="mx-auto origin-top transition-all duration-100 ease-out"
                   style={{ zoom: scale }}
                 >
-                  <article id="printable-cv" className="max-w-4xl mx-auto bg-navy-surface/40 border border-navy-border rounded-3xl p-6 sm:p-12 shadow-2xl text-foreground">
-                    {/* Header Block */}
-                    <header className="border-b border-navy-border pb-8 mb-8">
-                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                        <div>
-                          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight font-display text-gradient">
-                            Malila Nyamai
-                          </h1>
-                          <p className="text-lg sm:text-xl text-cyan mt-2 font-medium tracking-wide">
-                            Software Engineer · QA Engineer · IT Consultant
+                  <article id="printable-cv" className={`relative transition-all duration-300 max-w-4xl mx-auto rounded-3xl ${getThemeClasses()}`}>
+                    {/* Canvas for Matrix Code Rain Easter Egg */}
+                    {konamiActive && (
+                      <canvas
+                        ref={canvasRef}
+                        className="absolute inset-0 pointer-events-none z-0 rounded-3xl opacity-20"
+                      />
+                    )}
+
+                    <div className="relative z-10">
+                      {/* Header Block */}
+                      <header className={`border-b ${cvTheme === "light" ? "border-slate-200" : "border-navy-border"} pb-6 mb-8`}>
+                        <div className="flex flex-col gap-4">
+                          <div>
+                            <h1 className={`text-4xl sm:text-5xl font-black tracking-tight font-display ${getHeaderColor()} text-gradient`}>
+                              Malila Nyamai
+                            </h1>
+                            <p className={`text-base sm:text-lg ${getSubheaderColor()} mt-1.5 tracking-wide font-medium`}>
+                              Software Engineer · QA Engineer · IT Consultant
+                            </p>
+                          </div>
+
+                          {/* Horizontal Contact Pills */}
+                          <div className="flex flex-wrap gap-2.5 text-[11px] font-medium no-print">
+                            {[
+                              { icon: <Mail size={12} />, label: "jamesmnyamai9@gmail.com", href: "mailto:jamesmnyamai9@gmail.com" },
+                              { icon: <Phone size={12} />, label: "+254 745 806 761", href: "tel:+254745806761" },
+                              { icon: <MapPin size={12} />, label: "Nairobi, Kenya" },
+                              { icon: <Linkedin size={12} />, label: "LinkedIn", href: "https://www.linkedin.com/in/malila-nyamai-0b2711221" },
+                              { icon: <Github size={12} />, label: "GitHub", href: "https://github.com/joashnyamai" }
+                            ].map((item, idx) => (
+                              item.href ? (
+                                <a
+                                  key={idx}
+                                  href={item.href}
+                                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                                  rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full border transition-all ${
+                                    cvTheme === "light"
+                                      ? "bg-slate-50 border-slate-200 text-slate-600 hover:text-cyan hover:border-cyan"
+                                      : "bg-navy-elevated/40 border-white/5 text-muted-foreground hover:text-cyan hover:border-cyan/30"
+                                  }`}
+                                >
+                                  {item.icon}
+                                  <span>{item.label}</span>
+                                </a>
+                              ) : (
+                                <div
+                                  key={idx}
+                                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${
+                                    cvTheme === "light"
+                                      ? "bg-slate-50 border-slate-200 text-slate-500"
+                                      : "bg-navy-elevated/40 border-white/5 text-muted-foreground"
+                                  }`}
+                                >
+                                  {item.icon}
+                                  <span>{item.label}</span>
+                                </div>
+                              )
+                            ))}
+                          </div>
+                          
+                          {/* Print-only traditional contact list */}
+                          <div className={`hidden print:flex flex-wrap gap-x-6 gap-y-1 text-xs mt-1 ${getBodyTextColor()}`}>
+                            <span>Email: jamesmnyamai9@gmail.com</span>
+                            <span>Phone: +254 745 806 761</span>
+                            <span>Location: Nairobi, Kenya</span>
+                            <span>LinkedIn: linkedin.com/in/malila-nyamai-0b2711221</span>
+                            <span>GitHub: github.com/joashnyamai</span>
+                          </div>
+                        </div>
+                      </header>
+
+                      {/* Professional Summary */}
+                      <section id="cv-summary" className="mb-8 scroll-mt-20">
+                        <h2 className={`text-sm font-semibold tracking-widest uppercase mb-3 ${getSubheaderColor()}`}>
+                          Professional Summary
+                        </h2>
+                        <p className={`text-sm sm:text-base ${getBodyTextColor()} leading-relaxed`}>
+                          {highlightText("Motivated IT professional and BSc Information Technology finalist with 3+ years of hands-on experience in software development, quality assurance, IT support, cloud exposure (AWS), and digital training. Proven ability to monitor systems, document workflows, troubleshoot application issues, and support end users in fast-paced technology environments. Experienced in application testing (Jest & Postman), bug tracking (Jira), data management (MySQL, PostgreSQL), and prototyping web solutions using React, TypeScript, Node.js, and PHP. Familiar with AI/ML concepts through LangChain, RAG, and Generative AI certifications. A fast learner and collaborative team player eager to contribute to digital transformation agenda and J-Hub innovation initiatives.")}
+                        </p>
+                      </section>
+
+                      {/* INTERACTIVE FILTERS TOOLBAR */}
+                      <div className="no-print mb-8 bg-navy-elevated/20 border border-navy-border/60 p-5 rounded-2xl flex flex-col md:flex-row gap-4 items-center justify-between">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-xs font-bold text-foreground uppercase tracking-widest flex items-center gap-1.5">
+                            <Sliders size={13} className="text-cyan animate-pulse" />
+                            Filter by Specialization
+                          </span>
+                          <span className="text-[10px] text-muted-foreground">Isolate relevant history by category or select skills below</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[
+                            { key: "all", label: "Show All" },
+                            { key: "swe", label: "💻 Software Eng" },
+                            { key: "qa", label: "🛡️ QA & Testing" },
+                            { key: "it", label: "📡 IT & Security" }
+                          ].map((btn) => (
+                            <button
+                              key={btn.key}
+                              onClick={() => {
+                                setCareerFocus(btn.key as any);
+                                addLog(`Changed career focus filter to: ${btn.label.toUpperCase()}`);
+                              }}
+                              className={`px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all border ${
+                                careerFocus === btn.key
+                                  ? "bg-cyan border-cyan text-primary-foreground shadow-[0_0_12px_rgba(6,182,212,0.3)] scale-[1.03]"
+                                  : "bg-navy-surface border-navy-border text-muted-foreground hover:text-cyan hover:border-cyan/30"
+                              }`}
+                            >
+                              {btn.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* DYNAMIC STATISTICS HIGHLIGHTS COUNTER */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 bg-navy-elevated/10 p-4 border border-navy-border/40 rounded-2xl no-print text-center">
+                        {[
+                          { val: `${projectsCount}+`, label: "Completed Projects" },
+                          { val: `${yearsCount}+`, label: "Years Experience" },
+                          { val: `${techCount}+`, label: "Technologies Mastered" },
+                          { val: `${uptimeCount}%`, label: "QA Release SLA" }
+                        ].map((stat, i) => (
+                          <div key={i} className="flex flex-col items-center justify-center p-3 rounded-xl bg-navy-surface/30 border border-white/5 hover:border-cyan/20 transition-all duration-300">
+                            <span className="text-2xl sm:text-3xl font-black text-cyan tracking-tight font-mono">{stat.val}</span>
+                            <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider mt-1.5">{stat.label}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* DYNAMIC INTERACTIVE CAREER JOURNEY ROADMAP */}
+                      <div id="cv-roadmap" className="no-print mb-8 p-5 bg-navy-elevated/20 border border-navy-border/60 rounded-2xl scroll-mt-20">
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block mb-4">
+                          Interactive Career Journey Map
+                        </span>
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-2 relative">
+                          <div className="absolute top-[28px] left-[5%] right-[5%] h-0.5 bg-navy-border -translate-y-1/2 hidden md:block z-0" />
+                          {[
+                            { key: "student", label: "Student Milestone", desc: "Zetech IT Degree", targetId: "cv-education" },
+                            { key: "intern", label: "QA Intern", desc: "Kiwami Tech Solutions", targetId: "role-kiwami-tech-solutions-software-testing-intern" },
+                            { key: "qa", label: "QA Engineer", desc: "Annex Tech Senior QA", targetId: "role-annex-technologies-limited-senior-software-quality-assurance-engineer" },
+                            { key: "swe", label: "Co-Founder", desc: "RemboGlow Lead Engineer", targetId: "role-remboglow-co-founder-&-lead-engineer" },
+                          ].map((milestone) => (
+                            <button
+                              key={milestone.key}
+                              onClick={() => {
+                                const el = document.getElementById(milestone.targetId);
+                                if (el) {
+                                  el.scrollIntoView({ behavior: "smooth", block: "center" });
+                                  el.classList.add("animate-pulse");
+                                  setTimeout(() => el.classList.remove("animate-pulse"), 2000);
+                                  addLog(`Navigated journey step to: ${milestone.label}`);
+                                }
+                              }}
+                              className="relative z-10 bg-navy-surface border border-navy-border hover:border-cyan hover:scale-[1.03] active:scale-95 transition-all p-3 rounded-xl flex flex-col items-center text-center w-full md:w-36 shadow-lg"
+                            >
+                              <div className="w-5 h-5 rounded-full bg-cyan/20 border border-cyan/40 text-cyan text-[9px] font-black flex items-center justify-center mb-1">
+                                ➔
+                              </div>
+                              <span className="text-xs font-bold text-foreground leading-tight">{milestone.label}</span>
+                              <span className="text-[9px] text-muted-foreground mt-0.5">{milestone.desc}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Interactive Active Highlight Status indicators */}
+                      {selectedSkill && (
+                        <div className="no-print mb-6 p-4 bg-cyan/5 border border-cyan/20 rounded-2xl flex flex-col gap-1.5 text-xs text-muted-foreground animate-fadeIn">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-foreground">Interactive Skill Context: <span className="text-cyan font-mono">[{selectedSkill}]</span></span>
+                            <button
+                              onClick={() => setSelectedSkill(null)}
+                              className="text-[9px] uppercase font-bold text-cyan hover:opacity-80 border border-cyan/20 px-2 py-0.5 rounded bg-cyan/5"
+                            >
+                              Dismiss Overlay
+                            </button>
+                          </div>
+                          <p className="text-[11px] leading-relaxed">
+                            Malila Nyamai has utilized <strong>{selectedSkill}</strong> extensively across{" "}
+                            <strong>
+                              {projects.filter(p => p.stack.some(s => s.toLowerCase().includes(selectedSkill.toLowerCase()))).length} projects
+                            </strong>{" "}
+                            and mentioned it in{" "}
+                            <strong>
+                              {experiences.filter(e => e.tech.some(s => s.toLowerCase().includes(selectedSkill.toLowerCase()))).length} professional positions
+                            </strong>.
                           </p>
                         </div>
+                      )}
 
-                        {/* Contact Details */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-2.5 text-xs text-muted-foreground">
-                          <div className="flex items-center gap-2">
-                            <Mail size={14} className="text-cyan" />
-                            <a href="mailto:jamesmnyamai9@gmail.com" className="hover:text-cyan transition-colors">
-                              jamesmnyamai9@gmail.com
-                            </a>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Phone size={14} className="text-cyan" />
-                            <a href="tel:+254745806761" className="hover:text-cyan transition-colors">
-                              0745 806 761
-                            </a>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <MapPin size={14} className="text-cyan" />
-                            <span>Nairobi, Kenya</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Linkedin size={14} className="text-cyan" />
-                            <a
-                              href="https://www.linkedin.com/in/malila-nyamai-0b2711221"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="hover:text-cyan transition-colors"
-                            >
-                              linkedin.com/in/malila-nyamai-0b2711221
-                            </a>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Github size={14} className="text-cyan" />
-                            <a
-                              href="https://github.com/joashnyamai"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="hover:text-cyan transition-colors"
-                            >
-                              github.com/joashnyamai
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </header>
-
-                    {/* Professional Summary */}
-                    <section className="mb-8">
-                      <h2 className="text-sm font-semibold tracking-widest text-cyan uppercase mb-3">
-                        Professional Summary
-                      </h2>
-                      <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                        Motivated IT professional and BSc Information Technology finalist with 3+ years of hands-on experience in software development, quality assurance, IT support, cloud exposure (AWS), and digital training. Proven ability to monitor systems, document workflows, troubleshoot application issues, and support end users in fast-paced technology environments. Experienced in application testing (Jest & Postman), bug tracking (Jira), data management (MySQL, PostgreSQL), and prototyping web solutions using React, TypeScript, Node.js, and PHP. Familiar with AI/ML concepts through LangChain, RAG, and Generative AI certifications. A fast learner and collaborative team player eager to contribute to Jubilee Life Insurance's digital transformation agenda and J-Hub innovation initiatives.
-                      </p>
-                    </section>
-
-                    {/* Two-Column Grid for Skills / Experience */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                      {/* Left Column: Skills, Education, Certifications */}
-                      <div className="md:col-span-1 space-y-8">
-                        {/* Core Skills */}
-                        <section>
-                          <h2 className="text-sm font-semibold tracking-widest text-cyan uppercase mb-4">
-                            Technical Skills
-                          </h2>
-                          <div className="space-y-4 text-xs">
-                            <div>
-                              <h3 className="font-bold text-foreground mb-1 uppercase tracking-wider text-[10px]">
-                                Cloud & Infrastructure
-                              </h3>
-                              <p className="text-muted-foreground leading-normal">
-                                AWS · Azure · Cloud provisioning · Performance monitoring · Docker · CI/CD
-                              </p>
-                            </div>
-                            <div>
-                              <h3 className="font-bold text-foreground mb-1 uppercase tracking-wider text-[10px]">
-                                Testing & QA
-                              </h3>
-                              <p className="text-muted-foreground leading-normal">
-                                Manual & Automated Testing · Postman (API) · Jira · UAT · Load Testing · TDD
-                              </p>
-                            </div>
-                            <div>
-                              <h3 className="font-bold text-foreground mb-1 uppercase tracking-wider text-[10px]">
-                                Frontend Development
-                              </h3>
-                              <p className="text-muted-foreground leading-normal">
-                                React · TypeScript · JavaScript · HTML5 · CSS3 · Tailwind CSS · Vite
-                              </p>
-                            </div>
-                            <div>
-                              <h3 className="font-bold text-foreground mb-1 uppercase tracking-wider text-[10px]">
-                                Backend & Databases
-                              </h3>
-                              <p className="text-muted-foreground leading-normal">
-                                Node.js · PHP · ASP.NET Core / C# · MySQL · PostgreSQL · Firebase · REST APIs
-                              </p>
-                            </div>
-                            <div>
-                              <h3 className="font-bold text-foreground mb-1 uppercase tracking-wider text-[10px]">
-                                Architecture & Systems
-                              </h3>
-                              <p className="text-muted-foreground leading-normal">
-                                System design · Technical docs · Workflow mapping · Tech roadmaps
-                              </p>
-                            </div>
-                            <div>
-                              <h3 className="font-bold text-foreground mb-1 uppercase tracking-wider text-[10px]">
-                                AI, ML & Automation
-                              </h3>
-                              <p className="text-muted-foreground leading-normal">
-                                LangChain · RAG · Agent Architectures · Generative AI (SAP) · n8n Automation
-                              </p>
-                            </div>
-                          </div>
-                        </section>
-
-                        {/* Education */}
-                        <section>
-                          <h2 className="text-sm font-semibold tracking-widest text-cyan uppercase mb-4">
-                            Education
-                          </h2>
-                          <div className="space-y-4 text-xs text-muted-foreground">
-                            <div className="relative pl-3 border-l border-navy-border">
-                              <h3 className="font-semibold text-foreground">BSc Information Technology</h3>
-                              <p>Zetech University</p>
-                              <p className="text-[10px] text-muted-foreground/75 mt-0.5">Jan 2023 – Dec 2025 (Graduation: Nov 2026)</p>
-                            </div>
-                            <div className="relative pl-3 border-l border-navy-border">
-                              <h3 className="font-semibold text-foreground">Diploma — Computer Software Engineering</h3>
-                              <p>Zetech University</p>
-                              <p className="text-[10px] text-muted-foreground/75 mt-0.5">Jan 2022 – Nov 2023</p>
-                            </div>
-                            <div className="relative pl-3 border-l border-navy-border">
-                              <h3 className="font-semibold text-foreground">Software Development Certification</h3>
-                              <p>Power Learn Project (PLP Africa)</p>
-                              <p className="text-[10px] text-muted-foreground/75 mt-0.5">Mar 2025 – Aug 2025</p>
-                            </div>
-                          </div>
-                        </section>
-
-                        {/* Certifications */}
-                        <section>
-                          <h2 className="text-sm font-semibold tracking-widest text-cyan uppercase mb-4">
-                            Certifications
-                          </h2>
-                          <ul className="space-y-2 text-xs text-muted-foreground list-disc pl-4">
-                            <li>CCNA: Enterprise Networking, Security & Automation (Cisco)</li>
-                            <li>Cybersecurity Fundamentals (Q1 Masterclass)</li>
-                            <li>The Complete Cyber Security Course (Udemy)</li>
-                            <li>Generative AI (SAP)</li>
-                            <li>Hashgraph Developer (Hedera / Attendance)</li>
-                            <li>Software Engineering (Power Learn Africa)</li>
-                            <li>.NET Fundamentals (Microsoft Student Learn)</li>
-                          </ul>
-                        </section>
-                      </div>
-
-                      {/* Right Column: Experience & Projects */}
-                      <div className="md:col-span-2 space-y-6">
-                        <h2 className="text-sm font-semibold tracking-widest text-cyan uppercase mb-2">
-                          Work Experience
+                            {/* TECHNICAL SKILLS SECTION (FULL-WIDTH) */}
+                      <section id="cv-skills" className="mb-8 scroll-mt-20">
+                        <h2 className={`text-sm font-semibold tracking-widest uppercase mb-4 pb-1.5 border-b border-navy-border/40 ${getSubheaderColor()}`}>
+                          Technical Competencies & Skills
                         </h2>
-
-                        <div className="space-y-6">
-                          {/* Annex Technologies */}
-                          <div>
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h3 className="text-sm font-bold text-foreground">Senior Software Quality Assurance Engineer</h3>
-                                <p className="text-xs text-cyan">Annex Technologies Limited · Kenya · Hybrid</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                          {skillGroups.map((group) => (
+                            <div key={group.category} className={`space-y-2.5 p-4 rounded-2xl border transition-colors duration-300 ${getSkillCardClasses()}`}>
+                              <h3 className={`font-bold uppercase tracking-wider text-[10px] border-b border-navy-border/30 pb-1 flex items-center justify-between ${getHeaderColor()}`}>
+                                <span>{group.category}</span>
+                                <span className="text-[9px] text-muted-foreground/60 normal-case font-normal">{group.tagline}</span>
+                              </h3>
+                              <div className="flex flex-wrap gap-1 mt-1">
+                                {group.skills.map((skill) => {
+                                  const isSelected = selectedSkill?.toLowerCase() === skill.toLowerCase();
+                                  return (
+                                    <span
+                                      key={skill}
+                                      onClick={() => {
+                                        setSelectedSkill(isSelected ? null : skill);
+                                        addLog(`Highlighting projects/roles requiring: ${skill}`);
+                                      }}
+                                      className={getSkillBadgeClasses(skill)}
+                                    >
+                                      {skill}
+                                    </span>
+                                  );
+                                })}
                               </div>
-                              <span className="text-[10px] text-muted-foreground bg-navy-elevated px-2 py-0.5 rounded border border-navy-border">
-                                Jan 2024 – Present
-                              </span>
                             </div>
-                            <ul className="mt-2 text-xs text-muted-foreground list-disc pl-4 space-y-1">
-                              <li>Performed API testing using Postman and validated backend functionality with SQL queries, ensuring data integrity and system compliance.</li>
-                              <li>Assisted in automation testing, reducing manual testing effort and contributing to CI/CD quality pipelines.</li>
-                              <li>Provided first-line application support to internal users, escalating complex incidents through proper channels.</li>
-                              <li>Documented workflows, test procedures, and QA processes to support knowledge retention and operational continuity.</li>
-                            </ul>
-                          </div>
+                          ))}
+                        </div>
+                      </section>
 
-                          {/* Kiwami Intern */}
-                          <div>
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h3 className="text-sm font-bold text-foreground">Software Testing Intern</h3>
-                                <p className="text-xs text-cyan">Kiwami Tech Solutions · Nairobi, Kenya · Part-time</p>
-                              </div>
-                              <span className="text-[10px] text-muted-foreground bg-navy-elevated px-2 py-0.5 rounded border border-navy-border">
-                                Aug 2025 – Present
-                              </span>
-                            </div>
-                            <ul className="mt-2 text-xs text-muted-foreground list-disc pl-4 space-y-1">
-                              <li>Designed and maintained reusable test case management components, execution workflow interfaces, and real-time analytics dashboards to support performance monitoring.</li>
-                              <li>Collaborated with backend engineers to validate REST API integrations, verifying accurate display of live test execution results, logs, and dashboards.</li>
-                              <li>Performed frontend testing, debugging, and defect reporting; participated in Agile sprints to ensure quality across iterative releases.</li>
-                            </ul>
-                          </div>
+                      {/* Two-Column Grid for Career History & Timeline / Education & Certifications */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-navy-border/30 pt-8">
+                        {/* Left Main Column: Work Experience & Projects (col-span-2) */}
+                        <div className="md:col-span-2 space-y-8">
+                          {/* Work Experience */}
+                          <section>
+                            <h2 className={`text-sm font-semibold tracking-widest uppercase mb-6 pb-1.5 border-b border-navy-border/40 ${getSubheaderColor()}`}>
+                              Work History & Timeline
+                            </h2>
 
-                          {/* RemboGlow */}
-                          <div>
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h3 className="text-sm font-bold text-foreground">Co-Founder & Lead Engineer</h3>
-                                <p className="text-xs text-cyan">RemboGlow · Nairobi, Kenya</p>
-                              </div>
-                              <span className="text-[10px] text-muted-foreground bg-navy-elevated px-2 py-0.5 rounded border border-navy-border">
-                                Aug 2025 – Present
-                              </span>
-                            </div>
-                            <ul className="mt-2 text-xs text-muted-foreground list-disc pl-4 space-y-1">
-                              <li>Co-founded and engineered a beauty-tech digital platform owning architecture design, frontend development, deployment, and monitoring of pilot solutions.</li>
-                              <li>Conducted user research and feedback collection to iterate UI/UX and align product development with user needs.</li>
-                              <li>Documented learnings, case studies, and operational processes to support knowledge transfer and future scaling.</li>
-                            </ul>
-                          </div>
+                            {/* DYNAMIC COLLAPSIBLE TIMELINE CARDS */}
+                            <div id="cv-experience" className="relative pl-6 sm:pl-8 border-l border-cyan/20 space-y-6 scroll-mt-20">
+                              {experiences.map((exp) => {
+                                const matched = isExperienceMatched(exp);
+                                const dim = (selectedSkill || careerFocus !== "all") && !matched;
+                                const isExpanded = !!expandedRoles[exp.company + exp.role];
+                                const cardKey = exp.company + exp.role;
+                                
+                                return (
+                                  <div
+                                    key={cardKey}
+                                    id={`role-${exp.company.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${exp.role.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
+                                    className={`relative transition-all duration-300 ${
+                                      dim ? "opacity-15 blur-[0.4px] pointer-events-none scale-[0.98]" : "opacity-100"
+                                    }`}
+                                  >
+                                    {/* Timeline Node point indicator */}
+                                    <span className="absolute -left-[31px] sm:-left-[39px] top-4 w-4 h-4 rounded-full bg-navy-surface border-2 border-cyan flex items-center justify-center z-10 shadow-sm">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-cyan" />
+                                    </span>
 
-                          {/* Tari Africa */}
-                          <div>
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h3 className="text-sm font-bold text-foreground">Software Engineer</h3>
-                                <p className="text-xs text-cyan">Tari Africa Platforms · Nairobi, Kenya · Contract</p>
-                              </div>
-                              <span className="text-[10px] text-muted-foreground bg-navy-elevated px-2 py-0.5 rounded border border-navy-border">
-                                Jan 2025 – Jun 2025
-                              </span>
-                            </div>
-                            <ul className="mt-2 text-xs text-muted-foreground list-disc pl-4 space-y-1">
-                              <li>Designed and managed relational databases in MySQL, supporting data entry, cleanup, and migration tasks.</li>
-                              <li>Built real-time dashboards centralizing compliance and financial reporting supporting performance monitoring responsibilities.</li>
-                              <li>Maintained configuration and integration documentation ensuring compliance and knowledge continuity.</li>
-                            </ul>
-                          </div>
+                                    <div className={getCardClasses(matched)}>
+                                      <div className="flex justify-between items-start flex-wrap gap-2">
+                                        <div>
+                                          <h3 className={`text-sm font-bold ${getHeaderColor()}`}>{highlightText(exp.role)}</h3>
+                                          <p className="text-xs text-cyan font-medium">{highlightText(exp.company)} · {highlightText(exp.location)} · {highlightText(exp.type)}</p>
+                                        </div>
+                                        <span className="text-[10px] text-muted-foreground bg-navy-elevated px-2 py-0.5 rounded border border-navy-border font-medium">
+                                          {exp.period}
+                                        </span>
+                                      </div>
 
-                          {/* Malila Tech Consultancies */}
-                          <div>
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h3 className="text-sm font-bold text-foreground">Freelance IT Consultant & Developer</h3>
-                                <p className="text-xs text-cyan">Malila Tech Consultancies · Kenya · Full-time</p>
-                              </div>
-                              <span className="text-[10px] text-muted-foreground bg-navy-elevated px-2 py-0.5 rounded border border-navy-border">
-                                Apr 2023 – Oct 2025
-                              </span>
+                                      {/* Read more collapsible button */}
+                                      <div className="mt-3">
+                                        <button
+                                          onClick={() => {
+                                            setExpandedRoles(prev => ({ ...prev, [cardKey]: !isExpanded }));
+                                            addLog(`${isExpanded ? "Collapsed" : "Expanded"} details for: ${exp.role} at ${exp.company}`);
+                                          }}
+                                          className="text-[10px] font-bold text-cyan hover:opacity-85 flex items-center gap-1 uppercase tracking-widest"
+                                        >
+                                          {isExpanded ? (
+                                            <>
+                                              <ChevronUp size={12} />
+                                              <span>Collapse Achievements</span>
+                                            </>
+                                          ) : (
+                                            <>
+                                              <ChevronDown size={12} />
+                                              <span>Read Achievements & Overview</span>
+                                            </>
+                                          )}
+                                        </button>
+                                      </div>
+
+                                      {isExpanded && (
+                                        <motion.div
+                                          initial={{ opacity: 0, height: 0 }}
+                                          animate={{ opacity: 1, height: "auto" }}
+                                          exit={{ opacity: 0, height: 0 }}
+                                          transition={{ duration: 0.2 }}
+                                          className="mt-3 pt-3 border-t border-navy-border/40 space-y-2.5 overflow-hidden"
+                                        >
+                                          <p className="text-xs text-muted-foreground leading-relaxed">
+                                            {highlightText(exp.overview)}
+                                          </p>
+                                          <ul className="text-[11px] text-muted-foreground list-disc pl-4 space-y-1.5">
+                                            {exp.highlights.map((h, i) => (
+                                              <li key={i}>{highlightText(h)}</li>
+                                            ))}
+                                          </ul>
+                                        </motion.div>
+                                      )}
+
+                                      <div className="flex flex-wrap gap-1 mt-3">
+                                        {exp.tech.map((t) => (
+                                          <span
+                                            key={t}
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              const isSelected = selectedSkill?.toLowerCase() === t.toLowerCase();
+                                              setSelectedSkill(isSelected ? null : t);
+                                              addLog(`Highlighted context skills matching: ${t}`);
+                                            }}
+                                            className={getSkillBadgeClasses(t)}
+                                          >
+                                            {t}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
                             </div>
-                            <ul className="mt-2 text-xs text-muted-foreground list-disc pl-4 space-y-1">
-                              <li>Provided remote and on-site IT support, handling low-to-medium complexity technical issues and escalating complex incidents appropriately.</li>
-                              <li>Supported SMEs in data migration from manual to digital systems, improving data accuracy and cutting processing time by up to 40%.</li>
-                              <li>Advised clients on cybersecurity best practices password policies, phishing awareness, and endpoint protection.</li>
-                            </ul>
-                          </div>
+                          </section>
+
+                          {/* Key Projects */}
+                          <section id="cv-projects" className="pt-6 scroll-mt-20">
+                            <h2 className={`text-sm font-semibold tracking-widest uppercase mb-4 pb-1.5 border-b border-navy-border/40 ${getSubheaderColor()}`}>
+                              Key Projects
+                            </h2>
+                            <div className="space-y-4">
+                              {projects.map((proj) => {
+                                const matched = isProjectMatched(proj);
+                                const dim = (selectedSkill || careerFocus !== "all") && !matched;
+
+                                return (
+                                  <div key={proj.name} className={getCardClasses(matched)}>
+                                    <div className="flex justify-between items-start flex-wrap gap-2">
+                                      <h3 className={`font-bold text-xs ${getHeaderColor()}`}>
+                                        {highlightText(proj.name)}
+                                      </h3>
+                                      <span className="text-[10px] text-muted-foreground bg-navy-elevated px-2 py-0.5 rounded border border-navy-border">
+                                        {proj.period}
+                                      </span>
+                                    </div>
+                                    <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">{highlightText(proj.objective)}</p>
+                                    <p className="mt-1.5 text-[11px] text-muted-foreground/95 bg-navy/30 p-2.5 rounded border border-navy-border/40 leading-relaxed font-medium">
+                                      {highlightText(proj.summary)}
+                                    </p>
+
+                                    {/* Styled project live demo and source code actions */}
+                                    <div className="flex flex-wrap gap-2 mt-3.5 no-print">
+                                      {proj.url && (
+                                        <a
+                                          href={proj.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="px-2.5 py-1 bg-cyan text-primary-foreground font-bold rounded-lg text-[9px] hover:opacity-90 flex items-center gap-1.5 shadow-sm"
+                                        >
+                                          <PlayCircle size={11} />
+                                          Live Demo
+                                        </a>
+                                      )}
+                                      <a
+                                        href="https://github.com/joashnyamai"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-2.5 py-1 bg-navy-surface border border-navy-border hover:border-cyan text-muted-foreground hover:text-cyan font-bold rounded-lg text-[9px] flex items-center gap-1.5"
+                                      >
+                                        <Github size={11} />
+                                        GitHub Source
+                                      </a>
+                                    </div>
+
+                                    <div className="flex flex-wrap gap-1 mt-3">
+                                      {proj.stack.map((t) => (
+                                        <span
+                                          key={t}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            const isSelected = selectedSkill?.toLowerCase() === t.toLowerCase();
+                                            setSelectedSkill(isSelected ? null : t);
+                                            addLog(`Highlighted context skills matching: ${t}`);
+                                          }}
+                                          className={getSkillBadgeClasses(t)}
+                                        >
+                                          {t}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </section>
                         </div>
 
-                        {/* Key Projects */}
-                        <section className="pt-6 border-t border-navy-border">
-                          <h2 className="text-sm font-semibold tracking-widest text-cyan uppercase mb-4">
-                            Key Projects
-                          </h2>
-                          <div className="space-y-4 text-xs text-muted-foreground">
-                            <div>
-                              <h3 className="font-bold text-foreground">
-                                E-Foleni <span className="font-normal text-muted-foreground/80">· React · TypeScript · M-Pesa API</span>
-                              </h3>
-                              <p className="mt-1">Queue-free booking scheduler built for Kenyan organizations. Co-founded and engineered the platform end-to-end, integrating M-Pesa payment validation and facilitating 120,000+ bookings.</p>
+                        {/* Right Column: Education, Certifications & Credentials (col-span-1) */}
+                        <div className="md:col-span-1 space-y-8 border-l border-navy-border/30 md:pl-6">
+                          {/* Education */}
+                          <section id="cv-education" className="scroll-mt-20">
+                            <h2 className={`text-sm font-semibold tracking-widest uppercase mb-4 pb-1.5 border-b border-navy-border/40 ${getSubheaderColor()}`}>
+                              Education
+                            </h2>
+                            <div className="space-y-4 text-xs text-muted-foreground">
+                              {education.map((edu) => (
+                                <div key={edu.degree} className={`relative pl-3 border-l ${cvTheme === "light" ? "border-slate-200" : "border-navy-border"}`}>
+                                  <h3 className={`font-semibold text-[11px] leading-tight ${getHeaderColor()}`}>{highlightText(edu.degree)}</h3>
+                                  <p className={`text-[11px] mt-0.5 ${getBodyTextColor()}`}>{highlightText(edu.institution)}</p>
+                                  <p className="text-[9px] text-muted-foreground/75 mt-0.5">{edu.period} · {edu.status}</p>
+                                </div>
+                              ))}
                             </div>
-                            <div>
-                              <h3 className="font-bold text-foreground">
-                                Kiwami TestCloud <span className="font-normal text-muted-foreground/80">· React · TypeScript · Vite</span>
-                              </h3>
-                              <p className="mt-1">Production cloud-based software testing platform. Built full frontend with real-time dashboards, secure auth flows, and API integration.</p>
-                            </div>
-                            <div>
-                              <h3 className="font-bold text-foreground">
-                                RemboGlow <span className="font-normal text-muted-foreground/80">· React · Node.js · PostgreSQL</span>
-                              </h3>
-                              <p className="mt-1">Beauty-tech e-commerce platform — co-founded and engineered end-to-end, including architecture design, pilot deployment, and user research iteration.</p>
-                            </div>
-                            <div>
-                              <h3 className="font-bold text-foreground">
-                                Tari Digital Nexus <span className="font-normal text-muted-foreground/80">· Node.js · PHP · MySQL · KRA eTIMS</span>
-                              </h3>
-                              <p className="mt-1">Full-stack platform integrating KRA eTIMS and M-Pesa for SME digital tax compliance — included data migration, dashboard build, and compliance documentation.</p>
-                            </div>
-                          </div>
-                        </section>
+                          </section>
+
+                          {/* Certifications */}
+                          <section>
+                            <h2 className={`text-sm font-semibold tracking-widest uppercase mb-4 pb-1.5 border-b border-navy-border/40 ${getSubheaderColor()}`}>
+                              Certifications
+                            </h2>
+                            <ul className="space-y-2 text-xs text-muted-foreground list-none pl-0">
+                              {certifications.map((c) => {
+                                const isSelected = selectedSkill?.toLowerCase() === c.category.toLowerCase() || selectedSkill?.toLowerCase() === c.name.toLowerCase();
+                                return (
+                                  <li
+                                    key={c.name}
+                                    className={`flex items-start gap-2.5 p-2 rounded-xl transition-all border ${
+                                      isSelected 
+                                        ? "bg-cyan/10 text-cyan border-cyan/25" 
+                                        : (cvTheme === "light" 
+                                            ? "bg-slate-50/60 border-slate-200/60 text-slate-700" 
+                                            : "bg-navy-surface/30 border-white/5 text-muted-foreground")
+                                    }`}
+                                  >
+                                    <span className="text-sm flex-shrink-0 mt-0.5">{c.icon}</span>
+                                    <div>
+                                      <p className={`font-semibold text-[11px] leading-tight ${getHeaderColor()}`}>{highlightText(c.name)}</p>
+                                      <p className="text-[9px] text-muted-foreground/75 mt-1">{c.issuer} · {c.category}</p>
+                                    </div>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </section>
+                        </div>
                       </div>
                     </div>
                   </article>
@@ -727,8 +1316,8 @@ User inquiry about Malila's CV: "${text}"`;
                 </div>
 
                 {/* Keyboard tip */}
-                <div className="hidden sm:block text-[10px] text-muted-foreground">
-                  Press <kbd className="bg-white/10 px-1 py-0.5 rounded text-[9px] border border-white/10">Esc</kbd> to close · Use <kbd className="bg-white/10 px-1 py-0.5 rounded text-[9px] border border-white/10">↑ / ↓</kbd> to scroll
+                <div className="hidden sm:block text-[10px] text-muted-foreground font-mono">
+                  Press <kbd className="bg-white/10 px-1 py-0.5 rounded text-[9px] border border-white/10">Esc</kbd> to close · Hotkeys: <kbd className="bg-white/10 px-1.5 py-0.5 rounded text-[9px] border border-white/10">A</kbd> chat · <kbd className="bg-white/10 px-1.5 py-0.5 rounded text-[9px] border border-white/10">T</kbd> theme · <kbd className="bg-white/10 px-1.5 py-0.5 rounded text-[9px] border border-white/10">D</kbd> download · <kbd className="bg-white/10 px-1.5 py-0.5 rounded text-[9px] border border-white/10">H</kbd> cheatsheet
                 </div>
               </div>
             </div>
@@ -873,6 +1462,102 @@ User inquiry about Malila's CV: "${text}"`;
                   <Cpu size={16} className="animate-spin-slow" />
                   <span>Ask Ava about this Resume</span>
                 </motion.button>
+              )}
+            </AnimatePresence>
+
+            {/* DOWNLOAD ANALYTICS CTAs TOAST */}
+            <AnimatePresence>
+              {downloadToastActive && (
+                <motion.div
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 20, scale: 0.9 }}
+                  className="no-print fixed bottom-6 left-6 z-50 bg-[#090d16] border border-cyan/40 p-4 rounded-2xl shadow-2xl flex flex-col gap-2 max-w-sm backdrop-blur-xl text-xs text-muted-foreground"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-green-500/20 border border-green-500/35 flex items-center justify-center text-[10px] text-green-400 font-bold">✓</span>
+                    <span className="font-bold text-foreground">Resume downloaded successfully!</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground/90">Want to verify the codebase of his best projects?</p>
+                  <div className="flex gap-2 mt-1">
+                    <button
+                      onClick={() => {
+                        setDownloadToastActive(false);
+                        onClose();
+                        document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="px-3 py-1 bg-cyan text-primary-foreground text-[10px] font-bold rounded-lg hover:opacity-90 transition-opacity"
+                    >
+                      Explore Live Projects
+                    </button>
+                    <button
+                      onClick={() => setDownloadToastActive(false)}
+                      className="px-2.5 py-1 border border-white/10 hover:border-white/20 text-muted-foreground hover:text-foreground text-[10px] rounded-lg transition-colors"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* KEYBOARD SHORTCUTS HELP CHEATSHEET OVERLAY */}
+            <AnimatePresence>
+              {showShortcutsHelp && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 z-50 bg-navy/90 backdrop-blur-md flex items-center justify-center p-6"
+                  onClick={() => setShowShortcutsHelp(false)}
+                >
+                  <motion.div
+                    initial={{ scale: 0.9, y: 20 }}
+                    animate={{ scale: 1, y: 0 }}
+                    exit={{ scale: 0.9, y: 20 }}
+                    className="bg-[#0b0f19] border border-white/10 p-6 rounded-3xl max-w-md w-full shadow-2xl text-xs text-muted-foreground space-y-4"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                      <span className="font-display font-bold text-sm text-foreground flex items-center gap-1.5">
+                        <Terminal size={14} className="text-cyan" />
+                        Keyboard Shortcuts Cheatsheet
+                      </span>
+                      <button
+                        onClick={() => setShowShortcutsHelp(false)}
+                        className="p-1 rounded hover:bg-white/5 text-muted-foreground hover:text-foreground transition-all"
+                      >
+                        <X size={15} />
+                      </button>
+                    </div>
+
+                    <div className="space-y-3 font-mono">
+                      <div className="flex justify-between items-center">
+                        <span className="text-foreground">Toggle Ava Chat Panel</span>
+                        <kbd className="px-2 py-0.5 bg-white/10 border border-white/10 rounded text-[10px] text-cyan font-bold">A</kbd>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-foreground">Cycle visual style themes</span>
+                        <kbd className="px-2 py-0.5 bg-white/10 border border-white/10 rounded text-[10px] text-cyan font-bold">T</kbd>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-foreground">Download precompiled PDF CV</span>
+                        <kbd className="px-2 py-0.5 bg-white/10 border border-white/10 rounded text-[10px] text-cyan font-bold">D</kbd>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-foreground">Toggle shortcuts cheatsheet</span>
+                        <kbd className="px-2 py-0.5 bg-white/10 border border-white/10 rounded text-[10px] text-cyan font-bold">H</kbd>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-foreground">Exit Modal / Close</span>
+                        <kbd className="px-2 py-0.5 bg-white/10 border border-white/10 rounded text-[10px] text-cyan font-bold">ESC</kbd>
+                      </div>
+                      <div className="border-t border-white/5 pt-3 mt-1 text-[10px] text-muted-foreground/80 leading-relaxed font-sans">
+                        💡 <strong>Easter Egg Challenge</strong>: Try entering the legendary <strong>Konami Code</strong> on your keyboard (<kbd className="bg-white/5 px-1 rounded">↑</kbd><kbd className="bg-white/5 px-1 rounded">↑</kbd><kbd className="bg-white/5 px-1 rounded">↓</kbd><kbd className="bg-white/5 px-1 rounded">↓</kbd><kbd className="bg-white/5 px-1 rounded">←</kbd><kbd className="bg-white/5 px-1 rounded">→</kbd><kbd className="bg-white/5 px-1 rounded">←</kbd><kbd className="bg-white/5 px-1 rounded">→</kbd><kbd className="bg-white/5 px-1 rounded">B</kbd><kbd className="bg-white/5 px-1 rounded">A</kbd>) to unlock Matrix Code Rain Mode!
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.div>
               )}
             </AnimatePresence>
           </motion.div>

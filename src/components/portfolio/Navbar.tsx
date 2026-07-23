@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon, Keyboard } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
@@ -17,6 +17,32 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("portfolio-theme") as "dark" | "light" | null;
+    if (storedTheme) {
+      setTheme(storedTheme);
+      if (storedTheme === "light") {
+        document.documentElement.classList.add("light");
+      } else {
+        document.documentElement.classList.remove("light");
+      }
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(prev => {
+      const next = prev === "dark" ? "light" : "dark";
+      localStorage.setItem("portfolio-theme", next);
+      if (next === "light") {
+        document.documentElement.classList.add("light");
+      } else {
+        document.documentElement.classList.remove("light");
+      }
+      return next;
+    });
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -87,12 +113,36 @@ export default function Navbar() {
           </li>
         </ul>
 
-        <a
-          href={isHome ? "#contact" : "/#contact"}
-          className="hidden md:inline-flex items-center px-4 py-2 rounded-lg border border-cyan text-cyan text-sm font-medium hover:bg-cyan hover:text-primary-foreground transition-all duration-200 hover-glow"
-        >
-          Hire Me
-        </a>
+        <div className="hidden md:flex items-center gap-3">
+          {/* Command Palette Indicator Trigger Button */}
+          <button
+            onClick={() => {
+              const trigger = document.getElementById("trigger-command-palette");
+              if (trigger) trigger.click();
+            }}
+            className="p-2 rounded-lg border border-white/5 bg-white/5 hover:border-cyan text-muted-foreground hover:text-cyan transition-all cursor-pointer"
+            title="Search Commands (Ctrl+K)"
+          >
+            <Keyboard size={15} />
+          </button>
+
+          {/* Theme Switcher Button */}
+          <button
+            id="theme-cycle-button"
+            onClick={toggleTheme}
+            className="p-2 rounded-lg border border-white/5 bg-white/5 hover:border-cyan text-muted-foreground hover:text-cyan transition-all cursor-pointer"
+            title="Toggle theme mode"
+          >
+            {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
+          </button>
+
+          <a
+            href={isHome ? "#contact" : "/#contact"}
+            className="inline-flex items-center px-4 py-2 rounded-lg border border-cyan text-cyan text-sm font-medium hover:bg-cyan hover:text-primary-foreground transition-all duration-200 hover-glow"
+          >
+            Hire Me
+          </a>
+        </div>
 
         {/* Mobile toggle */}
         <button
@@ -132,10 +182,34 @@ export default function Navbar() {
                 </Link>
               </li>
               <li>
+                <div className="flex gap-2 pt-2">
+                  <button
+                    onClick={() => {
+                      setOpen(false);
+                      setTimeout(() => {
+                        const trigger = document.getElementById("trigger-command-palette");
+                        if (trigger) trigger.click();
+                      }, 200);
+                    }}
+                    className="flex-1 py-2 px-3 rounded-lg border border-white/5 bg-white/5 text-muted-foreground text-center text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Keyboard size={14} />
+                    <span>Search</span>
+                  </button>
+                  <button
+                    onClick={toggleTheme}
+                    className="flex-1 py-2 px-3 rounded-lg border border-white/5 bg-white/5 text-muted-foreground text-center text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    {theme === "light" ? <Moon size={14} /> : <Sun size={14} />}
+                    <span>Theme</span>
+                  </button>
+                </div>
+              </li>
+              <li>
                 <a
                   href={isHome ? "#contact" : "/#contact"}
                   onClick={() => setOpen(false)}
-                  className="inline-flex items-center px-4 py-2 rounded-lg border border-cyan text-cyan text-sm font-medium"
+                  className="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-lg border border-cyan text-cyan text-sm font-medium"
                 >
                   Hire Me
                 </a>
