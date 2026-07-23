@@ -132,15 +132,9 @@ export default function OperatingSystem({ onOpenResume }: { onOpenResume: () => 
 
         {/* macOS Menu Bar */}
         <nav className="fixed top-0 left-0 right-0 h-6 bg-[#161616]/75 border-b border-white/5 backdrop-blur-md flex items-center justify-between px-4 z-50 text-[11px] font-medium text-white/95 select-none shadow-sm font-sans max-md:hidden">
-          <div className="flex items-center gap-4">
-            <span className="text-[13px] font-semibold cursor-pointer"></span>
-            <span className="font-bold cursor-pointer">MalilaOS</span>
-            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">File</span>
-            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">Edit</span>
-            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">View</span>
-            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">Go</span>
-            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">Window</span>
-            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">Help</span>
+          <div className="flex items-center gap-2">
+            <span className="w-4 h-4 rounded-md bg-cyan bg-opacity-15 border border-cyan border-opacity-30 flex items-center justify-center text-[10px] text-cyan font-black font-mono shadow-sm">M</span>
+            <span className="font-extrabold cursor-pointer tracking-tight text-white">MalilaOS</span>
           </div>
           <div className="flex items-center gap-3">
             <span className="hidden sm:inline opacity-75">100% [🔋]</span>
