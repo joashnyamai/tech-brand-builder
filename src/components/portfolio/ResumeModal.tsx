@@ -661,22 +661,54 @@ User inquiry about Malila's CV: "${text}"`;
           {/* Main Modal container with glassmorphism */}
           <motion.div
             ref={containerRef}
-            className="relative w-full h-full md:h-[90vh] md:max-w-6xl md:rounded-3xl border border-white/10 bg-navy-surface/30 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row overflow-hidden"
+            className="relative w-full h-full md:h-[90vh] md:max-w-6xl md:rounded-3xl border border-white/10 bg-navy-surface/30 backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden"
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
             transition={{ type: "spring", damping: 25, stiffness: 220 }}
           >
-            {/* Scroll Indicator Progress Bar */}
-            <div className="absolute top-[65px] left-0 right-0 h-0.5 bg-white/5 z-20">
-              <div
-                className="h-full bg-cyan transition-all duration-75"
-                style={{ width: `${scrollPercent}%` }}
-              />
+            {/* Ubuntu Yaru Modal Title Bar */}
+            <div className="w-full bg-[#2a2a2a] border-b border-[#1c1c1c] px-4 py-2.5 flex items-center justify-between select-none shrink-0 z-30">
+              <span className="text-[11px] font-bold text-white/80 font-mono flex items-center gap-1.5 uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#E95420]" />
+                PROFILE <b className="text-white/40">/</b> resume.pdf
+              </span>
+              <div className="window-controls flex items-center gap-2">
+                {/* Ask Ava control indicator */}
+                <button 
+                  onClick={() => setIsChatOpen(!isChatOpen)}
+                  className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase transition-all flex items-center gap-1 border ${
+                    isChatOpen 
+                      ? "border-[#E95420]/30 bg-[#E95420]/10 text-white" 
+                      : "border-white/10 text-white/40 hover:text-white"
+                  }`}
+                  title="Toggle Ask Ava Copilot"
+                >
+                  <Cpu size={10} />
+                  <span>Ask Ava</span>
+                </button>
+                <button className="w-2.5 h-2.5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[7px]" aria-label="Minimize" />
+                <button className="w-2.5 h-2.5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[7px]" aria-label="Maximize" />
+                <button 
+                  onClick={onClose}
+                  className="w-2.5 h-2.5 rounded-full bg-[#E95420] hover:bg-[#E95420]/80 flex items-center justify-center text-[7px] text-white" 
+                  aria-label="Close" 
+                />
+              </div>
             </div>
 
-            {/* LEFT AREA: HTML CV VIEWER */}
-            <div className="flex-1 flex flex-col h-full overflow-hidden border-r border-white/5 relative">
+            {/* Split Column Panel content */}
+            <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+              {/* Scroll Indicator Progress Bar */}
+              <div className="absolute top-[48px] left-0 right-0 h-0.5 bg-white/5 z-20">
+                <div
+                  className="h-full bg-cyan transition-all duration-75"
+                  style={{ width: `${scrollPercent}%` }}
+                />
+              </div>
+
+              {/* LEFT AREA: HTML CV VIEWER */}
+              <div className="flex-1 flex flex-col h-full overflow-hidden border-r border-white/5 relative">
               {/* Header inside viewer */}
               <div className="px-4 sm:px-6 py-3.5 flex flex-col lg:flex-row gap-4 items-center justify-between border-b border-white/5 bg-[#0b0f19]/90 backdrop-blur-md z-20 shrink-0">
                 <div className="flex items-center gap-2.5">
@@ -763,30 +795,6 @@ User inquiry about Malila's CV: "${text}"`;
                       className="p-1.5 rounded-lg border border-white/10 text-muted-foreground hover:text-cyan hover:bg-white/5 transition-all flex items-center justify-center"
                       title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
                     >
-                      {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
-                    </button>
-
-                    {/* Ask Ava */}
-                    <button
-                      onClick={() => setIsChatOpen(!isChatOpen)}
-                      className={`p-1.5 rounded-lg border transition-all text-[11px] flex items-center gap-1 ${
-                        isChatOpen
-                          ? "border-cyan/30 text-cyan bg-cyan/5"
-                          : "border-white/10 text-muted-foreground hover:text-cyan hover:bg-white/5"
-                      }`}
-                      title="Ask Ava (Press A)"
-                    >
-                      <Cpu size={12} />
-                      <span>Ask Ava</span>
-                    </button>
-
-                    {/* Close */}
-                    <button
-                      onClick={onClose}
-                      className="p-1.5 rounded-lg border border-white/10 text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all flex items-center justify-center"
-                      title="Close"
-                    >
-                      <X size={12} />
                     </button>
                   </div>
                 </div>
@@ -1560,8 +1568,9 @@ User inquiry about Malila's CV: "${text}"`;
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </div>
         </motion.div>
+      </motion.div>
       )}
     </AnimatePresence>
   );

@@ -29,31 +29,37 @@ const initiatives = [
   },
 ];
 
-export default function Community() {
+export default function Community({ isOs = false }: { isOs?: boolean }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="community" ref={ref} className="py-28 px-6">
+    <div
+      id="community"
+      ref={ref}
+      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6"}
+    >
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
-        >
-          <span className="text-cyan text-xs tracking-widest uppercase font-medium">07 / Community</span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
-            Leadership &{" "}
-            <span className="text-gradient">Giving Back</span>
-          </h2>
-          <div className="section-divider mb-6" />
-          <p className="max-w-2xl text-muted-foreground leading-relaxed">
-            Technology becomes meaningful when it empowers people. Beyond building software,
-            I invest in communities, training the underserved, mentoring the ambitious,
-            and helping organizations build digital confidence from the ground up.
-          </p>
-        </motion.div>
+        {!isOs && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="mb-16"
+          >
+            <span className="text-cyan text-xs tracking-widest uppercase font-medium">07 / Community</span>
+            <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
+              Leadership &{" "}
+              <span className="text-gradient">Giving Back</span>
+            </h2>
+            <div className="section-divider mb-6" />
+            <p className="max-w-2xl text-muted-foreground leading-relaxed">
+              Technology becomes meaningful when it empowers people. Beyond building software,
+              I invest in communities, training the underserved, mentoring the ambitious,
+              and helping organizations build digital confidence from the ground up.
+            </p>
+          </motion.div>
+        )}
 
         <div className="grid md:grid-cols-2 gap-6">
           {initiatives.map((item, i) => (
@@ -78,6 +84,6 @@ export default function Community() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

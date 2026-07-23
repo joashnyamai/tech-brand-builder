@@ -3,7 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Bot, FileCheck, Terminal, ShieldAlert, Cpu } from "lucide-react";
 
-export default function AiLabTeaser() {
+export default function AiLabTeaser({ isOs = false }: { isOs?: boolean }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -26,7 +26,7 @@ export default function AiLabTeaser() {
   ];
 
   return (
-    <section id="ai-lab-teaser" ref={ref} className="py-28 px-6 bg-gradient-to-b from-transparent to-navy-surface/20">
+    <div id="ai-lab-teaser" ref={ref} className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6 bg-gradient-to-b from-transparent to-navy-surface/20"}>
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-3 gap-12 items-center">
           
@@ -37,7 +37,7 @@ export default function AiLabTeaser() {
             transition={{ duration: 0.6 }}
             className="md:col-span-1 space-y-6"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan/30 bg-cyan/5 text-cyan text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan border-opacity-30 bg-cyan bg-opacity-5 text-cyan text-xs font-semibold">
               <Cpu size={14} className="animate-spin-slow" />
               <span>Ava AI Lab</span>
             </div>
@@ -51,7 +51,7 @@ export default function AiLabTeaser() {
             <div className="pt-2">
               <Link
                 to="/ai-lab"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl gradient-accent text-primary-foreground font-display font-semibold text-sm tracking-wide hover:opacity-90 transition-opacity animate-pulse-glow shadow-lg"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cyan hover:bg-cyan/90 text-white font-display font-semibold text-sm tracking-wide transition-opacity shadow-lg shadow-cyan/15 cursor-pointer"
               >
                 <Terminal size={16} />
                 Open Ava AI Lab
@@ -71,10 +71,10 @@ export default function AiLabTeaser() {
               return (
                 <div
                   key={i}
-                  className="p-6 rounded-2xl bg-navy-surface border border-navy-border hover:border-cyan/40 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between"
+                  className="p-6 rounded-2xl bg-navy-surface border border-navy-border hover:border-cyan hover:border-opacity-40 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between"
                 >
                   <div>
-                    <div className="w-10 h-10 rounded-xl bg-navy-elevated flex items-center justify-center border border-navy-border text-cyan mb-4 group-hover:bg-cyan/10 transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-navy-elevated flex items-center justify-center border border-navy-border text-cyan mb-4 group-hover:bg-cyan group-hover:bg-opacity-10 transition-colors">
                       <Icon size={20} />
                     </div>
                     <h3 className="font-display font-bold text-base mb-2 text-foreground group-hover:text-cyan transition-colors">
@@ -91,6 +91,6 @@ export default function AiLabTeaser() {
 
         </div>
       </div>
-    </section>
+    </div>
   );
 }

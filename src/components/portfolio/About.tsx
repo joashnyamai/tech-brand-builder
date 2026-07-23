@@ -85,27 +85,33 @@ const timelineMilestones = [
   }
 ];
 
-export default function About() {
+export default function About({ isOs = false }: { isOs?: boolean }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const [activeMilestone, setActiveMilestone] = useState<"student" | "intern" | "qa" | "swe">("student");
 
   return (
-    <section id="about" ref={ref} className="py-28 px-6">
+    <div
+      id="about"
+      ref={ref}
+      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6"}
+    >
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
-        >
-          <span className="text-cyan text-xs tracking-widest uppercase font-medium">01 / About</span>
+        {!isOs && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="mb-16"
+          >
+            <span className="text-cyan text-xs tracking-widest uppercase font-medium">01 / About</span>
           <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
             The Engineer Behind <br className="hidden md:block" />
             <span className="text-gradient">the Code</span>
           </h2>
           <div className="section-divider mb-8" />
-        </motion.div>
+          </motion.div>
+        )}
 
         <div className="grid md:grid-cols-2 gap-16 items-start">
           {/* Narrative */}
@@ -291,6 +297,6 @@ export default function About() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

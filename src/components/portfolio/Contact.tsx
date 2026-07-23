@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Mail, Linkedin, Github, Phone, MapPin, ArrowUpRight, FileText, Send, Check, Copy, Download, Sparkles } from "lucide-react";
 
-export default function Contact({ onViewResume }: { onViewResume: () => void }) {
+export default function Contact({ onViewResume, isOs = false }: { onViewResume: () => void; isOs?: boolean }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -67,23 +67,29 @@ END:VCARD`;
   };
 
   return (
-    <section id="contact" ref={ref} className="py-28 px-6 bg-navy-surface/30">
+    <div
+      id="contact"
+      ref={ref}
+      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6 bg-navy-surface/30"}
+    >
       <div className="max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <span className="text-cyan text-xs tracking-widest uppercase font-medium">08 / Contact</span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
-            Let's Build <span className="text-gradient">Together</span>
-          </h2>
-          <div className="section-divider mx-auto mb-8" />
-          <p className="max-w-xl mx-auto text-muted-foreground leading-relaxed text-sm">
-            Whether you are looking to hire a software engineer, QA specialist, or IT consultant, I am excited to hear about your goals. Reach out today.
-          </p>
-        </motion.div>
+        {!isOs && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <span className="text-cyan text-xs tracking-widest uppercase font-medium">08 / Contact</span>
+            <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
+              Let's Build <span className="text-gradient">Together</span>
+            </h2>
+            <div className="section-divider mx-auto mb-8" />
+            <p className="max-w-xl mx-auto text-muted-foreground leading-relaxed text-sm">
+              Whether you are looking to hire a software engineer, QA specialist, or IT consultant, I am excited to hear about your goals. Reach out today.
+            </p>
+          </motion.div>
+        )}
 
         <div className="grid md:grid-cols-5 gap-8 items-start">
           {/* Column 1: Info badging & copy triggers (2/5 size) */}
@@ -278,6 +284,6 @@ END:VCARD`;
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

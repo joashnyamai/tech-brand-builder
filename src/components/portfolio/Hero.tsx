@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import type { Easing } from "framer-motion";
-import { ArrowDown, FileText, Cpu, Bot, Play } from "lucide-react";
+import { ArrowDown, FileText, Cpu, Bot, Play, Route } from "lucide-react";
 
 const EASE: Easing = "easeOut";
 const fadeUp = (delay = 0) => ({
@@ -213,6 +213,13 @@ export default function Hero({ onViewResume }: HeroProps) {
           >
             <Bot size={12} className="animate-pulse" />
             Talk to Ava
+          </button>
+          <button
+            onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase text-muted-foreground hover:text-cyan transition-colors"
+          >
+            <Route size={13} />
+            Start Tour
           </button>
         </motion.div>
 

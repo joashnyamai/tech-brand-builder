@@ -61,6 +61,7 @@ export default function CommandPalette({
         { icon: <Cpu size={14} />, label: "Go to Technical Skills", action: () => { document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" }); onClose(); } },
         { icon: <Briefcase size={14} />, label: "Go to Work Experience", action: () => { document.getElementById("experience")?.scrollIntoView({ behavior: "smooth" }); onClose(); } },
         { icon: <FolderGit size={14} />, label: "Go to Featured Projects", action: () => { document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" }); onClose(); } },
+        { icon: <Cpu size={14} />, label: "Open Portfolio Knowledge Graph", action: () => { document.querySelector<HTMLButtonElement>('button[title="Skill Graph"]')?.click(); onClose(); } },
         { icon: <Mail size={14} />, label: "Go to Contact Details", action: () => { document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); onClose(); } }
       ]
     },

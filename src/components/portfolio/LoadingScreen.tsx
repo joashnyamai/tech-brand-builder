@@ -1,34 +1,70 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Cpu, Terminal, Sparkles } from "lucide-react";
+import { Cpu } from "lucide-react";
 
 interface LoadingScreenProps {
   onComplete: () => void;
 }
 
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
-  const [step, setStep] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    // 0: Loading Portfolio (0ms)
-    // 1: Initializing Projects (400ms)
-    // 2: Loading Experience (850ms)
-    // 3: Starting Ava (1300ms)
-    // 4: Complete/Welcome (1750ms)
-    const timers = [
-      setTimeout(() => setStep(1), 400),
-      setTimeout(() => setStep(2), 850),
-      setTimeout(() => setStep(3), 1300),
-      setTimeout(() => setStep(4), 1750),
-      setTimeout(() => {
-        setIsVisible(false);
-        setTimeout(onComplete, 300); // allow fade out animation to finish
-      }, 2100)
-    ];
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    return () => timers.forEach(clearTimeout);
-  }, [onComplete]);
+    let animationFrameId: number;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    // Matrix characters
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$#@%&*+=:;<>?アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+    const fontSize = 14;
+    const columns = Math.floor(canvas.width / fontSize);
+
+    // Initial drops y coordinates
+    const rainDrops: number[] = Array(columns).fill(1);
+
+    const draw = () => {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#0f0"; // Matrix Green
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        const x = i * fontSize;
+        const y = rainDrops[i] * fontSize;
+
+        ctx.fillText(text, x, y);
+
+        if (y > canvas.height && Math.random() > 0.975) {
+          rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
+      }
+    };
+
+    const loop = () => {
+      draw();
+      animationFrameId = requestAnimationFrame(loop);
+    };
+    loop();
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
 
   if (!isVisible) return null;
 
@@ -36,85 +72,70 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 1 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.3 }}
-        className="fixed inset-0 bg-[#070b13] z-[9999] flex flex-col items-center justify-center font-mono text-xs text-muted-foreground select-none"
+        exit={{ opacity: 0, filter: "blur(8px)" }}
+        transition={{ duration: 0.4 }}
+        className="fixed inset-0 bg-black z-[9999] flex flex-col items-center justify-center font-mono select-none overflow-hidden"
       >
-        <div className="max-w-xs w-full px-6 space-y-6">
-          {/* Main loader logo */}
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-cyan/20 blur-md animate-pulse" />
-              <div className="w-10 h-10 rounded-full border border-cyan/30 flex items-center justify-center text-cyan bg-cyan/5">
-                <Cpu size={20} className="animate-spin" />
-              </div>
+        <canvas ref={canvasRef} className="absolute inset-0 block w-full h-full opacity-60" />
+
+        {/* Center Panel Dialog */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="relative max-w-sm w-[90%] mx-auto p-6 md:p-8 rounded-2xl bg-[#030708]/85 border border-cyan/25 backdrop-blur-md shadow-[0_0_50px_rgba(0,255,0,0.15)] text-center space-y-6 z-10"
+        >
+          {/* Cyber Decorators */}
+          <span className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-cyan rounded-tl-lg" />
+          <span className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan rounded-tr-lg" />
+          <span className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan rounded-bl-lg" />
+          <span className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan rounded-br-lg" />
+
+          {/* Logo Title */}
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-12 h-12 rounded-full border-2 border-cyan/20 flex items-center justify-center text-cyan bg-cyan/5 animate-pulse">
+              <Cpu size={22} />
             </div>
-            <div className="flex flex-col">
-              <span className="font-display font-black text-sm tracking-widest text-foreground uppercase">Malila.io</span>
-              <span className="text-[9px] uppercase tracking-wider text-cyan font-bold">Systems Diagnostic</span>
-            </div>
-          </div>
-
-          {/* Sequential items checklist */}
-          <div className="space-y-3 bg-[#0a0f1d] border border-white/5 p-4 rounded-xl">
-            <div className="flex items-center gap-2">
-              <Terminal size={12} className="text-cyan animate-pulse" />
-              <span className="text-foreground font-semibold">Initializing profile...</span>
-            </div>
-
-            <div className="space-y-2 pt-2 border-t border-white/5">
-              <div className="flex items-center justify-between">
-                <span>Loading Portfolio</span>
-                <span className="text-cyan font-bold">✓</span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span>Initializing Projects</span>
-                {step >= 1 ? (
-                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-cyan font-bold">✓</motion.span>
-                ) : (
-                  <span className="w-2.5 h-2.5 border border-white/20 border-t-cyan rounded-full animate-spin" />
-                )}
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span>Loading Experience</span>
-                {step >= 2 ? (
-                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-cyan font-bold">✓</motion.span>
-                ) : step >= 1 ? (
-                  <span className="w-2.5 h-2.5 border border-white/20 border-t-cyan rounded-full animate-spin" />
-                ) : (
-                  <span className="text-white/20">...</span>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span>Starting Ava AI</span>
-                {step >= 3 ? (
-                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-cyan font-bold">✓</motion.span>
-                ) : step >= 2 ? (
-                  <span className="w-2.5 h-2.5 border border-white/20 border-t-cyan rounded-full animate-spin" />
-                ) : (
-                  <span className="text-white/20">...</span>
-                )}
-              </div>
+            <div>
+              <h1 className="font-display font-black text-lg tracking-widest text-foreground uppercase mt-2">MALILA.OS</h1>
+              <span className="text-[9px] uppercase tracking-widest text-cyan font-bold block mt-0.5">Systems Initializer v3.1</span>
             </div>
           </div>
 
-          {/* Welcome status line */}
-          <div className="h-6 text-center text-[10px] text-cyan font-semibold tracking-widest uppercase">
-            {step >= 4 && (
-              <motion.span
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center justify-center gap-1.5"
-              >
-                <Sparkles size={11} className="animate-pulse" />
-                Welcome.
-              </motion.span>
-            )}
+          <div className="space-y-2 py-4 border-t border-b border-white/10 text-left text-[11px] text-white/60">
+            <div className="flex items-center justify-between font-mono">
+              <span>HOST:</span>
+              <span className="text-cyan font-bold">localhost:8080</span>
+            </div>
+            <div className="flex items-center justify-between font-mono">
+              <span>LOCATION:</span>
+              <span className="text-foreground">Nairobi, Kenya</span>
+            </div>
+            <div className="flex items-center justify-between font-mono">
+              <span>CORE CREDENTIALS:</span>
+              <span className="text-cyan">Full-Stack & QA</span>
+            </div>
+            <div className="flex items-center justify-between font-mono">
+              <span>STATUS:</span>
+              <span className="text-emerald-500 font-bold tracking-wider animate-pulse">READY</span>
+            </div>
           </div>
-        </div>
+
+          {/* Glowing Entry Button */}
+          <button 
+            onClick={() => {
+              setIsVisible(false);
+              setTimeout(onComplete, 400); // allow exit animations to complete
+            }}
+            className="w-full py-3 rounded-xl bg-cyan text-slate-950 text-xs font-black uppercase tracking-widest transition-all duration-300 hover:bg-cyan/90 hover:scale-[1.02] shadow-[0_0_20px_rgba(6,182,212,0.35)] cursor-pointer block"
+          >
+            Access Malila.OS
+          </button>
+
+          <p className="text-[8px] text-white/30 font-mono tracking-wider">
+            SECURE AUTH PROTOCOL // HTTP2-TLS1.3 CERTIFIED
+          </p>
+        </motion.div>
       </motion.div>
     </AnimatePresence>
   );

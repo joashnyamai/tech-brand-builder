@@ -3,27 +3,33 @@ import { motion, useInView } from "framer-motion";
 import { Award, GraduationCap, BookOpen } from "lucide-react";
 import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
-export default function Certifications() {
+export default function Certifications({ isOs = false }: { isOs?: boolean }) {
   const { certifications, education } = usePortfolioData();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="certifications" ref={ref} className="py-28 px-6 bg-navy-surface/30">
+    <div
+      id="certifications"
+      ref={ref}
+      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6 bg-navy-surface/30"}
+    >
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
-        >
-          <span className="text-cyan text-xs tracking-widest uppercase font-medium">06 / Credentials</span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
-            Education &{" "}
-            <span className="text-gradient">Certifications</span>
-          </h2>
-          <div className="section-divider" />
-        </motion.div>
+        {!isOs && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="mb-16"
+          >
+            <span className="text-cyan text-xs tracking-widest uppercase font-medium">06 / Credentials</span>
+            <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
+              Education &{" "}
+              <span className="text-gradient">Certifications</span>
+            </h2>
+            <div className="section-divider" />
+          </motion.div>
+        )}
 
         <div className="grid md:grid-cols-2 gap-12">
           {/* Education */}
@@ -106,6 +112,6 @@ export default function Certifications() {
           </p>
         </motion.div>
       </div>
-    </section>
+    </div>
   );
 }

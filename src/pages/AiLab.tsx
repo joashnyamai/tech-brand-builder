@@ -1051,9 +1051,11 @@ ${customCode}`;
   }, [isRunning]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground py-10 px-4 sm:px-6 lg:px-8">
+    <div className="os-shell min-h-screen bg-background text-foreground py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-[#2c001e]">
+      <div className="ambient ambient-one" />
+      <div className="ambient ambient-two" />
       {/* Header Bar */}
-      <header className="max-w-7xl mx-auto mb-10 flex justify-between items-center bg-navy-surface/40 border border-navy-border p-6 rounded-2xl backdrop-blur-md">
+      <header className="max-w-7xl mx-auto mb-10 flex justify-between items-center bg-navy-surface/40 border border-navy-border p-6 rounded-2xl backdrop-blur-md relative z-10">
         <div className="flex items-center gap-3">
           <Link
             to="/"

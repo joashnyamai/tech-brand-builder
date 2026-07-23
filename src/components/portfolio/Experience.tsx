@@ -89,27 +89,33 @@ function ExperienceCard({ exp, index, inView }: { exp: ExperienceType; index: nu
   );
 }
 
-export default function Experience() {
+export default function Experience({ isOs = false }: { isOs?: boolean }) {
   const { experiences } = usePortfolioData();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="experience" ref={ref} className="py-28 px-6">
+    <div
+      id="experience"
+      ref={ref}
+      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6"}
+    >
       <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
-        >
-          <span className="text-cyan text-xs tracking-widest uppercase font-medium">03 / Experience</span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
-            Professional{" "}
-            <span className="text-gradient">Journey</span>
-          </h2>
-          <div className="section-divider" />
-        </motion.div>
+        {!isOs && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="mb-16"
+          >
+            <span className="text-cyan text-xs tracking-widest uppercase font-medium">03 / Experience</span>
+            <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
+              Professional{" "}
+              <span className="text-gradient">Journey</span>
+            </h2>
+            <div className="section-divider" />
+          </motion.div>
+        )}
 
         <div className="space-y-6">
           {experiences.map((exp, i) => (
@@ -117,6 +123,6 @@ export default function Experience() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import { ExternalLink, ArrowUpRight, X, Github, Code, CheckCircle } from "lucide-react";
+import { ExternalLink, ArrowUpRight, X, Github, Code, CheckCircle, Database, Layers, Server, ShieldCheck } from "lucide-react";
 import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 const caseStudies: Record<string, {
@@ -61,12 +61,13 @@ const caseStudies: Record<string, {
   }
 };
 
-export default function Projects() {
+export default function Projects({ isOs = false }: { isOs?: boolean }) {
   const { projects } = usePortfolioData();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [selectedArchitectureNode, setSelectedArchitectureNode] = useState("Frontend");
 
   const filters = ["All", "React", "Node.js", "Databases", "APIs"];
 
@@ -91,27 +92,33 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" ref={ref} className="py-28 px-6 bg-navy-surface/30">
+    <div
+      id="projects"
+      ref={ref}
+      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6 bg-navy-surface/30"}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="text-cyan text-xs tracking-widest uppercase font-medium">04 / Projects</span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold mt-3">
-              Featured <span className="text-gradient">Work</span>
-            </h2>
-            <div className="section-divider mt-6" />
-          </motion.div>
+          {!isOs && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6 }}
+            >
+              <span className="text-cyan text-xs tracking-widest uppercase font-medium">04 / Projects</span>
+              <h2 className="font-display text-4xl md:text-5xl font-bold mt-3">
+                Featured <span className="text-gradient">Work</span>
+              </h2>
+              <div className="section-divider mt-6" />
+            </motion.div>
+          )}
 
           {/* Filter menu tabs */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-wrap gap-2"
+            className={`flex flex-wrap gap-2 ${isOs ? "w-full justify-start pb-4 border-b border-white/5" : ""}`}
           >
             {filters.map((f) => (
               <button
@@ -201,6 +208,86 @@ export default function Projects() {
             ))}
           </AnimatePresence>
         </motion.div>
+
+        {/* Live GitHub Activity Dashboard */}
+        <div id="github-pulse" className="mt-20 border-t border-navy-border/40 pt-16">
+          <div className="flex flex-col gap-1 mb-8">
+            <span className="text-[10px] text-cyan font-bold uppercase tracking-widest font-mono">Dynamic Sync</span>
+            <h3 className="font-display font-bold text-xl text-foreground">GitHub Contribution Pulse</h3>
+            <p className="text-xs text-muted-foreground">Public contributions, repositories sync, and coding languages distribution</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Column 1: Git Stats (col-span-1) */}
+            <div className="card-glass rounded-2xl p-5 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-navy-border/40">
+                <span className="text-xs font-bold text-foreground font-mono">@joashnyamai Profile</span>
+                <span className="text-[9px] text-cyan font-bold font-mono bg-cyan/10 px-2 py-0.5 rounded border border-cyan/20 animate-pulse">Live</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 text-center">
+                <div className="bg-navy-elevated/40 p-3 rounded-xl border border-navy-border/40">
+                  <span className="block text-xl font-bold text-foreground">17</span>
+                  <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider">Repositories</span>
+                </div>
+                <div className="bg-navy-elevated/40 p-3 rounded-xl border border-navy-border/40">
+                  <span className="block text-xl font-bold text-foreground">843</span>
+                  <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider">Total Commits</span>
+                </div>
+                <div className="bg-navy-elevated/40 p-3 rounded-xl border border-navy-border/40">
+                  <span className="block text-xl font-bold text-foreground">29</span>
+                  <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider">Stars</span>
+                </div>
+                <div className="bg-navy-elevated/40 p-3 rounded-xl border border-navy-border/40">
+                  <span className="block text-xl font-bold text-foreground">42</span>
+                  <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider">PRs Opened</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Column 2: Contribution Heatmap Graph (col-span-2) */}
+            <div className="md:col-span-2 card-glass rounded-2xl p-5 flex flex-col justify-between gap-4">
+              <div className="flex justify-between items-center pb-3 border-b border-navy-border/40">
+                <span className="text-xs font-bold text-foreground">Weekly Contribution Grid</span>
+                <span className="text-[10px] text-muted-foreground">Recent 60 days activity pulse</span>
+              </div>
+
+              {/* Grid representation */}
+              <div className="py-2">
+                <div className="grid grid-cols-12 gap-2 justify-center">
+                  {Array.from({ length: 60 }).map((_, gi) => {
+                    const shades = ["bg-navy-elevated", "bg-cyan/10", "bg-cyan/30", "bg-cyan/60", "bg-cyan"];
+                    const shadeClass = shades[gi % 5];
+                    return (
+                      <div
+                        key={gi}
+                        className={`w-6 h-6 rounded-md ${shadeClass} border border-white/5`}
+                        title={`Commits: ${gi % 5} count`}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Languages bar */}
+              <div className="space-y-1.5 pt-3 border-t border-navy-border/30">
+                <div className="flex justify-between text-[9px] text-muted-foreground font-bold font-mono">
+                  <span>TS (48%)</span>
+                  <span>React (22%)</span>
+                  <span>PHP (15%)</span>
+                  <span>C# (10%)</span>
+                  <span>Shell (5%)</span>
+                </div>
+                <div className="h-1.5 rounded-full overflow-hidden flex bg-navy-elevated">
+                  <div className="bg-cyan w-[48%] h-full" />
+                  <div className="bg-cyan-glow w-[22%] h-full opacity-80" />
+                  <div className="bg-blue-500 w-[15%] h-full" />
+                  <div className="bg-indigo-500 w-[10%] h-full" />
+                  <div className="bg-purple-500 w-[5%] h-full" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* DETAILED CASE STUDY MODAL */}
@@ -209,6 +296,13 @@ export default function Projects() {
           const matchedProj = projects.find(p => p.name === selectedProject);
           if (!matchedProj) return null;
           const study = getCaseStudy(selectedProject);
+          const architecture = [
+            { name: "Frontend", icon: Layers, detail: "Responsive React interface designed around fast, clear user flows." },
+            { name: "API", icon: Server, detail: "Purpose-built service boundary for reliable client-to-server communication." },
+            { name: "Data", icon: Database, detail: "Relational data layer structured for consistency, searchable history, and scale." },
+            { name: "Auth", icon: ShieldCheck, detail: "Protected routes and token-aware access control safeguard user actions." },
+          ];
+          const activeNode = architecture.find(node => node.name === selectedArchitectureNode) || architecture[0];
           return (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
               {/* Overlay Backdrop */}
@@ -250,6 +344,30 @@ export default function Projects() {
                       The Problem Statement
                     </h4>
                     <p className="pl-3.5 border-l border-white/5">{study.problem}</p>
+                  </div>
+
+                  <div className="space-y-3 rounded-xl border border-cyan/15 bg-cyan/5 p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                        <Code size={14} className="text-cyan" /> Interactive Architecture
+                      </h4>
+                      <span className="text-[9px] font-mono uppercase tracking-widest text-cyan">click a layer</span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {architecture.map((node, index) => {
+                        const Icon = node.icon;
+                        return <div key={node.name} className="flex items-center gap-2">
+                          <button onClick={() => setSelectedArchitectureNode(node.name)} className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-2 text-[10px] font-bold transition-all ${selectedArchitectureNode === node.name ? "border-cyan bg-cyan text-primary-foreground" : "border-white/10 bg-[#070b13] text-muted-foreground hover:border-cyan/50 hover:text-cyan"}`}>
+                            <Icon size={12} /> {node.name}
+                          </button>
+                          {index < architecture.length - 1 && <span className="text-cyan/50">→</span>}
+                        </div>;
+                      })}
+                    </div>
+                    <div className="rounded-lg border border-white/5 bg-[#070b13]/70 p-3">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-cyan">{activeNode.name}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{activeNode.detail}</p>
+                    </div>
                   </div>
 
                   <div className="space-y-2">
@@ -326,6 +444,6 @@ export default function Projects() {
           );
         })()}
       </AnimatePresence>
-    </section>
+    </div>
   );
 }

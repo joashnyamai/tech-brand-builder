@@ -22,6 +22,18 @@ export default function GlobalAvaChat({ onOpenResume }: GlobalAvaChatProps) {
     }
   }, [isOpen, messages]);
 
+  useEffect(() => {
+    const handleMessage = (e: Event) => {
+      const txt = (e as CustomEvent).detail as string;
+      if (txt) {
+        setMessages(prev => [...prev, { sender: "ava", text: txt }]);
+        setIsOpen(true);
+      }
+    };
+    window.addEventListener("ava-message", handleMessage);
+    return () => window.removeEventListener("ava-message", handleMessage);
+  }, []);
+
   const handleSend = async (customText?: string) => {
     const textToSend = customText || input;
     if (!textToSend.trim() || loading) return;
@@ -31,21 +43,21 @@ export default function GlobalAvaChat({ onOpenResume }: GlobalAvaChatProps) {
     if (!customText) setInput("");
     setLoading(true);
 
-    // Trigger page-scrolling heuristics based on query keyword matching
+    // Trigger page-scrolling and tab-switching heuristics based on query keyword matching
     const q = textToSend.toLowerCase();
     let actionFeedback = "";
     if (q.includes("project") || q.includes("work history") || q.includes("portfolio")) {
-      const el = document.getElementById("projects");
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-        actionFeedback = "\n\n*(I have automatically scrolled to the Projects section for you!)*";
-      }
+      window.dispatchEvent(new CustomEvent("os-navigate", { detail: "projects" }));
+      actionFeedback = "\n\n*(I have automatically navigated to the Projects app window for you!)*";
     } else if (q.includes("contact") || q.includes("hire") || q.includes("reach") || q.includes("email")) {
-      const el = document.getElementById("contact");
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-        actionFeedback = "\n\n*(I have scrolled down to the Contact details section for you!)*";
-      }
+      window.dispatchEvent(new CustomEvent("os-navigate", { detail: "contact" }));
+      actionFeedback = "\n\n*(I have navigated to the Contact app window for you!)*";
+    } else if (q.includes("skill") || q.includes("technology") || q.includes("stack") || q.includes("graph")) {
+      window.dispatchEvent(new CustomEvent("os-navigate", { detail: "graph" }));
+      actionFeedback = "\n\n*(I have navigated to the Skill Graph app window!)*";
+    } else if (q.includes("experience") || q.includes("career") || q.includes("work")) {
+      window.dispatchEvent(new CustomEvent("os-navigate", { detail: "career" }));
+      actionFeedback = "\n\n*(I have navigated to the Career app window!)*";
     } else if (q.includes("cv") || q.includes("resume") || q.includes("print") || q.includes("download")) {
       onOpenResume();
       actionFeedback = "\n\n*(Opening Malila's resume modal...)*";
@@ -73,6 +85,7 @@ export default function GlobalAvaChat({ onOpenResume }: GlobalAvaChatProps) {
   };
 
   const chips = [
+    "Show me backend projects",
     "What is your strongest project?",
     "Summarize Malila's experience.",
     "Does he know Ruby on Rails?",
@@ -101,7 +114,7 @@ export default function GlobalAvaChat({ onOpenResume }: GlobalAvaChatProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-20 right-6 z-50 w-[calc(100%-3rem)] sm:w-96 h-[480px] bg-card border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col backdrop-blur-xl"
+            className="fixed bottom-20 right-6 z-50 w-[calc(100%-3rem)] sm:w-96 h-[480px] bg-card border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col backdrop-blur-xl relative"
           >
             {/* Header */}
             <div className="px-4 py-3 bg-muted/40 border-b border-border flex items-center justify-between">
