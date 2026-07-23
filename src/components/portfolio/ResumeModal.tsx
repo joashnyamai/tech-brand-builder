@@ -667,19 +667,37 @@ User inquiry about Malila's CV: "${text}"`;
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
             transition={{ type: "spring", damping: 25, stiffness: 220 }}
           >
-            {/* Ubuntu Yaru Modal Title Bar */}
-            <div className="w-full bg-[#2a2a2a] border-b border-[#1c1c1c] px-4 py-2.5 flex items-center justify-between select-none shrink-0 z-30">
-              <span className="text-[11px] font-bold text-white/80 font-mono flex items-center gap-1.5 uppercase">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#E95420]" />
-                PROFILE <b className="text-white/40">/</b> resume.pdf
+            {/* macOS Modal Title Bar */}
+            <div className="w-full bg-[#1e1e1e] border-b border-black/30 px-4 py-2.5 flex items-center justify-between select-none relative shrink-0 z-30">
+              {/* macOS Traffic Lights on the Left */}
+              <div className="flex items-center gap-1.5 shrink-0 z-10 group/modal-controls">
+                <button 
+                  onClick={onClose}
+                  className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] hover:bg-[#FF5F56]/80 flex items-center justify-center text-[6px] text-[#4c0000] font-bold select-none cursor-pointer animate-none" 
+                  aria-label="Close"
+                >
+                  <span className="opacity-0 group-hover/modal-controls:opacity-100 transition-opacity">×</span>
+                </button>
+                <button className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] hover:bg-[#FFBD2E]/80 flex items-center justify-center text-[6px] text-[#5c3e00] font-bold select-none cursor-default" aria-label="Minimize">
+                  <span className="opacity-0 group-hover/modal-controls:opacity-100 transition-opacity">-</span>
+                </button>
+                <button className="w-2.5 h-2.5 rounded-full bg-[#27C93F] hover:bg-[#27C93F]/80 flex items-center justify-center text-[5px] text-[#004d00] font-bold select-none cursor-default" aria-label="Maximize">
+                  <span className="opacity-0 group-hover/modal-controls:opacity-100 transition-opacity">+</span>
+                </button>
+              </div>
+
+              {/* Centered Title */}
+              <span className="text-[10px] font-bold text-white/80 font-mono tracking-wide uppercase absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
+                PROFILE <b className="text-white/30">/</b> resume.pdf
               </span>
-              <div className="window-controls flex items-center gap-2">
-                {/* Ask Ava control indicator */}
+
+              {/* Ask Ava control indicator on the Right */}
+              <div className="flex items-center gap-2">
                 <button 
                   onClick={() => setIsChatOpen(!isChatOpen)}
                   className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase transition-all flex items-center gap-1 border ${
                     isChatOpen 
-                      ? "border-[#E95420]/30 bg-[#E95420]/10 text-white" 
+                      ? "border-cyan/30 bg-cyan/10 text-white" 
                       : "border-white/10 text-white/40 hover:text-white"
                   }`}
                   title="Toggle Ask Ava Copilot"
@@ -687,13 +705,6 @@ User inquiry about Malila's CV: "${text}"`;
                   <Cpu size={10} />
                   <span>Ask Ava</span>
                 </button>
-                <button className="w-2.5 h-2.5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[7px]" aria-label="Minimize" />
-                <button className="w-2.5 h-2.5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[7px]" aria-label="Maximize" />
-                <button 
-                  onClick={onClose}
-                  className="w-2.5 h-2.5 rounded-full bg-[#E95420] hover:bg-[#E95420]/80 flex items-center justify-center text-[7px] text-white" 
-                  aria-label="Close" 
-                />
               </div>
             </div>
 
@@ -795,6 +806,7 @@ User inquiry about Malila's CV: "${text}"`;
                       className="p-1.5 rounded-lg border border-white/10 text-muted-foreground hover:text-cyan hover:bg-white/5 transition-all flex items-center justify-center"
                       title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
                     >
+                      {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
                     </button>
                   </div>
                 </div>

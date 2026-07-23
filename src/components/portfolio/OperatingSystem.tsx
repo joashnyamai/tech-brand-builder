@@ -31,14 +31,25 @@ export default function OperatingSystem({ onOpenResume }: { onOpenResume: () => 
   const [xray, setXray] = useState<typeof projects[number] | null>(null);
   const [showMatrix, setShowMatrix] = useState(false);
   const [time, setTime] = useState("");
+  const [mobileTime, setMobileTime] = useState("");
 
   useEffect(() => {
     const updateTime = () => {
       const date = new Date();
-      const parts = date.toLocaleDateString("en-US", { month: "short", day: "numeric" }).split(" ");
-      const hours = date.getHours().toString().padStart(2, "0");
+      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const dayName = days[date.getDay()];
+      const monthName = months[date.getMonth()];
+      const dayNum = date.getDate();
+      
+      let hours = date.getHours();
       const minutes = date.getMinutes().toString().padStart(2, "0");
-      setTime(`${parts[0]} ${parts[1]}  ${hours}:${minutes}`);
+      const ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      
+      setTime(`${dayName} ${monthName} ${dayNum}  ${hours}:${minutes} ${ampm}`);
+      setMobileTime(`${hours}:${minutes} ${ampm}`);
     };
     updateTime();
     const interval = setInterval(updateTime, 60000);
@@ -105,76 +116,78 @@ export default function OperatingSystem({ onOpenResume }: { onOpenResume: () => 
   const related = projects.filter(project => project.stack.some(stack => stack.toLowerCase().includes(node.toLowerCase()) || node.toLowerCase().includes(stack.toLowerCase())));
   return (
     <>
-      <main className="os-shell min-h-screen overflow-hidden text-white selection:bg-violet-300 selection:text-slate-950 pl-[68px] pt-7 bg-[#2c001e]">
+      <main className="os-shell min-h-screen md:overflow-hidden text-white selection:bg-violet-300 selection:text-slate-950 pl-0 pt-6 pb-6 md:pb-24 bg-[#0a0c16]">
         <div className="ambient ambient-one" />
         <div className="ambient ambient-two" />
         
-        {/* Ubuntu Full-Width Top Bar */}
-        <header className="fixed top-0 left-0 right-0 h-7 bg-[#111111] text-[11px] text-white/90 px-4 flex items-center justify-between z-50 font-sans shadow-md select-none">
-          <div className="flex items-center gap-4">
-            <span className="font-extrabold hover:text-white cursor-pointer transition-colors">Activities</span>
-            <span className="text-white/40">|</span>
-            <span className="capitalize font-mono tracking-tight text-white/80">{active}</span>
+        {/* iOS Status Bar */}
+        <nav className="fixed top-0 left-0 right-0 h-6 px-6 bg-transparent flex items-center justify-between z-50 text-[11px] font-semibold text-white/90 select-none md:hidden">
+          <span>{mobileTime}</span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px]">📶</span>
+            <span className="text-[9px] font-mono">5G</span>
+            <span className="text-[10px]">🔋</span>
           </div>
-          <div className="font-bold text-white/85 text-xs">
-            {time || "Jul 23  17:36"}
-          </div>
-          <div className="flex items-center gap-3.5 text-white/60">
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.17 19.58 10.53 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/>
-            </svg>
-            <span className="text-[10px] font-bold">100%</span>
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-            </svg>
-          </div>
-        </header>
+        </nav>
 
-        {/* Ubuntu Vertical Left-Sidebar Launcher (Adaptive to Bottom Dock on mobile) */}
-        <nav className="fixed left-0 top-7 bottom-0 w-[68px] bg-[#111111]/85 backdrop-blur-md border-r border-white/5 flex flex-col items-center py-4 gap-3 z-40 select-none overflow-y-auto max-md:left-1/2 max-md:bottom-4 max-md:top-auto max-md:w-max max-md:-translate-x-1/2 max-md:h-14 max-md:flex-row max-md:py-2 max-md:px-4 max-md:rounded-2xl max-md:border max-md:border-white/10 max-md:shadow-2xl">
-          {appList.map(({ id, label, icon: Icon }) => {
-            const isActive = active === id;
+        {/* macOS Menu Bar */}
+        <nav className="fixed top-0 left-0 right-0 h-6 bg-[#161616]/75 border-b border-white/5 backdrop-blur-md flex items-center justify-between px-4 z-50 text-[11px] font-medium text-white/95 select-none shadow-sm font-sans max-md:hidden">
+          <div className="flex items-center gap-4">
+            <span className="text-[13px] font-semibold cursor-pointer"></span>
+            <span className="font-bold cursor-pointer">MalilaOS</span>
+            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">File</span>
+            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">Edit</span>
+            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">View</span>
+            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">Go</span>
+            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">Window</span>
+            <span className="hidden sm:inline cursor-pointer opacity-80 hover:opacity-100">Help</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="hidden sm:inline opacity-75">100% [🔋]</span>
+            <span className="opacity-75">📶</span>
+            <button 
+              onClick={() => setPalette(true)}
+              className="opacity-75 hover:opacity-100 transition-opacity flex items-center"
+              title="Search (⌘K)"
+            >
+              🔍
+            </button>
+            <span className="font-mono opacity-90">{time}</span>
+          </div>
+        </nav>
+
+        {/* macOS Centered Floating Dock */}
+        <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-max max-w-[95vw] h-14 bg-slate-900/60 backdrop-blur-xl border border-white/10 flex items-center px-4 gap-4 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.5)] z-40 select-none overflow-x-auto max-md:hidden">
+          {appList.map((app) => {
+            const Icon = app.icon;
+            const isActive = active === app.id;
             return (
               <button
-                key={id}
-                onClick={() => setActive(id)}
-                className={`relative w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-200 group cursor-pointer ${
-                  isActive
-                    ? "bg-[#E95420]/15 border border-[#E95420]/30 text-white"
-                    : "text-white/50 hover:bg-white/5 hover:text-white"
-                }`}
-                title={label}
+                key={app.id}
+                onClick={() => setActive(app.id)}
+                className="relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 hover:scale-110 group text-white/70 hover:text-white shrink-0 cursor-pointer"
               >
-                {/* Active Indicator Pip (Left on desktop, Bottom on mobile) */}
-                {isActive && (
-                  <span className="absolute left-0 top-[35%] w-1 h-[30%] bg-[#E95420] rounded-r-md max-md:left-[35%] max-md:bottom-0 max-md:w-[30%] max-md:h-1 max-md:top-auto" />
-                )}
-                <Icon size={18} />
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 border border-white/10 shadow-sm group-hover:bg-white/10 transition-colors">
+                  <Icon size={16} />
+                </div>
                 {/* Tooltip on hover (Hidden on mobile) */}
-                <span className="absolute left-[78px] px-2.5 py-1 rounded bg-[#2b2b2b] text-[10px] text-white/90 font-mono tracking-tight border border-white/5 shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 origin-left transition-all duration-150 pointer-events-none whitespace-nowrap z-50 max-md:hidden">
-                  {label}
+                <span className="absolute bottom-12 px-2 py-0.5 rounded bg-[#1c1c1f] text-[9px] text-white font-sans opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-150 pointer-events-none shadow-md border border-white/5 whitespace-nowrap z-50 max-md:hidden">
+                  {app.label}
                 </span>
+                {/* Active indicator dot */}
+                {isActive && (
+                  <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-white shadow-[0_0_5px_#fff]" />
+                )}
               </button>
             );
           })}
-
-          <div className="w-8 h-[1px] bg-white/10 my-1 max-md:w-[1px] max-md:h-8 max-md:mx-1 max-md:my-0" />
-
-          {/* Search/Palette Trigger */}
-          <button
-            onClick={() => setPalette(true)}
-            className="w-11 h-11 rounded-xl flex items-center justify-center text-white/50 hover:bg-white/5 hover:text-white cursor-pointer group"
-            title="Search command"
-          >
-            <Search size={17} />
-            <span className="absolute left-[78px] px-2.5 py-1 rounded bg-[#2b2b2b] text-[10px] text-white/90 font-mono tracking-tight border border-white/5 shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 origin-left transition-all duration-150 pointer-events-none whitespace-nowrap z-50 max-md:hidden">
-              Search Ctrl+K
-            </span>
-          </button>
         </nav>
 
+        {/* iOS Home Indicator Bar */}
+        <div className="fixed bottom-2 left-1/2 -translate-x-1/2 w-36 h-1 rounded-full bg-white/35 z-50 pointer-events-none md:hidden" />
+
         {/* Workspace content container */}
-        <section className="relative w-full h-[calc(100vh-28px)] overflow-hidden flex flex-col p-4 md:p-6 select-none justify-center max-md:h-[calc(100vh-28px-74px)]">
+        <section className="relative w-full h-[calc(100vh-96px)] md:overflow-hidden overflow-y-auto flex flex-col p-4 md:p-6 select-none md:justify-center justify-start">
           <AnimatePresence mode="wait">
             <motion.div
               key={active}
@@ -186,26 +199,26 @@ export default function OperatingSystem({ onOpenResume }: { onOpenResume: () => 
             >
 
               {active === "home" && <Home setActive={setActive} onOpenResume={onOpenResume} />}
-              {active === "profile" && <Window eyebrow="PROFILE" title="professional summary"><About isOs={true} /></Window>}
-              {active === "projects" && <Window eyebrow="ARCHIVE" title="selected projects"><ProjectsSection isOs={true} /></Window>}
-              {active === "graph" && <Graph node={node} setNode={setNode} related={related} experiences={experiences.filter(experience => Number(experience.period.match(/20\d{2}/)?.[0] || 2026) <= year).length} skills={skills.filter((_, index) => year >= 2022 + Math.min(index, 3)).length} />}
-              {active === "timeline" && <TimelineExplorer year={year} setYear={setYear} projects={projects} experiences={experiences} skills={skills} />}
-              {active === "terminal" && <TerminalApp lines={lines} input={input} setInput={setInput} run={run} />}
-              {active === "resume" && <Resume open={onOpenResume} />}
-              {active === "contact" && <Window eyebrow="CHANNEL" title="contact"><ContactSection onViewResume={onOpenResume} isOs={true} /></Window>}
-              {active === "career" && <Window eyebrow="CAREER" title="professional background"><Experience isOs={true} /></Window>}
-              {active === "education" && <Window eyebrow="EDUCATION" title="education & credentials"><CertificationsSection isOs={true} /></Window>}
-              {active === "community" && <Window eyebrow="BEYOND CODE" title="community & leadership"><Community isOs={true} /></Window>}
-              {active === "ai" && <Window eyebrow="AVA" title="AI lab"><AiLabTeaser isOs={true} /></Window>}
-              {active === "articles" && <Window eyebrow="BUILD IN PUBLIC" title="technical notes"><Articles /></Window>}
-              {active === "certificates" && <Window eyebrow="VERIFIED" title="certificates"><CertificationsSection isOs={true} /></Window>}
-              {active === "code" && <Window eyebrow="EXPLORER" title="components"><CodeExplorer /></Window>}
-              {active === "sandbox" && <Window eyebrow="LIVE" title="coding sandbox"><Sandbox /></Window>}
+              {active === "profile" && <Window eyebrow="PROFILE" title="professional summary" onClose={() => setActive("home")}><About isOs={true} /></Window>}
+              {active === "projects" && <Window eyebrow="ARCHIVE" title="selected projects" onClose={() => setActive("home")}><ProjectsSection isOs={true} /></Window>}
+              {active === "graph" && <Graph node={node} setNode={setNode} related={related} experiences={experiences.filter(experience => Number(experience.period.match(/20\d{2}/)?.[0] || 2026) <= year).length} skills={skills.filter((_, index) => year >= 2022 + Math.min(index, 3)).length} onClose={() => setActive("home")} />}
+              {active === "timeline" && <TimelineExplorer year={year} setYear={setYear} projects={projects} experiences={experiences} skills={skills} onClose={() => setActive("home")} />}
+              {active === "terminal" && <TerminalApp lines={lines} input={input} setInput={setInput} run={run} onClose={() => setActive("home")} />}
+              {active === "resume" && <Resume open={onOpenResume} onClose={() => setActive("home")} />}
+              {active === "contact" && <Window eyebrow="CHANNEL" title="contact" onClose={() => setActive("home")}><ContactSection onViewResume={onOpenResume} isOs={true} /></Window>}
+              {active === "career" && <Window eyebrow="CAREER" title="professional background" onClose={() => setActive("home")}><Experience isOs={true} /></Window>}
+              {active === "education" && <Window eyebrow="EDUCATION" title="education & credentials" onClose={() => setActive("home")}><CertificationsSection isOs={true} /></Window>}
+              {active === "community" && <Window eyebrow="BEYOND CODE" title="community & leadership" onClose={() => setActive("home")}><Community isOs={true} /></Window>}
+              {active === "ai" && <Window eyebrow="AVA" title="AI lab" onClose={() => setActive("home")}><AiLabTeaser isOs={true} /></Window>}
+              {active === "articles" && <Window eyebrow="BUILD IN PUBLIC" title="technical notes" onClose={() => setActive("home")}><Articles /></Window>}
+              {active === "certificates" && <Window eyebrow="VERIFIED" title="certificates" onClose={() => setActive("home")}><CertificationsSection isOs={true} /></Window>}
+              {active === "code" && <Window eyebrow="EXPLORER" title="components" onClose={() => setActive("home")}><CodeExplorer /></Window>}
+              {active === "sandbox" && <Window eyebrow="LIVE" title="coding sandbox" onClose={() => setActive("home")}><Sandbox /></Window>}
             </motion.div>
           </AnimatePresence>
 
           {/* Floating Time Machine Slider */}
-          <div className="fixed right-6 bottom-6 z-40">
+          <div className="fixed right-6 bottom-6 z-40 max-md:hidden">
             <Timeline year={year} setYear={setYear} onExplore={() => setActive("timeline")} />
           </div>
         </section>
@@ -231,20 +244,34 @@ export default function OperatingSystem({ onOpenResume }: { onOpenResume: () => 
   );
 }
 
-function Window({ eyebrow, title, children }: { eyebrow:string; title:string; children:React.ReactNode }) {
+function Window({ eyebrow, title, children, onClose }: { eyebrow:string; title:string; children:React.ReactNode; onClose?:()=>void }) {
   return (
-    <section className="os-window bg-[#2c001e]/85 border border-[#77216f]/30 rounded-xl shadow-2xl backdrop-blur-md overflow-hidden flex flex-col h-full">
-      <div className="window-bar bg-[#2a2a2a] border-b border-[#1c1c1c] px-4 py-2.5 flex items-center justify-between select-none">
-        <span className="text-[11px] font-bold text-white/80 font-mono flex items-center gap-1.5 uppercase">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#E95420]" />
-          {eyebrow} <b className="text-white/40">/</b> {title}
-        </span>
-        <div className="window-controls flex items-center gap-2">
-          {/* Ubuntu Yaru controls on the right */}
-          <button className="w-2.5 h-2.5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[7px]" aria-label="Minimize" />
-          <button className="w-2.5 h-2.5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[7px]" aria-label="Maximize" />
-          <button className="w-2.5 h-2.5 rounded-full bg-[#E95420] hover:bg-[#E95420]/80 flex items-center justify-center text-[7px] text-white" aria-label="Close" />
+    <section className="os-window bg-[#12131e]/85 border border-white/10 rounded-xl shadow-2xl backdrop-blur-md overflow-hidden flex flex-col h-full relative">
+      <div className="window-bar bg-[#1e1e1e] border-b border-black/30 px-4 py-2.5 flex items-center justify-between select-none relative">
+        {/* macOS Traffic Lights on the Left */}
+        <div className="flex items-center gap-1.5 shrink-0 z-10 group/controls">
+          <button 
+            onClick={onClose}
+            className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] hover:bg-[#FF5F56]/80 flex items-center justify-center text-[6px] text-[#4c0000] font-bold select-none cursor-pointer" 
+            aria-label="Close"
+          >
+            <span className="opacity-0 group-hover/controls:opacity-100 transition-opacity">×</span>
+          </button>
+          <button className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] hover:bg-[#FFBD2E]/80 flex items-center justify-center text-[6px] text-[#5c3e00] font-bold select-none cursor-default" aria-label="Minimize">
+            <span className="opacity-0 group-hover/controls:opacity-100 transition-opacity">-</span>
+          </button>
+          <button className="w-2.5 h-2.5 rounded-full bg-[#27C93F] hover:bg-[#27C93F]/80 flex items-center justify-center text-[5px] text-[#004d00] font-bold select-none cursor-default" aria-label="Maximize">
+            <span className="opacity-0 group-hover/controls:opacity-100 transition-opacity">+</span>
+          </button>
         </div>
+        
+        {/* Centered Title */}
+        <span className="text-[10px] font-bold text-white/80 font-mono tracking-wide uppercase absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
+          {eyebrow} <b className="text-white/30">/</b> {title}
+        </span>
+
+        {/* Empty space matching height */}
+        <div className="w-12 h-2.5" />
       </div>
       <div className="flex-1 overflow-y-auto">
         {children}
@@ -259,6 +286,81 @@ function Home({
   setActive: (app: AppName) => void;
   onOpenResume: () => void;
 }) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  if (isMobile) {
+    const iosApps = [
+      { id: "profile", label: "Profile", icon: UserRound, color: "bg-blue-500" },
+      { id: "projects", label: "Projects", icon: FolderGit2, color: "bg-emerald-500" },
+      { id: "graph", label: "Skills", icon: Zap, color: "bg-amber-500" },
+      { id: "timeline", label: "Roadmap", icon: Calendar, color: "bg-indigo-500" },
+      { id: "terminal", label: "Terminal", icon: Terminal, color: "bg-zinc-800" },
+      { id: "resume", label: "Resume", icon: Briefcase, color: "bg-red-500" },
+      { id: "ai", label: "Ava Guide", icon: Bot, color: "bg-violet-600" },
+      { id: "certificates", label: "Verify", icon: Award, color: "bg-teal-500" },
+      { id: "sandbox", label: "Sandbox", icon: Sliders, color: "bg-orange-500" },
+      { id: "contact", label: "Contact", icon: Mail, color: "bg-sky-600" }
+    ];
+    return (
+      <div className="flex flex-col h-full w-full max-w-md mx-auto select-none pt-4">
+        {/* iOS Clock/Welcome Widget */}
+        <div className="bg-white/5 border border-white/10 rounded-[24px] p-5 backdrop-blur-md mb-6 space-y-4 shadow-xl">
+          <div className="flex justify-between items-center pb-2 border-b border-white/5">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
+              <span className="text-[11px] font-bold font-mono text-cyan tracking-wider">MALILA WIDGET</span>
+            </div>
+            <span className="text-[9px] font-mono text-white/35">iOS 17</span>
+          </div>
+          <div className="flex gap-4 items-center">
+            <img src="/profile.jpg" alt="Malila Nyamai" className="w-12 h-12 rounded-full border border-cyan/30 shadow-md" />
+            <div>
+              <h3 className="text-sm font-black text-white font-mono">Malila Nyamai</h3>
+              <p className="text-[11px] text-white/50">Full-Stack QA & Product Engineer</p>
+            </div>
+          </div>
+          <p className="text-[11px] text-white/60 leading-relaxed font-sans pt-1">
+            Tap any app icon below to explore my workspace, run terminal commands, view interactive credentials, or chat with Ava!
+          </p>
+        </div>
+
+        {/* iOS App Screen Grid */}
+        <div className="grid grid-cols-4 gap-y-7 gap-x-2 px-1">
+          {iosApps.map((app) => {
+            const Icon = app.icon;
+            return (
+              <button
+                key={app.id}
+                onClick={() => {
+                  if (app.id === "resume") {
+                    setActive("resume");
+                    onOpenResume();
+                  } else {
+                    setActive(app.id);
+                  }
+                }}
+                className="flex flex-col items-center group cursor-pointer"
+              >
+                <div className={`w-14 h-14 rounded-2xl ${app.color} flex items-center justify-center shadow-lg transform active:scale-90 transition-transform`}>
+                  <Icon size={24} className="text-white" />
+                </div>
+                <span className="text-[10px] text-white/80 font-sans text-center mt-1.5 truncate max-w-full font-medium tracking-tight">
+                  {app.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="grid h-full gap-4 lg:grid-cols-[1.4fr_.8fr]">
       {/* Welcome Card */}
@@ -405,13 +507,15 @@ function Graph({
   setNode,
   related,
   experiences,
-  skills
+  skills,
+  onClose
 }: {
   node: string;
   setNode: (value: string) => void;
   related: ReturnType<typeof usePortfolioData>["projects"];
   experiences: number;
   skills: number;
+  onClose?: () => void;
 }) {
   const [filter, setFilter] = useState<"all" | "frontend" | "backend" | "qa" | "cloud_ai">("all");
 
@@ -443,7 +547,7 @@ function Graph({
   const filteredNodes = filter === "all" ? skillNodes : skillNodes.filter(n => n.category === filter);
 
   return (
-    <Window eyebrow="HUD" title="knowledge & skills graph">
+    <Window eyebrow="HUD" title="knowledge & skills graph" onClose={onClose}>
       <div className="grid lg:grid-cols-[1.3fr_.7fr] min-h-[480px]">
         {/* Left Side: Interactive Node Matrix */}
         <div className="p-5 flex flex-col justify-between border-r border-white/5 bg-[#05080e]/40">
@@ -610,10 +714,10 @@ function Graph({
     </Window>
   );
 }
-function TerminalApp({lines,input,setInput,run}:{lines:string[];input:string;setInput:(value:string)=>void;run:()=>void}) { return <Window eyebrow="DEV" title="terminal"><div className="terminal-view">{lines.map((line,index)=><p key={index} className={line.startsWith("malila")?"text-violet-200":"text-emerald-200/80"}>{line}</p>)}<form onSubmit={event=>{event.preventDefault();run()}} className="flex gap-2"><span className="text-violet-300">malila@os:~$</span><input autoFocus value={input} onChange={event=>setInput(event.target.value)}/></form></div></Window> }
-function Resume({open}:{open:()=>void}) {
+function TerminalApp({lines,input,setInput,run,onClose}:{lines:string[];input:string;setInput:(value:string)=>void;run:()=>void;onClose?:()=>void}) { return <Window eyebrow="DEV" title="terminal" onClose={onClose}><div className="terminal-view">{lines.map((line,index)=><p key={index} className={line.startsWith("malila")?"text-violet-200":"text-emerald-200/80"}>{line}</p>)}<form onSubmit={event=>{event.preventDefault();run()}} className="flex gap-2"><span className="text-violet-300">malila@os:~$</span><input autoFocus value={input} onChange={event=>setInput(event.target.value)}/></form></div></Window> }
+function Resume({open,onClose}:{open:()=>void;onClose?:()=>void}) {
   return (
-    <Window eyebrow="PROFILE" title="resume.pdf">
+    <Window eyebrow="PROFILE" title="resume.pdf" onClose={onClose}>
       <div className="resume-page flex flex-col items-center justify-center text-center p-8 md:p-12 space-y-6">
         <div className="w-16 h-16 rounded-2xl bg-cyan bg-opacity-10 border border-cyan border-opacity-35 flex items-center justify-center text-cyan shadow-lg shadow-cyan/10 animate-pulse">
           <UserRound size={32} />
@@ -637,6 +741,6 @@ function Resume({open}:{open:()=>void}) {
 }
 function LegacyContact(){return <Window eyebrow="CHANNEL" title="contact"><div className="contact-page"><div className="eyebrow"><span/> LET’S MAKE SOMETHING USEFUL</div><h2>Got a tricky idea?<br/><em>Let’s talk.</em></h2><p>I’m always happy to meet thoughtful people building ambitious things.</p><div className="contact-links"><a href="mailto:hello@malila.dev"><Mail/> hello@malila.dev <ChevronRight/></a><a href="https://github.com/joashnyamai" target="_blank" rel="noreferrer"><Github/> github.com/joashnyamai <ChevronRight/></a><a href="#location"><MapPin/> Nairobi, Kenya <ChevronRight/></a></div></div></Window>}
 function Timeline({year,setYear,onExplore}:{year:number;setYear:(year:number)=>void;onExplore:()=>void}){return <div className="time-machine"><button onClick={onExplore}><span className="eyebrow"><span/> TIME MACHINE</span><b>{year}</b></button><input aria-label="Career timeline" type="range" min="2022" max="2026" value={year} onChange={event=>{const y=Number(event.target.value);setYear(y);onExplore();}}/><div className="timeline-years"><span>2022</span><span>2023</span><span>2024</span><span>2025</span><span>2026</span></div><button className="timeline-open" onClick={onExplore}>Explore year →</button></div>}
-function TimelineExplorer({year,setYear,projects,experiences,skills}:{year:number;setYear:(year:number)=>void;projects:ReturnType<typeof usePortfolioData>["projects"];experiences:ReturnType<typeof usePortfolioData>["experiences"];skills:ReturnType<typeof usePortfolioData>["skills"]}){const milestones:Record<number,{title:string;summary:string;focus:string[]}>={2022:{title:"Foundations",summary:"Building the academic, support, and digital-literacy foundations that shaped a practical technology career.",focus:["IT support","Digital literacy","Security basics"]},2023:{title:"Early practice",summary:"Moving from study into hands-on support, testing, and early product work.",focus:["Manual testing","Jira","Documentation"]},2024:{title:"Quality engineering",summary:"Strengthening delivery confidence through API testing, database validation, and automation workflows.",focus:["Postman","SQL","CI/CD"]},2025:{title:"Product builder",summary:"Shipping full-stack products and collaborating across development, quality, and business needs.",focus:["React","Node.js","PostgreSQL"]},2026:{title:"Systems thinking",summary:"Connecting product engineering, AI workflows, and quality systems into a broader technical practice.",focus:["AI agents","Architecture","Product strategy"]}};const stage=milestones[year];const visibleProjects=projects.filter(project=>Number(project.period.match(/20\d{2}/)?.[0]||2026)<=year);const visibleExperience=experiences.filter(experience=>Number(experience.period.match(/20\d{2}/)?.[0]||2026)<=year);const visibleSkills=skills.slice(0,Math.max(1,year-2021));return <Window eyebrow="TIME MACHINE" title={`${year} / ${stage.title}`}><div className="timeline-explorer"><div className="timeline-explorer-head"><div><div className="eyebrow"><span/> CAREER EVOLUTION</div><h2>{stage.title}</h2><p>{stage.summary}</p></div><b>{year}</b></div><input aria-label="Explore career year" type="range" min="2022" max="2026" value={year} onChange={event=>setYear(Number(event.target.value))}/><div className="timeline-year-buttons">{[2022,2023,2024,2025,2026].map(value=><button key={value} onClick={()=>setYear(value)} className={value===year?"active":""}>{value}</button>)}</div><div className="timeline-stage-grid"><section><span>FOCUS UNLOCKED</span>{stage.focus.map(item=><Pill key={item}>{item}</Pill>)}</section><section><span>PROJECTS / {visibleProjects.length}</span>{visibleProjects.length?visibleProjects.slice(0,3).map(project=><p key={project.name}>{project.name}</p>):<p>Project work emerges in later stages.</p>}</section><section><span>EXPERIENCE / {visibleExperience.length}</span>{visibleExperience.length?visibleExperience.slice(0,3).map(experience=><p key={experience.role}>{experience.role}</p>):<p>Experience detail appears as the journey advances.</p>}</section><section><span>SKILL GROUPS / {visibleSkills.length}</span>{visibleSkills.map(group=><p key={group.category}>{group.category}</p>)}</section></div></div></Window>}
+function TimelineExplorer({year,setYear,projects,experiences,skills,onClose}:{year:number;setYear:(year:number)=>void;projects:ReturnType<typeof usePortfolioData>["projects"];experiences:ReturnType<typeof usePortfolioData>["experiences"];skills:ReturnType<typeof usePortfolioData>["skills"];onClose?:()=>void}){const milestones:Record<number,{title:string;summary:string;focus:string[]}>={2022:{title:"Foundations",summary:"Building the academic, support, and digital-literacy foundations that shaped a practical technology career.",focus:["IT support","Digital literacy","Security basics"]},2023:{title:"Early practice",summary:"Moving from study into hands-on support, testing, and early product work.",focus:["Manual testing","Jira","Documentation"]},2024:{title:"Quality engineering",summary:"Strengthening delivery confidence through API testing, database validation, and automation workflows.",focus:["Postman","SQL","CI/CD"]},2025:{title:"Product builder",summary:"Shipping full-stack products and collaborating across development, quality, and business needs.",focus:["React","Node.js","PostgreSQL"]},2026:{title:"Systems thinking",summary:"Connecting product engineering, AI workflows, and quality systems into a broader technical practice.",focus:["AI agents","Architecture","Product strategy"]}};const stage=milestones[year];const visibleProjects=projects.filter(project=>Number(project.period.match(/20\d{2}/)?.[0]||2026)<=year);const visibleExperience=experiences.filter(experience=>Number(experience.period.match(/20\d{2}/)?.[0]||2026)<=year);const visibleSkills=skills.slice(0,Math.max(1,year-2021));return <Window eyebrow="TIME MACHINE" title={`${year} / ${stage.title}`} onClose={onClose}><div className="timeline-explorer"><div className="timeline-explorer-head"><div><div className="eyebrow"><span/> CAREER EVOLUTION</div><h2>{stage.title}</h2><p>{stage.summary}</p></div><b>{year}</b></div><input aria-label="Explore career year" type="range" min="2022" max="2026" value={year} onChange={event=>setYear(Number(event.target.value))}/><div className="timeline-year-buttons">{[2022,2023,2024,2025,2026].map(value=><button key={value} onClick={()=>setYear(value)} className={value===year?"active":""}>{value}</button>)}</div><div className="timeline-stage-grid"><section><span>FOCUS UNLOCKED</span>{stage.focus.map(item=><Pill key={item}>{item}</Pill>)}</section><section><span>PROJECTS / {visibleProjects.length}</span>{visibleProjects.length?visibleProjects.slice(0,3).map(project=><p key={project.name}>{project.name}</p>):<p>Project work emerges in later stages.</p>}</section><section><span>EXPERIENCE / {visibleExperience.length}</span>{visibleExperience.length?visibleExperience.slice(0,3).map(experience=><p key={experience.role}>{experience.role}</p>):<p>Experience detail appears as the journey advances.</p>}</section><section><span>SKILL GROUPS / {visibleSkills.length}</span>{visibleSkills.map(group=><p key={group.category}>{group.category}</p>)}</section></div></div></Window>}
 function Palette({query,setQuery,close,setActive,projects,skills,experiences}:{query:string;setQuery:(value:string)=>void;close:()=>void;setActive:(app:AppName)=>void;projects:ReturnType<typeof usePortfolioData>["projects"];skills:string[];experiences:string[]}){const needle=query.toLowerCase();const apps=appList.filter(app=>app.label.toLowerCase().includes(needle));const projectResults=projects.filter(project=>`${project.name} ${project.stack.join(" ")}`.toLowerCase().includes(needle)).slice(0,4);const skillResults=skills.filter(skill=>skill.toLowerCase().includes(needle)).slice(0,4);const experienceResults=experiences.filter(role=>role.toLowerCase().includes(needle)).slice(0,3);const action=(app:AppName)=>{setActive(app);close()};return <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="palette-layer" onMouseDown={close}><motion.div initial={{y:-16,scale:.98}} animate={{y:0,scale:1}} onMouseDown={event=>event.stopPropagation()} className="command-card"><div className="flex items-center gap-3 border-b border-white/10 px-5 py-4"><Search className="text-violet-300" size={19}/><input autoFocus value={query} onChange={event=>setQuery(event.target.value)} placeholder="Search projects, skills, experience, code…"/><kbd><Command size={11}/>K</kbd></div><div className="max-h-[430px] overflow-y-auto p-2"><p className="px-3 py-2 text-[10px] font-bold uppercase tracking-[.2em] text-white/35">Apps</p>{apps.map(({id,label,icon:Icon})=><button key={id} className="command-result" onClick={()=>action(id)}><Icon size={16}/><span>{label}</span><ChevronRight size={15}/></button>)}{projectResults.length>0&&<><p className="px-3 py-2 text-[10px] font-bold uppercase tracking-[.2em] text-white/35">Projects</p>{projectResults.map(project=><button key={project.name} className="command-result" onClick={()=>action("projects")}><FolderGit2 size={16}/><span>{project.name}</span><ChevronRight size={15}/></button>)}</>}{skillResults.length>0&&<><p className="px-3 py-2 text-[10px] font-bold uppercase tracking-[.2em] text-white/35">Skills</p>{skillResults.map(skill=><button key={skill} className="command-result" onClick={()=>action("graph")}><Zap size={16}/><span>{skill}</span><ChevronRight size={15}/></button>)}</>}{experienceResults.length>0&&<><p className="px-3 py-2 text-[10px] font-bold uppercase tracking-[.2em] text-white/35">Experience</p>{experienceResults.map(role=><button key={role} className="command-result" onClick={()=>action("resume")}><UserRound size={16}/><span>{role}</span><ChevronRight size={15}/></button>)}</>}</div></motion.div></motion.div>}
 function Pill({children}:{children:React.ReactNode}){return <span className="pill">{children}</span>}function Stat({value,label}:{value:string;label:string}){return <div><b className="text-xl">{value}</b><p className="mt-1 text-xs text-white/45">{label}</p></div>}
