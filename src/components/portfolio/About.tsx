@@ -97,6 +97,63 @@ export default function About({ isOs = false }: { isOs?: boolean }) {
       className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6"}
     >
       <div className="max-w-6xl mx-auto">
+        {/* Welcome Hero Section at the top of Profile */}
+        <div className="mb-16 bg-[#12131e]/40 border border-white/5 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row gap-8 items-center justify-between select-none">
+          <div className="space-y-6 max-w-2xl text-left">
+            {/* Header info */}
+            <div className="flex items-center gap-4">
+              <img src="/profile.jpg" alt="Malila Nyamai" className="w-16 h-16 rounded-full border-2 border-cyan/30 shadow-[0_0_10px_rgba(6,182,212,0.15)]" />
+              <div>
+                <h2 className="text-sm font-black font-mono tracking-wider text-cyan">MALILA NYAMAI</h2>
+                <p className="text-xs text-white/45 font-mono">Full-Stack & QA Engineer</p>
+              </div>
+            </div>
+
+            {/* Main Hero Title */}
+            <h1 className="font-display font-black text-3xl sm:text-5xl leading-tight tracking-tight text-white">
+              I build systems <br />
+              people <span className="text-cyan font-serif italic drop-shadow-[0_0_6px_rgba(6,182,212,0.2)]">love</span> to use.
+            </h1>
+
+            {/* Tagline description */}
+            <p className="text-xs sm:text-sm leading-relaxed text-white/55">
+              Over 3 years of experience crafting secure React/Node frameworks, automated test suites (Selenium/Postman), and reliable product architectures.
+            </p>
+
+            {/* CTA Actions */}
+            <div className="flex flex-wrap gap-3 pt-2">
+              <a 
+                href="#projects-section"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const event = new CustomEvent("os-navigate", { detail: "projects" });
+                  window.dispatchEvent(event);
+                }}
+                className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan/90 text-slate-950 text-xs font-bold transition-all duration-200 shadow-lg shadow-cyan/10 flex items-center gap-1.5 cursor-pointer"
+              >
+                Explore work ➔
+              </a>
+              <button 
+                onClick={() => {
+                  const event = new CustomEvent("os-navigate", { detail: "ai" });
+                  window.dispatchEvent(event);
+                }}
+                className="px-5 py-2.5 rounded-xl border border-white/10 hover:border-cyan/30 hover:bg-cyan/5 text-white/85 text-xs font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer"
+              >
+                AI Lab ✨
+              </button>
+            </div>
+          </div>
+          
+          {/* Ambient graphic representation */}
+          <div className="relative w-40 h-40 bg-cyan/5 rounded-2xl border border-cyan/15 flex flex-col items-center justify-center p-4 text-center shrink-0 hidden md:flex">
+            <div className="absolute top-2 left-2 w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
+            <div className="absolute top-2 right-2 text-[8px] font-mono text-white/30">v3.1</div>
+            <span className="text-4xl">💻</span>
+            <span className="text-[10px] font-mono font-bold text-cyan mt-3 tracking-widest uppercase">QA & DEV LAB</span>
+          </div>
+        </div>
+
         {!isOs && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -105,11 +162,11 @@ export default function About({ isOs = false }: { isOs?: boolean }) {
             className="mb-16"
           >
             <span className="text-cyan text-xs tracking-widest uppercase font-medium">01 / About</span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
-            The Engineer Behind <br className="hidden md:block" />
-            <span className="text-gradient">the Code</span>
-          </h2>
-          <div className="section-divider mb-8" />
+            <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
+              The Engineer Behind <br className="hidden md:block" />
+              <span className="text-gradient">the Code</span>
+            </h2>
+            <div className="section-divider mb-8" />
           </motion.div>
         )}
 

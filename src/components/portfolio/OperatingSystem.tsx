@@ -13,15 +13,15 @@ import ProjectsSection from "@/components/portfolio/Projects";
 import MatrixRain from "@/components/portfolio/MatrixRain";
 
 type AppName = "home" | "profile" | "career" | "education" | "community" | "ai" | "projects" | "graph" | "timeline" | "terminal" | "resume" | "contact" | "articles" | "certificates" | "code" | "sandbox";
-const appList: { id: AppName; label: string; icon: typeof Bot; tone: string }[] = [
-  { id: "home", label: "Ava AI", icon: Bot, tone: "bg-violet-400" }, { id: "profile", label: "Profile", icon: UserRound, tone: "bg-indigo-300" }, { id: "projects", label: "Projects", icon: FolderGit2, tone: "bg-cyan-400" },
-  { id: "graph", label: "Skill Graph", icon: Zap, tone: "bg-amber-300" }, { id: "timeline", label: "Timeline", icon: Play, tone: "bg-cyan-300" }, { id: "terminal", label: "Terminal", icon: Terminal, tone: "bg-emerald-400" },
+const appList: { id: AppName; label: string; icon: typeof Bot | typeof Terminal; tone: string }[] = [
+  { id: "terminal", label: "Terminal CLI", icon: Terminal, tone: "bg-emerald-400" }, { id: "profile", label: "Profile", icon: UserRound, tone: "bg-indigo-300" }, { id: "projects", label: "Projects", icon: FolderGit2, tone: "bg-cyan-400" },
+  { id: "graph", label: "Skill Graph", icon: Zap, tone: "bg-amber-300" }, { id: "timeline", label: "Timeline", icon: Play, tone: "bg-cyan-300" },
   { id: "career", label: "Career", icon: UserRound, tone: "bg-teal-300" }, { id: "education", label: "Education", icon: FileText, tone: "bg-pink-300" }, { id: "community", label: "Beyond code", icon: Zap, tone: "bg-orange-300" }, { id: "ai", label: "AI Lab", icon: Bot, tone: "bg-fuchsia-300" }, { id: "resume", label: "Resume", icon: FileText, tone: "bg-rose-400" }, { id: "contact", label: "Contact", icon: Mail, tone: "bg-blue-400" }, { id: "articles", label: "Notes", icon: FileText, tone: "bg-lime-300" }, { id: "certificates", label: "Certificates", icon: Zap, tone: "bg-pink-300" }, { id: "code", label: "Code", icon: Code2, tone: "bg-sky-300" }, { id: "sandbox", label: "Sandbox", icon: Terminal, tone: "bg-orange-300" },
 ];
 
 export default function OperatingSystem({ onOpenResume }: { onOpenResume: () => void }) {
   const { projects, experiences, skills, certifications } = usePortfolioData();
-  const [active, setActive] = useState<AppName>("home");
+  const [active, setActive] = useState<AppName>("terminal");
   const workspaceRef = useRef<HTMLElement>(null);
   const [palette, setPalette] = useState(false);
   const [query, setQuery] = useState("");
@@ -31,6 +31,7 @@ export default function OperatingSystem({ onOpenResume }: { onOpenResume: () => 
   const [lines, setLines] = useState(["Welcome to malila@portfolio — type help to explore."]);
   const [xray, setXray] = useState<typeof projects[number] | null>(null);
   const [showMatrix, setShowMatrix] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [time, setTime] = useState("");
   const [mobileTime, setMobileTime] = useState("");
 
@@ -115,131 +116,152 @@ export default function OperatingSystem({ onOpenResume }: { onOpenResume: () => 
     setInput("");
   };
   const related = projects.filter(project => project.stack.some(stack => stack.toLowerCase().includes(node.toLowerCase()) || node.toLowerCase().includes(stack.toLowerCase())));
+
   return (
-    <>
-      <main className="os-shell min-h-screen md:overflow-hidden text-white selection:bg-violet-300 selection:text-slate-950 pl-0 pt-6 pb-6 md:pb-24 bg-[#0a0c16]">
-        <div className="ambient ambient-one" />
-        <div className="ambient ambient-two" />
-        
-        {/* iOS Status Bar */}
-        <nav className="fixed top-0 left-0 right-0 h-6 px-6 bg-transparent flex items-center justify-between z-50 text-[11px] font-semibold text-white/90 select-none md:hidden">
-          <span>{mobileTime}</span>
-          <div className="flex items-center gap-1.5">
-            <span className="text-[10px]">📶</span>
-            <span className="text-[9px] font-mono">5G</span>
-            <span className="text-[10px]">🔋</span>
-          </div>
-        </nav>
+    <div className="web-shell min-h-screen bg-[#060814] text-white flex flex-col font-sans select-text relative">
+      <div className="ambient ambient-one" />
+      <div className="ambient ambient-two" />
 
-        {/* macOS Menu Bar */}
-        <nav className="fixed top-0 left-0 right-0 h-6 bg-[#161616]/75 border-b border-white/5 backdrop-blur-md flex items-center justify-between px-4 z-50 text-[11px] font-medium text-white/95 select-none shadow-sm font-sans max-md:hidden">
-          <div className="flex items-center gap-2">
-            <span className="w-4 h-4 rounded-md bg-cyan bg-opacity-15 border border-cyan border-opacity-30 flex items-center justify-center text-[10px] text-cyan font-black font-mono shadow-sm">M</span>
-            <span className="font-extrabold cursor-pointer tracking-tight text-white">MalilaOS</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="hidden sm:inline opacity-75">100% [🔋]</span>
-            <span className="opacity-75">📶</span>
-            <button 
-              onClick={() => setPalette(true)}
-              className="opacity-75 hover:opacity-100 transition-opacity flex items-center"
-              title="Search (⌘K)"
-            >
-              🔍
-            </button>
-            <span className="font-mono opacity-90">{time}</span>
-          </div>
-        </nav>
+      {/* Premium Web Navbar */}
+      <nav className="sticky top-0 left-0 right-0 h-16 bg-[#060814]/85 border-b border-white/5 backdrop-blur-md flex items-center justify-between px-6 z-50 shadow-sm">
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setActive("terminal")}
+            className="w-8 h-8 rounded-lg bg-cyan bg-opacity-15 border border-cyan border-opacity-30 flex items-center justify-center text-sm text-cyan font-black font-mono shadow-sm hover:bg-cyan/20 transition-colors cursor-pointer"
+          >
+            M
+          </button>
+          <span className="font-bold tracking-tight text-white cursor-pointer hover:text-cyan transition-colors" onClick={() => setActive("terminal")}>
+            Malila Nyamai
+          </span>
+        </div>
 
-        {/* macOS Centered Floating Dock */}
-        <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-max max-w-[95vw] h-14 bg-slate-900/60 backdrop-blur-xl border border-white/10 flex items-center px-4 gap-4 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.5)] z-40 select-none overflow-x-auto max-md:hidden">
-          {appList.map((app) => {
-            const Icon = app.icon;
-            const isActive = active === app.id;
-            return (
+        {/* Navbar links */}
+        <div className="hidden md:flex items-center gap-6 text-[11px] uppercase tracking-widest font-bold text-white/50">
+          <button onClick={() => setActive("terminal")} className={`transition-colors cursor-pointer ${active === "terminal" ? "text-cyan" : "hover:text-cyan"}`}>Terminal</button>
+          <button onClick={() => setActive("profile")} className={`transition-colors cursor-pointer ${active === "profile" ? "text-cyan" : "hover:text-cyan"}`}>Profile</button>
+          <button onClick={() => setActive("projects")} className={`transition-colors cursor-pointer ${active === "projects" ? "text-cyan" : "hover:text-cyan"}`}>Projects</button>
+          <button onClick={() => setActive("graph")} className={`transition-colors cursor-pointer ${active === "graph" ? "text-cyan" : "hover:text-cyan"}`}>Skills</button>
+          <button onClick={() => setActive("contact")} className={`transition-colors cursor-pointer ${active === "contact" ? "text-cyan" : "hover:text-cyan"}`}>Contact</button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setPalette(true)}
+            className="px-3 py-1.5 rounded-lg border border-white/10 text-white/70 hover:text-white hover:border-cyan/40 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <Search size={12} />
+            <span className="hidden sm:inline">Search</span>
+          </button>
+          
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="p-1.5 rounded-lg border border-white/10 text-white/70 hover:text-white md:hidden cursor-pointer text-xs leading-none"
+            aria-label="Toggle Navigation Menu"
+          >
+            {menuOpen ? "✕" : "☰"}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Navigation Drawer */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-[#060814]/95 border-b border-white/5 overflow-hidden flex flex-col px-6 py-4 space-y-3 z-40 select-none sticky top-16 backdrop-blur-md"
+          >
+            {[
+              { id: "terminal", label: "Terminal" },
+              { id: "profile", label: "Profile" },
+              { id: "projects", label: "Projects" },
+              { id: "graph", label: "Skills" },
+              { id: "contact", label: "Contact" }
+            ].map(link => (
               <button
-                key={app.id}
-                onClick={() => setActive(app.id)}
-                className="relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 hover:scale-110 group text-white/70 hover:text-white shrink-0 cursor-pointer"
+                key={link.id}
+                onClick={() => {
+                  setActive(link.id as AppName);
+                  setMenuOpen(false);
+                }}
+                className={`text-left text-[10px] uppercase tracking-widest font-bold py-2 transition-colors ${active === link.id ? "text-cyan" : "text-white/60 hover:text-cyan"}`}
               >
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 border border-white/10 shadow-sm group-hover:bg-white/10 transition-colors">
-                  <Icon size={16} />
-                </div>
-                {/* Tooltip on hover (Hidden on mobile) */}
-                <span className="absolute bottom-12 px-2 py-0.5 rounded bg-[#1c1c1f] text-[9px] text-white font-sans opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-150 pointer-events-none shadow-md border border-white/5 whitespace-nowrap z-50 max-md:hidden">
-                  {app.label}
-                </span>
-                {/* Active indicator dot */}
-                {isActive && (
-                  <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-white shadow-[0_0_5px_#fff]" />
-                )}
+                {link.label}
               </button>
-            );
-          })}
-        </nav>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        {/* iOS Home Indicator Bar */}
-        <div className="fixed bottom-2 left-1/2 -translate-x-1/2 w-36 h-1 rounded-full bg-white/35 z-50 pointer-events-none md:hidden" />
-
-        {/* Workspace content container */}
-        <section ref={workspaceRef} className="relative w-full h-[calc(100vh_-_48px)] md:h-[calc(100vh_-_120px)] overflow-y-auto flex flex-col p-4 md:p-6 select-none md:justify-center justify-start">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              className="flex-1 relative overflow-hidden flex flex-col justify-center max-w-[1400px] mx-auto w-full"
-              initial={{ opacity: 0, scale: 0.94, y: 15, filter: "blur(6px)" }}
-              animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.94, y: -10, filter: "blur(6px)" }}
-              transition={{ type: "spring", stiffness: 240, damping: 24 }}
-            >
-
-              {active === "home" && <Home setActive={setActive} onOpenResume={onOpenResume} />}
-              {active === "profile" && <Window eyebrow="PROFILE" title="professional summary" onClose={() => setActive("home")}><About isOs={true} /></Window>}
-              {active === "projects" && <Window eyebrow="ARCHIVE" title="selected projects" onClose={() => setActive("home")}><ProjectsSection isOs={true} /></Window>}
-              {active === "graph" && <Graph node={node} setNode={setNode} related={related} experiences={experiences.filter(experience => Number(experience.period.match(/20\d{2}/)?.[0] || 2026) <= year).length} skills={skills.filter((_, index) => year >= 2022 + Math.min(index, 3)).length} onClose={() => setActive("home")} />}
-              {active === "timeline" && <TimelineExplorer year={year} setYear={setYear} projects={projects} experiences={experiences} skills={skills} onClose={() => setActive("home")} />}
-              {active === "terminal" && <TerminalApp lines={lines} input={input} setInput={setInput} run={run} onClose={() => setActive("home")} />}
-              {active === "resume" && <Resume open={onOpenResume} onClose={() => setActive("home")} />}
-              {active === "contact" && <Window eyebrow="CHANNEL" title="contact" onClose={() => setActive("home")}><ContactSection onViewResume={onOpenResume} isOs={true} /></Window>}
-              {active === "career" && <Window eyebrow="CAREER" title="professional background" onClose={() => setActive("home")}><Experience isOs={true} /></Window>}
-              {active === "education" && <Window eyebrow="EDUCATION" title="education & credentials" onClose={() => setActive("home")}><CertificationsSection isOs={true} /></Window>}
-              {active === "community" && <Window eyebrow="BEYOND CODE" title="community & leadership" onClose={() => setActive("home")}><Community isOs={true} /></Window>}
-              {active === "ai" && <Window eyebrow="AVA" title="AI lab" onClose={() => setActive("home")}><AiLabTeaser isOs={true} /></Window>}
-              {active === "articles" && <Window eyebrow="BUILD IN PUBLIC" title="technical notes" onClose={() => setActive("home")}><Articles /></Window>}
-              {active === "certificates" && <Window eyebrow="VERIFIED" title="certificates" onClose={() => setActive("home")}><CertificationsSection isOs={true} /></Window>}
-              {active === "code" && <Window eyebrow="EXPLORER" title="components" onClose={() => setActive("home")}><CodeExplorer /></Window>}
-              {active === "sandbox" && <Window eyebrow="LIVE" title="coding sandbox" onClose={() => setActive("home")}><Sandbox /></Window>}
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Floating Time Machine Slider */}
-          <div className="fixed right-6 bottom-6 z-40 max-md:hidden">
-            <Timeline year={year} setYear={setYear} onExplore={() => setActive("timeline")} />
-          </div>
-        </section>
-
-        {/* Palette / Command Palette Overlay */}
-        <AnimatePresence>
-          {palette && (
-            <Palette
-              query={query}
-              setQuery={setQuery}
-              close={() => setPalette(false)}
-              setActive={setActive}
-              projects={projects}
-              skills={skills.flatMap((group) => group.skills)}
-              experiences={experiences.map((experience) => experience.role)}
-            />
-          )}
+      {/* Main Page Content */}
+      <main className="flex-1 w-full max-w-none px-6 md:px-12 py-8 relative z-10 flex flex-col min-h-[calc(100vh_-_64px)]">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            className="flex-1 w-full flex flex-col"
+            initial={{ opacity: 0, scale: 0.97, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97, y: -10 }}
+            transition={{ duration: 0.22 }}
+          >
+            {active === "profile" && <Window eyebrow="PROFILE" title="professional summary" onClose={() => setActive("terminal")} isOs={false}><About isOs={false} /></Window>}
+            {active === "projects" && <Window eyebrow="ARCHIVE" title="selected projects" onClose={() => setActive("terminal")} isOs={false}><ProjectsSection isOs={false} /></Window>}
+            {active === "graph" && <Graph node={node} setNode={setNode} related={related} experiences={experiences.filter(exp => Number(exp.period.match(/20\d{2}/)?.[0] || 2026) <= year).length} skills={skills.filter((_, index) => year >= 2022 + Math.min(index, 3)).length} onClose={() => setActive("terminal")} isOs={false} />}
+            {active === "timeline" && <TimelineExplorer year={year} setYear={setYear} projects={projects} experiences={experiences} skills={skills} onClose={() => setActive("terminal")} isOs={false} />}
+            {active === "terminal" && <Window eyebrow="DEV" title="terminal" onClose={() => setActive("terminal")} isOs={false}><TerminalApp lines={lines} input={input} setInput={setInput} run={run} onClose={() => setActive("terminal")} isOs={false} /></Window>}
+            {active === "career" && <Window eyebrow="CAREER" title="professional background" onClose={() => setActive("terminal")} isOs={false}><Experience isOs={false} /></Window>}
+            {active === "education" && <Window eyebrow="EDUCATION" title="education & credentials" onClose={() => setActive("terminal")} isOs={false}><CertificationsSection isOs={false} /></Window>}
+            {active === "community" && <Window eyebrow="BEYOND CODE" title="community & leadership" onClose={() => setActive("terminal")} isOs={false}><Community isOs={false} /></Window>}
+            {active === "ai" && <Window eyebrow="AVA" title="AI lab" onClose={() => setActive("terminal")} isOs={false}><AiLabTeaser isOs={false} /></Window>}
+            {active === "articles" && <Window eyebrow="BUILD IN PUBLIC" title="technical notes" onClose={() => setActive("terminal")} isOs={false}><Articles /></Window>}
+            {active === "certificates" && <Window eyebrow="VERIFIED" title="certificates" onClose={() => setActive("terminal")} isOs={false}><CertificationsSection isOs={false} /></Window>}
+            {active === "code" && <Window eyebrow="EXPLORER" title="components" onClose={() => setActive("terminal")} isOs={false}><CodeExplorer /></Window>}
+            {active === "sandbox" && <Window eyebrow="LIVE" title="coding sandbox" onClose={() => setActive("terminal")} isOs={false}><Sandbox /></Window>}
+            {active === "contact" && <Window eyebrow="CHANNEL" title="contact" onClose={() => setActive("terminal")} isOs={false}><ContactSection onViewResume={onOpenResume} isOs={false} /></Window>}
+            {active === "resume" && <Window eyebrow="PROFILE" title="resume.pdf" onClose={() => setActive("terminal")} isOs={false}><Resume open={onOpenResume} onClose={() => setActive("terminal")} /></Window>}
+          </motion.div>
         </AnimatePresence>
-        <XRay project={xray} close={() => setXray(null)} />
       </main>
+ 
+      {/* Standard Footer */}
+      <footer className="border-t border-white/5 py-8 bg-[#03050d] text-xs text-white/40 z-20">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <span>© {new Date().getFullYear()} Malila Nyamai. All rights reserved.</span>
+          <div className="flex gap-4">
+            <a href="https://github.com/joashnyamai" target="_blank" rel="noopener noreferrer" className="hover:text-cyan transition-colors">GitHub</a>
+            <button onClick={() => setActive("contact")} className="hover:text-cyan transition-colors cursor-pointer">Contact</button>
+            <button onClick={() => setActive("terminal")} className="hover:text-cyan transition-colors cursor-pointer">Terminal</button>
+          </div>
+        </div>
+      </footer>
+
+      {/* Palette / Command Palette Overlay */}
+      <AnimatePresence>
+        {palette && (
+          <Palette
+            query={query}
+            setQuery={setQuery}
+            close={() => setPalette(false)}
+            setActive={setActive}
+            projects={projects}
+            skills={skills.flatMap((group) => group.skills)}
+            experiences={experiences.map((experience) => experience.role)}
+          />
+        )}
+      </AnimatePresence>
+      <XRay project={xray} close={() => setXray(null)} />
       {showMatrix && <MatrixRain onClose={() => setShowMatrix(false)} />}
-    </>
+    </div>
   );
 }
 
-function Window({ eyebrow, title, children, onClose }: { eyebrow:string; title:string; children:React.ReactNode; onClose?:()=>void }) {
+function Window({ eyebrow, title, children, onClose, isOs = true }: { eyebrow:string; title:string; children:React.ReactNode; onClose?:()=>void; isOs?:boolean }) {
+  if (!isOs) {
+    return <div className="w-full text-left select-text">{children}</div>;
+  }
+
   return (
     <section className="os-window bg-[#12131e]/85 border border-white/10 rounded-xl shadow-2xl backdrop-blur-md overflow-hidden flex flex-col h-full relative max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:h-[85vh] max-md:bg-[#12131e]/95 max-md:border-t max-md:border-white/10 max-md:rounded-t-[24px] max-md:z-40">
       {/* iOS Drag Handle Bar (Mobile Only) */}
@@ -523,7 +545,8 @@ function Graph({
   related,
   experiences,
   skills,
-  onClose
+  onClose,
+  isOs = true
 }: {
   node: string;
   setNode: (value: string) => void;
@@ -531,6 +554,7 @@ function Graph({
   experiences: number;
   skills: number;
   onClose?: () => void;
+  isOs?: boolean;
 }) {
   const [filter, setFilter] = useState<"all" | "frontend" | "backend" | "qa" | "cloud_ai">("all");
 
@@ -562,7 +586,7 @@ function Graph({
   const filteredNodes = filter === "all" ? skillNodes : skillNodes.filter(n => n.category === filter);
 
   return (
-    <Window eyebrow="HUD" title="knowledge & skills graph" onClose={onClose}>
+    <Window eyebrow="HUD" title="knowledge & skills graph" onClose={onClose} isOs={isOs}>
       <div className="grid lg:grid-cols-[1.3fr_.7fr] min-h-[480px]">
         {/* Left Side: Interactive Node Matrix */}
         <div className="p-5 flex flex-col justify-between border-r border-white/5 bg-[#05080e]/40">
@@ -729,7 +753,7 @@ function Graph({
     </Window>
   );
 }
-function TerminalApp({lines,input,setInput,run,onClose}:{lines:string[];input:string;setInput:(value:string)=>void;run:()=>void;onClose?:()=>void}) { return <Window eyebrow="DEV" title="terminal" onClose={onClose}><div className="terminal-view">{lines.map((line,index)=><p key={index} className={line.startsWith("malila")?"text-violet-200":"text-emerald-200/80"}>{line}</p>)}<form onSubmit={event=>{event.preventDefault();run()}} className="flex gap-2"><span className="text-violet-300">malila@os:~$</span><input autoFocus value={input} onChange={event=>setInput(event.target.value)}/></form></div></Window> }
+function TerminalApp({lines,input,setInput,run,onClose,isOs=true}:{lines:string[];input:string;setInput:(value:string)=>void;run:()=>void;onClose?:()=>void;isOs?:boolean}) { return <Window eyebrow="DEV" title="terminal" onClose={onClose} isOs={isOs}><div className="terminal-view">{lines.map((line,index)=><p key={index} className={line.startsWith("malila")?"text-violet-200":"text-emerald-200/80"}>{line}</p>)}<form onSubmit={event=>{event.preventDefault();run()}} className="flex gap-2"><span className="text-violet-300">malila@os:~$</span><input autoFocus value={input} onChange={event=>setInput(event.target.value)}/></form></div></Window> }
 function Resume({open,onClose}:{open:()=>void;onClose?:()=>void}) {
   return (
     <Window eyebrow="PROFILE" title="resume.pdf" onClose={onClose}>
@@ -756,6 +780,6 @@ function Resume({open,onClose}:{open:()=>void;onClose?:()=>void}) {
 }
 function LegacyContact(){return <Window eyebrow="CHANNEL" title="contact"><div className="contact-page"><div className="eyebrow"><span/> LET’S MAKE SOMETHING USEFUL</div><h2>Got a tricky idea?<br/><em>Let’s talk.</em></h2><p>I’m always happy to meet thoughtful people building ambitious things.</p><div className="contact-links"><a href="mailto:hello@malila.dev"><Mail/> hello@malila.dev <ChevronRight/></a><a href="https://github.com/joashnyamai" target="_blank" rel="noreferrer"><Github/> github.com/joashnyamai <ChevronRight/></a><a href="#location"><MapPin/> Nairobi, Kenya <ChevronRight/></a></div></div></Window>}
 function Timeline({year,setYear,onExplore}:{year:number;setYear:(year:number)=>void;onExplore:()=>void}){return <div className="time-machine"><button onClick={onExplore}><span className="eyebrow"><span/> TIME MACHINE</span><b>{year}</b></button><input aria-label="Career timeline" type="range" min="2022" max="2026" value={year} onChange={event=>{const y=Number(event.target.value);setYear(y);onExplore();}}/><div className="timeline-years"><span>2022</span><span>2023</span><span>2024</span><span>2025</span><span>2026</span></div><button className="timeline-open" onClick={onExplore}>Explore year →</button></div>}
-function TimelineExplorer({year,setYear,projects,experiences,skills,onClose}:{year:number;setYear:(year:number)=>void;projects:ReturnType<typeof usePortfolioData>["projects"];experiences:ReturnType<typeof usePortfolioData>["experiences"];skills:ReturnType<typeof usePortfolioData>["skills"];onClose?:()=>void}){const milestones:Record<number,{title:string;summary:string;focus:string[]}>={2022:{title:"Foundations",summary:"Building the academic, support, and digital-literacy foundations that shaped a practical technology career.",focus:["IT support","Digital literacy","Security basics"]},2023:{title:"Early practice",summary:"Moving from study into hands-on support, testing, and early product work.",focus:["Manual testing","Jira","Documentation"]},2024:{title:"Quality engineering",summary:"Strengthening delivery confidence through API testing, database validation, and automation workflows.",focus:["Postman","SQL","CI/CD"]},2025:{title:"Product builder",summary:"Shipping full-stack products and collaborating across development, quality, and business needs.",focus:["React","Node.js","PostgreSQL"]},2026:{title:"Systems thinking",summary:"Connecting product engineering, AI workflows, and quality systems into a broader technical practice.",focus:["AI agents","Architecture","Product strategy"]}};const stage=milestones[year];const visibleProjects=projects.filter(project=>Number(project.period.match(/20\d{2}/)?.[0]||2026)<=year);const visibleExperience=experiences.filter(experience=>Number(experience.period.match(/20\d{2}/)?.[0]||2026)<=year);const visibleSkills=skills.slice(0,Math.max(1,year-2021));return <Window eyebrow="TIME MACHINE" title={`${year} / ${stage.title}`} onClose={onClose}><div className="timeline-explorer"><div className="timeline-explorer-head"><div><div className="eyebrow"><span/> CAREER EVOLUTION</div><h2>{stage.title}</h2><p>{stage.summary}</p></div><b>{year}</b></div><input aria-label="Explore career year" type="range" min="2022" max="2026" value={year} onChange={event=>setYear(Number(event.target.value))}/><div className="timeline-year-buttons">{[2022,2023,2024,2025,2026].map(value=><button key={value} onClick={()=>setYear(value)} className={value===year?"active":""}>{value}</button>)}</div><div className="timeline-stage-grid"><section><span>FOCUS UNLOCKED</span>{stage.focus.map(item=><Pill key={item}>{item}</Pill>)}</section><section><span>PROJECTS / {visibleProjects.length}</span>{visibleProjects.length?visibleProjects.slice(0,3).map(project=><p key={project.name}>{project.name}</p>):<p>Project work emerges in later stages.</p>}</section><section><span>EXPERIENCE / {visibleExperience.length}</span>{visibleExperience.length?visibleExperience.slice(0,3).map(experience=><p key={experience.role}>{experience.role}</p>):<p>Experience detail appears as the journey advances.</p>}</section><section><span>SKILL GROUPS / {visibleSkills.length}</span>{visibleSkills.map(group=><p key={group.category}>{group.category}</p>)}</section></div></div></Window>}
+function TimelineExplorer({year,setYear,projects,experiences,skills,onClose,isOs=true}:{year:number;setYear:(year:number)=>void;projects:ReturnType<typeof usePortfolioData>["projects"];experiences:ReturnType<typeof usePortfolioData>["experiences"];skills:ReturnType<typeof usePortfolioData>["skills"];onClose?:()=>void;isOs?:boolean}){const milestones:Record<number,{title:string;summary:string;focus:string[]}>={2022:{title:"Foundations",summary:"Building the academic, support, and digital-literacy foundations that shaped a practical technology career.",focus:["IT support","Digital literacy","Security basics"]},2023:{title:"Early practice",summary:"Moving from study into hands-on support, testing, and early product work.",focus:["Manual testing","Jira","Documentation"]},2024:{title:"Quality engineering",summary:"Strengthening delivery confidence through API testing, database validation, and automation workflows.",focus:["Postman","SQL","CI/CD"]},2025:{title:"Product builder",summary:"Shipping full-stack products and collaborating across development, quality, and business needs.",focus:["React","Node.js","PostgreSQL"]},2026:{title:"Systems thinking",summary:"Connecting product engineering, AI workflows, and quality systems into a broader technical practice.",focus:["AI agents","Architecture","Product strategy"]}};const stage=milestones[year];const visibleProjects=projects.filter(project=>Number(project.period.match(/20\d{2}/)?.[0]||2026)<=year);const visibleExperience=experiences.filter(experience=>Number(experience.period.match(/20\d{2}/)?.[0]||2026)<=year);const visibleSkills=skills.slice(0,Math.max(1,year-2021));return <Window eyebrow="TIME MACHINE" title={`${year} / ${stage.title}`} onClose={onClose} isOs={isOs}><div className="timeline-explorer"><div className="timeline-explorer-head"><div><div className="eyebrow"><span/> CAREER EVOLUTION</div><h2>{stage.title}</h2><p>{stage.summary}</p></div><b>{year}</b></div><input aria-label="Explore career year" type="range" min="2022" max="2026" value={year} onChange={event=>setYear(Number(event.target.value))}/><div className="timeline-year-buttons">{[2022,2023,2024,2025,2026].map(value=><button key={value} onClick={()=>setYear(value)} className={value===year?"active":""}>{value}</button>)}</div><div className="timeline-stage-grid"><section><span>FOCUS UNLOCKED</span>{stage.focus.map(item=><Pill key={item}>{item}</Pill>)}</section><section><span>PROJECTS / {visibleProjects.length}</span>{visibleProjects.length?visibleProjects.slice(0,3).map(project=><p key={project.name}>{project.name}</p>):<p>Project work emerges in later stages.</p>}</section><section><span>EXPERIENCE / {visibleExperience.length}</span>{visibleExperience.length?visibleExperience.slice(0,3).map(experience=><p key={experience.role}>{experience.role}</p>):<p>Experience detail appears as the journey advances.</p>}</section><section><span>SKILL GROUPS / {visibleSkills.length}</span>{visibleSkills.map(group=><p key={group.category}>{group.category}</p>)}</section></div></div></Window>}
 function Palette({query,setQuery,close,setActive,projects,skills,experiences}:{query:string;setQuery:(value:string)=>void;close:()=>void;setActive:(app:AppName)=>void;projects:ReturnType<typeof usePortfolioData>["projects"];skills:string[];experiences:string[]}){const needle=query.toLowerCase();const apps=appList.filter(app=>app.label.toLowerCase().includes(needle));const projectResults=projects.filter(project=>`${project.name} ${project.stack.join(" ")}`.toLowerCase().includes(needle)).slice(0,4);const skillResults=skills.filter(skill=>skill.toLowerCase().includes(needle)).slice(0,4);const experienceResults=experiences.filter(role=>role.toLowerCase().includes(needle)).slice(0,3);const action=(app:AppName)=>{setActive(app);close()};return <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="palette-layer" onMouseDown={close}><motion.div initial={{y:-16,scale:.98}} animate={{y:0,scale:1}} onMouseDown={event=>event.stopPropagation()} className="command-card"><div className="flex items-center gap-3 border-b border-white/10 px-5 py-4"><Search className="text-violet-300" size={19}/><input autoFocus value={query} onChange={event=>setQuery(event.target.value)} placeholder="Search projects, skills, experience, code…"/><kbd><Command size={11}/>K</kbd></div><div className="max-h-[430px] overflow-y-auto p-2"><p className="px-3 py-2 text-[10px] font-bold uppercase tracking-[.2em] text-white/35">Apps</p>{apps.map(({id,label,icon:Icon})=><button key={id} className="command-result" onClick={()=>action(id)}><Icon size={16}/><span>{label}</span><ChevronRight size={15}/></button>)}{projectResults.length>0&&<><p className="px-3 py-2 text-[10px] font-bold uppercase tracking-[.2em] text-white/35">Projects</p>{projectResults.map(project=><button key={project.name} className="command-result" onClick={()=>action("projects")}><FolderGit2 size={16}/><span>{project.name}</span><ChevronRight size={15}/></button>)}</>}{skillResults.length>0&&<><p className="px-3 py-2 text-[10px] font-bold uppercase tracking-[.2em] text-white/35">Skills</p>{skillResults.map(skill=><button key={skill} className="command-result" onClick={()=>action("graph")}><Zap size={16}/><span>{skill}</span><ChevronRight size={15}/></button>)}</>}{experienceResults.length>0&&<><p className="px-3 py-2 text-[10px] font-bold uppercase tracking-[.2em] text-white/35">Experience</p>{experienceResults.map(role=><button key={role} className="command-result" onClick={()=>action("resume")}><UserRound size={16}/><span>{role}</span><ChevronRight size={15}/></button>)}</>}</div></motion.div></motion.div>}
 function Pill({children}:{children:React.ReactNode}){return <span className="pill">{children}</span>}function Stat({value,label}:{value:string;label:string}){return <div><b className="text-xl">{value}</b><p className="mt-1 text-xs text-white/45">{label}</p></div>}
