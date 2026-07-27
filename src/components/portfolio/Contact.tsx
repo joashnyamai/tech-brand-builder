@@ -54,7 +54,7 @@ ORG:Malila Tech Consultancies
 TITLE:Software & QA Engineer
 TEL;TYPE=CELL:+254745806761
 EMAIL;TYPE=PREF,INTERNET:jamesmnyamai9@gmail.com
-URL:https://efoleni.co.ke
+URL:https://github.com/joashnyamai
 ADR;TYPE=WORK:;;Nairobi;Kenya;;;
 END:VCARD`;
     const blob = new Blob([vcardContent], { type: "text/vcard" });
@@ -230,7 +230,7 @@ END:VCARD`;
                       rows={4}
                       value={message}
                       onChange={e => setMessage(e.target.value)}
-                      placeholder="Hi Malila, I reviewed your work history and e-Foleni scheduler details. Let's discuss..."
+                      placeholder="Hi Malila, I reviewed your work history and Kiwami TestCloud details. Let's discuss..."
                       className="w-full bg-[#070b13] border border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-cyan/50 focus:shadow-[0_0_10px_rgba(6,182,212,0.1)] transition-all resize-none"
                     />
                   </div>

@@ -45,16 +45,6 @@ export interface Education {
 
 const DEFAULT_PROJECTS: Project[] = [
   {
-    name: "E-Foleni",
-    period: "Sep 2025 – Present",
-    url: "https://efoleni.co.ke/",
-    objective: "A queue-free booking platform replacing walk-in lines, WhatsApp threads, and double-booked spreadsheets with an M-Pesa native time-slot scheduler.",
-    stack: ["React", "TypeScript", "Tailwind CSS", "M-Pesa API (Daraja)", "Role-Aware Dashboards"],
-    summary: "Co-founded and engineered a booking platform serving schools, clinics, and banks. Built multi-person back-to-back booking logic, M-Pesa STK push integration, and fast mobile-first web views for low-bandwidth networks.",
-    value: "Saved an average of 42 minutes of queue time per visitor, with over 120,000+ slots booked locally and 99.9% uptime.",
-    highlight: true,
-  },
-  {
     name: "Kiwami TestCloud",
     period: "Sep 2025 – Jan 2026",
     url: "https://www.kiwamitestcloud.com",
@@ -62,7 +52,7 @@ const DEFAULT_PROJECTS: Project[] = [
     stack: ["React", "TypeScript", "Vite", "REST APIs", "Dashboards"],
     summary: "Built the complete frontend architecture of Kiwami TestCloud, implementing reusable test case management components, execution workflow interfaces, and real-time analytics dashboards.",
     value: "Protected 10,000+ users from faulty releases and saved QA testing time by 35% through automated workflows.",
-    highlight: false,
+    highlight: true,
   },
   {
     name: "RemboGlow",
@@ -227,34 +217,52 @@ const DEFAULT_EXPERIENCES: Experience[] = [
 
 const DEFAULT_SKILLS: SkillGroup[] = [
   {
-    iconName: "Code2",
-    category: "Frontend Development",
-    tagline: "Building highly responsive user interfaces",
-    skills: ["React", "TypeScript", "JavaScript (ES6+)", "HTML5", "CSS3", "Tailwind CSS", "Bootstrap", "Vite"],
-  },
-  {
-    iconName: "Shield",
-    category: "Application Testing & QA",
-    tagline: "Ensuring software stability and reliability",
-    skills: ["Manual & Automated Testing", "Postman (API)", "Jira (bug tracking)", "UAT", "Load Testing", "TDD", "Jest"],
-  },
-  {
     iconName: "Building2",
     category: "Cloud & Infrastructure",
     tagline: "Provisioning resources and deployment automation",
     skills: ["AWS (exposure)", "Azure (exposure)", "Cloud resource provisioning", "Performance monitoring", "Docker", "CI/CD Pipelines"],
   },
   {
+    iconName: "Shield",
+    category: "Application Testing & QA",
+    tagline: "Ensuring software stability and reliability",
+    skills: ["Manual & Automated Testing", "Postman (API)", "Jira (bug tracking)", "UAT", "Load Testing", "TDD"],
+  },
+  {
+    iconName: "Code2",
+    category: "Frontend Development",
+    tagline: "Building highly responsive user interfaces",
+    skills: ["React", "TypeScript", "JavaScript (ES6+)", "HTML5", "CSS3", "Tailwind CSS", "Bootstrap", "Vite"],
+  },
+  {
     iconName: "TestTube2",
     category: "Backend & Databases",
     tagline: "Data architectures and secure REST API services",
-    skills: ["Node.js", "ASP.NET Core / C#", "MySQL", "PostgreSQL", "Firebase", "REST APIs", "Data Migration", "PHP"],
+    skills: ["Node.js", "ASP.NET Core / C#", "MySQL", "PostgreSQL", "Firebase", "REST APIs", "Data Migration"],
+  },
+  {
+    iconName: "Sliders",
+    category: "Architecture & Diagramming",
+    tagline: "System design and workflow mapping",
+    skills: ["System design", "Technical documentation", "Workflow mapping", "Architecture repositories", "Technology roadmaps"],
+  },
+  {
+    iconName: "Bot",
+    category: "AI / ML & Innovation",
+    tagline: "LangChain, RAG, and generative models",
+    skills: ["LangChain", "RAG", "Agent Architectures", "Generative AI (SAP certified)", "n8n Automation", "Prototype development"],
+  },
+  {
+    iconName: "UserRound",
+    category: "UI/UX & Prototyping",
+    tagline: "User research and interface iteration",
+    skills: ["UI testing & iteration", "User research", "Feedback collection", "Responsive design", "Accessibility standards"],
   },
   {
     iconName: "Wrench",
-    category: "AI, ML & IT Support",
-    tagline: "Agent models, system logs, and user support",
-    skills: ["LangChain", "RAG", "Agent Architectures", "Generative AI (SAP certified)", "n8n Automation", "First-line user support", "Technical writing", "Cybersecurity (CCNA)", "Wireshark"],
+    category: "IT Support & Docs",
+    tagline: "Infrastructure support and user guides",
+    skills: ["First-line user support", "Technical writing", "User guides", "Training manuals", "Cybersecurity (CCNA)", "Wireshark"],
   },
 ];
 
@@ -341,6 +349,17 @@ export function usePortfolioData() {
 
   // Function to load everything from localStorage or fall back to defaults
   const loadData = () => {
+    // Clear legacy local storage once to ensure latest CV templates load
+    const legacyCheck = localStorage.getItem("portfolio_cv_version_v3");
+    if (!legacyCheck) {
+      localStorage.removeItem("portfolio_projects");
+      localStorage.removeItem("portfolio_experiences");
+      localStorage.removeItem("portfolio_skills");
+      localStorage.removeItem("portfolio_certifications");
+      localStorage.removeItem("portfolio_education");
+      localStorage.setItem("portfolio_cv_version_v3", "true");
+    }
+
     const localProjects = localStorage.getItem("portfolio_projects");
     const localExperiences = localStorage.getItem("portfolio_experiences");
     const localSkills = localStorage.getItem("portfolio_skills");

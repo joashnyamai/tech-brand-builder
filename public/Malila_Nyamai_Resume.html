@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Malila Nyamai - Resume</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1f2937;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    a {
+      color: #0c8599;
+      text-decoration: none;
+    }
+    .header {
+      border-bottom: 2px solid #0c8599;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .header h1 {
+      font-size: 24px;
+      margin: 0 0 3px 0;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #111827;
+    }
+    .header .subtitle {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0c8599;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .contact-info {
+      text-align: right;
+      font-size: 9.5px;
+      color: #4b5563;
+      line-height: 1.35;
+    }
+    .section {
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #0c8599;
+      margin: 0 0 4px 0;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 3px;
+    }
+    .summary {
+      text-align: justify;
+      color: #374151;
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 14px;
+    }
+    .skill-category {
+      margin-bottom: 2px;
+    }
+    .skill-category strong {
+      color: #111827;
+      font-size: 10.5px;
+    }
+    .skill-category span {
+      color: #4b5563;
+    }
+    .job {
+      margin-bottom: 8px;
+    }
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+    .job-title {
+      font-size: 11px;
+    }
+    .job-company {
+      color: #0c8599;
+      font-weight: 600;
+    }
+    .job-meta {
+      font-size: 9.5px;
+      color: #6b7280;
+      font-weight: 500;
+      text-align: right;
+    }
+    .bullet-list {
+      margin: 0;
+      padding-left: 14px;
+      list-style-type: disc;
+      color: #374151;
+    }
+    .bullet-list li {
+      margin-bottom: 2px;
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .project-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 5px;
+      padding: 6px;
+    }
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+    .project-stack {
+      font-size: 8.5px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+    .project-desc {
+      color: #4b5563;
+      font-size: 10px;
+    }
+    .education-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .education-degree {
+      font-weight: 700;
+      color: #111827;
+    }
+    .education-school {
+      color: #0c8599;
+      font-weight: 600;
+    }
+    .education-meta {
+      text-align: right;
+      font-size: 9.5px;
+      color: #6b7280;
+    }
+    .certs-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px 14px;
+      padding-left: 10px;
+      margin: 0;
+    }
+    .certs-list li {
+      color: #374151;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>MALILA NYAMAI</h1>
+      <div class="subtitle">Software Engineer &middot; QA Engineer &middot; IT Consultant</div>
+    </div>
+    <div class="contact-info">
+      Nairobi, Kenya<br>
+      jamesmnyamai9@gmail.com &middot; 0745 806 761<br>
+      linkedin.com/in/malila-nyamai-0b2711221<br>
+      github.com/joashnyamai
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="section">
+    <div class="section-title">Professional Summary</div>
+    <div class="summary">
+      Motivated IT professional and BSc Information Technology finalist with 3+ years of hands-on experience in software development, quality assurance, IT support, cloud exposure (AWS), and digital training. Proven ability to monitor systems, document workflows, troubleshoot application issues, and support end users in fast-paced technology environments. Experienced in application testing (Jest & Postman), bug tracking (Jira), data management (MySQL, PostgreSQL), and prototyping web solutions using React, TypeScript, Node.js, and PHP. Familiar with AI/ML concepts through LangChain, RAG, and Generative AI certifications. A fast learner and collaborative team player eager to contribute to digital transformation agendas and J-Hub innovation initiatives.
+    </div>
+  </div>
+
+  <!-- Technical Skills -->
+  <div class="section">
+    <div class="section-title">Technical Skills</div>
+    <div class="skills-grid">
+      <div class="skill-category">
+        <strong>Cloud & Infrastructure:</strong>
+        <span>AWS (exposure) &middot; Azure (exposure) &middot; Cloud resource provisioning &middot; Performance monitoring &middot; Docker &middot; CI/CD Pipelines</span>
+      </div>
+      <div class="skill-category">
+        <strong>Application Testing & QA:</strong>
+        <span>Manual & Automated Testing &middot; Postman (API) &middot; Jira (bug tracking) &middot; UAT &middot; Load Testing &middot; TDD</span>
+      </div>
+      <div class="skill-category">
+        <strong>Frontend Development:</strong>
+        <span>React &middot; TypeScript &middot; JavaScript (ES6+) &middot; HTML5 &middot; CSS3 &middot; Tailwind CSS &middot; Bootstrap &middot; Vite</span>
+      </div>
+      <div class="skill-category">
+        <strong>Backend & Databases:</strong>
+        <span>Node.js &middot; ASP.NET Core / C# &middot; MySQL &middot; PostgreSQL &middot; Firebase &middot; REST APIs &middot; Data Migration &middot; PHP</span>
+      </div>
+      <div class="skill-category">
+        <strong>Architecture & Diagramming:</strong>
+        <span>System design &middot; Technical documentation &middot; Workflow mapping &middot; Architecture repositories &middot; Roadmaps</span>
+      </div>
+      <div class="skill-category">
+        <strong>AI / ML & Innovation:</strong>
+        <span>LangChain &middot; RAG &middot; Agent Architectures &middot; Generative AI (SAP certified) &middot; n8n Automation</span>
+      </div>
+      <div class="skill-category">
+        <strong>UI/UX & Prototyping:</strong>
+        <span>UI testing & iteration &middot; User research &middot; Feedback collection &middot; Responsive design &middot; Accessibility</span>
+      </div>
+      <div class="skill-category">
+        <strong>IT Support & Docs:</strong>
+        <span>First-line user support &middot; Technical writing &middot; User guides &middot; CCNA Cybersecurity &middot; Wireshark</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Work Experience -->
+  <div class="section">
+    <div class="section-title">Work Experience</div>
+
+    <!-- Annex -->
+    <div class="job">
+      <div class="job-header">
+        <div class="job-title">Senior Software Quality Assurance Engineer &middot; <span class="job-company">Annex Technologies Limited</span></div>
+        <div class="job-meta">Jan 2024 – Present<br>Kenya &middot; Hybrid</div>
+      </div>
+      <ul class="bullet-list">
+        <li>Performed API testing using Postman and validated backend functionality with SQL queries, ensuring data integrity and system compliance.</li>
+        <li>Assisted in automation testing, reducing manual testing effort and contributing to CI/CD quality pipelines.</li>
+        <li>Provided first-line application support to internal users, escalating complex incidents through proper channels.</li>
+        <li>Documented workflows, test procedures, and QA processes to support knowledge retention and operational continuity.</li>
+      </ul>
+    </div>
+
+    <!-- Kiwami Intern -->
+    <div class="job">
+      <div class="job-header">
+        <div class="job-title">Software Testing Intern &middot; <span class="job-company">Kiwami Tech Solutions</span></div>
+        <div class="job-meta">Aug 2025 – Present<br>Nairobi, Kenya &middot; Part-time</div>
+      </div>
+      <ul class="bullet-list">
+        <li>Designed and maintained reusable test case management components, execution workflow interfaces, and real-time dashboards to support performance monitoring.</li>
+        <li>Collaborated with backend engineers to validate REST API integrations, verifying accurate display of live test execution results, logs, and dashboards.</li>
+        <li>Performed frontend testing, debugging, and defect reporting; participated in Agile sprints to ensure quality across iterative releases.</li>
+      </ul>
+    </div>
+
+    <!-- RemboGlow -->
+    <div class="job">
+      <div class="job-header">
+        <div class="job-title">Co-Founder & Lead Engineer &middot; <span class="job-company">RemboGlow</span></div>
+        <div class="job-meta">Aug 2025 – Present<br>Nairobi, Kenya</div>
+      </div>
+      <ul class="bullet-list">
+        <li>Co-founded and engineered a beauty-tech digital platform owning architecture design, frontend development, deployment, and monitoring of pilot solutions.</li>
+        <li>Conducted user research and feedback collection to iterate UI/UX and align product development with user needs.</li>
+        <li>Documented learnings, case studies, and operational processes to support knowledge transfer and future scaling.</li>
+      </ul>
+    </div>
+
+    <!-- Tari Africa -->
+    <div class="job">
+      <div class="job-header">
+        <div class="job-title">Software Engineer &middot; <span class="job-company">Tari Africa Platforms</span></div>
+        <div class="job-meta">Jan 2025 – Jun 2025<br>Nairobi, Kenya &middot; Contract</div>
+      </div>
+      <ul class="bullet-list">
+        <li>Designed and managed relational databases in MySQL, supporting data entry, cleanup, and migration tasks.</li>
+        <li>Built real-time dashboards centralizing compliance and financial reporting supporting performance monitoring responsibilities.</li>
+        <li>Maintained configuration and integration documentation ensuring compliance and knowledge continuity.</li>
+        <li>Managed Agile sprint delivery during peak transaction periods, contributing to parallel project execution.</li>
+      </ul>
+    </div>
+
+    <!-- Freelance -->
+    <div class="job">
+      <div class="job-header">
+        <div class="job-title">Freelance IT Consultant & Software Developer &middot; <span class="job-company">Malila Tech Consultancies</span></div>
+        <div class="job-meta">Apr 2023 – Oct 2025<br>Kenya &middot; Full-time</div>
+      </div>
+      <ul class="bullet-list">
+        <li>Provided remote and on-site IT support, handling low-to-medium complexity technical issues and escalating complex incidents appropriately.</li>
+        <li>Supported SMEs in data migration from manual to digital systems, improving data accuracy and cutting processing time by up to 40%.</li>
+        <li>Advised clients on cybersecurity best practices, password policies, phishing awareness, and endpoint protection.</li>
+        <li>Delivered digital literacy workshops for community groups and NGOs, building capacity in IT tools and web technologies.</li>
+      </ul>
+    </div>
+
+    <!-- Kiwami Attaché -->
+    <div class="job">
+      <div class="job-header">
+        <div class="job-title">Quality Assurance Attaché &middot; <span class="job-company">Kiwami Tech Solutions</span></div>
+        <div class="job-meta">Jun 2025 – Aug 2025<br>Nairobi, Kenya</div>
+      </div>
+      <ul class="bullet-list">
+        <li>Designed manual test cases for a mobile banking app and created automated test scripts, cutting QA task time by 35%.</li>
+        <li>Identified and documented critical bugs in mobile UI flows, preventing a flawed release to 10,000+ users.</li>
+        <li>Participated in sprint reviews, presenting QA findings and contributing to technology roadmap and release decisions.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Key Projects -->
+  <div class="section">
+    <div class="section-title">Key Projects</div>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-header">
+          <strong>Kiwami TestCloud</strong>
+          <span class="project-stack">React &middot; TS &middot; Vite</span>
+        </div>
+        <div class="project-desc">Production cloud-based software testing platform. Built full frontend with real-time dashboards, secure auth flows, and API integration.</div>
+      </div>
+      <div class="project-card">
+        <div class="project-header">
+          <strong>RemboGlow</strong>
+          <span class="project-stack">React &middot; Node &middot; Postgres</span>
+        </div>
+        <div class="project-desc">Beauty-tech e-commerce platform — co-founded and engineered end-to-end, including architecture design, pilot deployment, and user research iteration.</div>
+      </div>
+      <div class="project-card">
+        <div class="project-header">
+          <strong>Tari Digital Nexus</strong>
+          <span class="project-stack">Node &middot; PHP &middot; MySQL</span>
+        </div>
+        <div class="project-desc">Full-stack platform integrating KRA eTIMS and M-Pesa for SME digital tax compliance — included data migration, dashboard build, and compliance documentation.</div>
+      </div>
+      <div class="project-card">
+        <div class="project-header">
+          <strong>Skymed Life</strong>
+          <span class="project-stack">React &middot; Node &middot; Load Testing</span>
+        </div>
+        <div class="project-desc">Healthcare web application with load-tested infrastructure supporting 500+ concurrent users and workflow documentation.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Education & Certifications -->
+  <div class="section">
+    <div class="section-title">Education</div>
+    <div class="education-item">
+      <div>
+        <span class="education-degree">BSc Information Technology</span> &middot; <span class="education-school">Zetech University</span>
+      </div>
+      <div class="education-meta">Jan 2023 – Dec 2025 (Expected Graduation: Nov 2026) &middot; Finalist</div>
+    </div>
+    <div class="education-item">
+      <div>
+        <span class="education-degree">Diploma &mdash; Computer Software Engineering</span> &middot; <span class="education-school">Zetech University</span>
+      </div>
+      <div class="education-meta">Jan 2022 – Nov 2023 &middot; Completed</div>
+    </div>
+    <div class="education-item">
+      <div>
+        <span class="education-degree">Software Development Certification</span> &middot; <span class="education-school">Power Learn Project (PLP Africa)</span>
+      </div>
+      <div class="education-meta">Mar 2025 – Aug 2025 &middot; Completed</div>
+    </div>
+  </div>
+
+  <!-- Licenses & Certifications -->
+  <div class="section">
+    <div class="section-title">Licenses & Certifications</div>
+    <ul class="certs-list">
+      <li>CCNA: Enterprise Networking, Security & Automation</li>
+      <li>Cybersecurity Fundamentals — Q1 Masterclass</li>
+      <li>The Complete Cyber Security Course — Udemy</li>
+      <li>Generative AI — SAP</li>
+      <li>Hashgraph Developer — Hedera / Attendance</li>
+      <li>Software Engineering — Power Learn Africa</li>
+      <li>.NET Fundamentals — Microsoft Student Learn</li>
+      <li>Microsoft Office Suite — Microsoft</li>
+    </ul>
+  </div>
+
+  <!-- Languages -->
+  <div class="section">
+    <div class="section-title">Languages</div>
+    <div style="display: flex; gap: 40px; color: #374151;">
+      <div><strong>English</strong> — Full Professional Proficiency</div>
+      <div><strong>Swahili</strong> — Native / Full Professional Proficiency</div>
+    </div>
+  </div>
+
+</body>
+</html>
