@@ -98,47 +98,42 @@ export default function About({ isOs = false }: { isOs?: boolean }) {
     >
       <div className="max-w-6xl mx-auto">
         {/* Welcome Hero Section at the top of Profile */}
-        <div className="mb-16 bg-[#12131e]/40 border border-white/5 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row gap-8 items-center justify-between select-none">
+        <div className="mb-16 card-glass rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row gap-8 items-center justify-between select-none">
           <div className="space-y-6 max-w-2xl text-left">
             {/* Header info */}
             <div className="flex items-center gap-4">
               <img src="/profile.jpg" alt="Malila Nyamai" className="w-16 h-16 rounded-full border-2 border-cyan/30 shadow-[0_0_10px_rgba(6,182,212,0.15)]" />
               <div>
                 <h2 className="text-sm font-black font-mono tracking-wider text-cyan">MALILA NYAMAI</h2>
-                <p className="text-xs text-white/45 font-mono">Full-Stack & QA Engineer</p>
+                <p className="text-xs text-muted-foreground font-mono">Full-Stack & QA Engineer</p>
               </div>
             </div>
 
             {/* Main Hero Title */}
-            <h1 className="font-display font-black text-3xl sm:text-5xl leading-tight tracking-tight text-white">
+            <h1 className="font-display font-black text-3xl sm:text-5xl leading-tight tracking-tight text-foreground">
               I build systems <br />
               people <span className="text-cyan font-serif italic drop-shadow-[0_0_6px_rgba(6,182,212,0.2)]">love</span> to use.
             </h1>
 
             {/* Tagline description */}
-            <p className="text-xs sm:text-sm leading-relaxed text-white/55">
+            <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
               Over 3 years of experience crafting secure React/Node frameworks, automated test suites (Selenium/Postman), and reliable product architectures.
             </p>
 
             {/* CTA Actions */}
             <div className="flex flex-wrap gap-3 pt-2">
               <a 
-                href="#projects-section"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const event = new CustomEvent("os-navigate", { detail: "projects" });
-                  window.dispatchEvent(event);
-                }}
-                className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan/90 text-slate-950 text-xs font-bold transition-all duration-200 shadow-lg shadow-cyan/10 flex items-center gap-1.5 cursor-pointer"
+                href="#projects"
+                className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan/90 text-primary-foreground text-xs font-bold transition-all duration-200 shadow-lg shadow-cyan/10 flex items-center gap-1.5 cursor-pointer"
               >
                 Explore work ➔
               </a>
               <button 
                 onClick={() => {
-                  const event = new CustomEvent("os-navigate", { detail: "ai" });
-                  window.dispatchEvent(event);
+                  const trigger = document.querySelector('[aria-label="Toggle Ava Assistant"]') as HTMLButtonElement;
+                  trigger?.click();
                 }}
-                className="px-5 py-2.5 rounded-xl border border-white/10 hover:border-cyan/30 hover:bg-cyan/5 text-white/85 text-xs font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer"
+                className="px-5 py-2.5 rounded-xl border border-navy-border hover:border-cyan/30 hover:bg-cyan/5 text-foreground text-xs font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer"
               >
                 AI Lab ✨
               </button>
@@ -148,7 +143,7 @@ export default function About({ isOs = false }: { isOs?: boolean }) {
           {/* Ambient graphic representation */}
           <div className="relative w-40 h-40 bg-cyan/5 rounded-2xl border border-cyan/15 flex flex-col items-center justify-center p-4 text-center shrink-0 hidden md:flex">
             <div className="absolute top-2 left-2 w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
-            <div className="absolute top-2 right-2 text-[8px] font-mono text-white/30">v3.1</div>
+            <div className="absolute top-2 right-2 text-[8px] font-mono text-muted-foreground">v3.1</div>
             <span className="text-4xl">💻</span>
             <span className="text-[10px] font-mono font-bold text-cyan mt-3 tracking-widest uppercase">QA & DEV LAB</span>
           </div>

@@ -141,7 +141,7 @@ END:VCARD`;
             </div>
 
             {/* Location & Links */}
-            <div className="p-4 rounded-2xl border border-navy-border/60 bg-[#0a0f1d]/40 space-y-4">
+            <div className="p-4 rounded-2xl border border-navy-border/60 bg-navy-surface border border-navy-border space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground">
                   <MapPin size={15} />
@@ -196,7 +196,7 @@ END:VCARD`;
                         value={name}
                         onChange={e => setName(e.target.value)}
                         placeholder="John Doe"
-                        className="w-full bg-[#070b13] border border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-cyan/50 focus:shadow-[0_0_10px_rgba(6,182,212,0.1)] transition-all"
+                        className="w-full bg-navy-elevated border border-navy-border rounded-xl px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-cyan/50 focus:shadow-[0_0_10px_rgba(6,182,212,0.1)] transition-all"
                       />
                     </div>
                     <div className="space-y-1">
@@ -207,7 +207,7 @@ END:VCARD`;
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         placeholder="john@example.com"
-                        className="w-full bg-[#070b13] border border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-cyan/50 focus:shadow-[0_0_10px_rgba(6,182,212,0.1)] transition-all"
+                        className="w-full bg-navy-elevated border border-navy-border rounded-xl px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-cyan/50 focus:shadow-[0_0_10px_rgba(6,182,212,0.1)] transition-all"
                       />
                     </div>
                   </div>
@@ -219,7 +219,7 @@ END:VCARD`;
                       value={subject}
                       onChange={e => setSubject(e.target.value)}
                       placeholder="Opportunity / Collaboration Inquiry"
-                      className="w-full bg-[#070b13] border border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-cyan/50 focus:shadow-[0_0_10px_rgba(6,182,212,0.1)] transition-all"
+                      className="w-full bg-navy-elevated border border-navy-border rounded-xl px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-cyan/50 focus:shadow-[0_0_10px_rgba(6,182,212,0.1)] transition-all"
                     />
                   </div>
 
@@ -231,7 +231,7 @@ END:VCARD`;
                       value={message}
                       onChange={e => setMessage(e.target.value)}
                       placeholder="Hi Malila, I reviewed your work history and Kiwami TestCloud details. Let's discuss..."
-                      className="w-full bg-[#070b13] border border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-cyan/50 focus:shadow-[0_0_10px_rgba(6,182,212,0.1)] transition-all resize-none"
+                      className="w-full bg-navy-elevated border border-navy-border rounded-xl px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-cyan/50 focus:shadow-[0_0_10px_rgba(6,182,212,0.1)] transition-all resize-none"
                     />
                   </div>
 

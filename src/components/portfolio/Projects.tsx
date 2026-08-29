@@ -311,7 +311,7 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSelectedProject(null)}
-                className="absolute inset-0 bg-[#06080e]/80 backdrop-blur-md"
+                className="absolute inset-0 bg-background/80 backdrop-blur-md"
               />
 
               {/* Modal Container */}
@@ -319,7 +319,7 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
                 initial={{ opacity: 0, scale: 0.95, y: 15 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 15 }}
-                className="relative w-full max-w-2xl bg-[#0a0f1d] border border-white/10 rounded-2xl shadow-2xl p-6 md:p-8 max-h-[85vh] overflow-y-auto z-10 space-y-6"
+                className="relative w-full max-w-2xl bg-card border border-border text-card-foreground rounded-2xl shadow-2xl p-6 md:p-8 max-h-[85vh] overflow-y-auto z-10 space-y-6"
               >
                 {/* Header */}
                 <div className="flex justify-between items-start pb-4 border-b border-white/5">

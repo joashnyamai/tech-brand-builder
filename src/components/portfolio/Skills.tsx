@@ -68,7 +68,7 @@ const techMetadata: Record<string, {
   }
 };
 
-export default function Skills() {
+export default function Skills({ isOs = false }: { isOs?: boolean } = {}) {
   const { skills: skillGroups } = usePortfolioData();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
@@ -151,7 +151,7 @@ export default function Skills() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSelectedTech(null)}
-                className="absolute inset-0 bg-[#06080e]/75 backdrop-blur-sm"
+                className="absolute inset-0 bg-background/80 backdrop-blur-sm"
               />
 
               {/* Side sheet card */}
@@ -160,7 +160,7 @@ export default function Skills() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 100 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="relative w-full max-w-sm h-full bg-[#0a0f1d] border border-white/10 rounded-2xl shadow-2xl p-6 flex flex-col justify-between overflow-y-auto"
+                className="relative w-full max-w-sm h-full bg-card border border-border text-card-foreground rounded-2xl shadow-2xl p-6 flex flex-col justify-between overflow-y-auto"
               >
                 <div className="space-y-6">
                   {/* Close button */}

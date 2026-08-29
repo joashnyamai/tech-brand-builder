@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -107,7 +107,7 @@ export default function CommandPalette({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-[#06080e]/80 backdrop-blur-md"
+          className="fixed inset-0 bg-background/80 backdrop-blur-md"
         />
 
         {/* Palette Card */}
@@ -116,7 +116,7 @@ export default function CommandPalette({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.97, y: -10 }}
           transition={{ duration: 0.15 }}
-          className="relative w-full max-w-lg bg-[#0a0f1d] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-10"
+          className="relative w-full max-w-lg bg-card border border-border text-card-foreground rounded-2xl shadow-2xl overflow-hidden z-10"
         >
           {/* Search bar */}
           <div className="flex items-center gap-3 px-4 py-3.5 border-b border-white/5 bg-navy-surface/40">

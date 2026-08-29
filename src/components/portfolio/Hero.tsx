@@ -122,7 +122,7 @@ export default function Hero({ onViewResume }: HeroProps) {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#05080e]"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background text-foreground transition-colors duration-300"
     >
       {/* Interactive canvas backdrop */}
       <canvas
@@ -131,7 +131,7 @@ export default function Hero({ onViewResume }: HeroProps) {
       />
 
       {/* Dark gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#05080e]/40 via-[#05080e]/60 to-[#05080e] z-1" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background z-1" />
 
       {/* Glow orbs */}
       <div className="absolute top-1/4 right-1/4 w-80 h-80 rounded-full bg-cyan/5 blur-3xl animate-pulse pointer-events-none z-1" />

@@ -45,6 +45,16 @@ export interface Education {
 
 const DEFAULT_PROJECTS: Project[] = [
   {
+    name: "E-Foleni",
+    period: "Jan 2025 – Present",
+    url: "https://efoleni.co.ke/",
+    objective: "Digital appointment & queue booking client platform integrated with M-Pesa automated transaction verification.",
+    stack: ["React", "TypeScript", "Node.js", "Express", "PostgreSQL", "M-Pesa API"],
+    summary: "Co-founded and engineered E-Foleni, a responsive native booking scheduling client integrated directly with M-Pesa automated transaction verification workflows.",
+    value: "Scaled queue scheduling to 120,000+ bookings in Kenya, eliminating long physical queues and wait times.",
+    highlight: true,
+  },
+  {
     name: "Kiwami TestCloud",
     period: "Sep 2025 – Jan 2026",
     url: "https://www.kiwamitestcloud.com",
@@ -350,14 +360,14 @@ export function usePortfolioData() {
   // Function to load everything from localStorage or fall back to defaults
   const loadData = () => {
     // Clear legacy local storage once to ensure latest CV templates load
-    const legacyCheck = localStorage.getItem("portfolio_cv_version_v3");
+    const legacyCheck = localStorage.getItem("portfolio_cv_version_v4");
     if (!legacyCheck) {
       localStorage.removeItem("portfolio_projects");
       localStorage.removeItem("portfolio_experiences");
       localStorage.removeItem("portfolio_skills");
       localStorage.removeItem("portfolio_certifications");
       localStorage.removeItem("portfolio_education");
-      localStorage.setItem("portfolio_cv_version_v3", "true");
+      localStorage.setItem("portfolio_cv_version_v4", "true");
     }
 
     const localProjects = localStorage.getItem("portfolio_projects");
