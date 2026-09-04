@@ -84,23 +84,23 @@ export default function Skills({ isOs = false }: { isOs?: boolean } = {}) {
   };
 
   return (
-    <section id="skills" ref={ref} className="py-28 px-6 bg-navy-surface/30 relative">
+    <section id="skills" ref={ref} className="py-16 sm:py-28 px-4 sm:px-6 bg-navy-surface/30 relative">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-16"
+          className="mb-12 sm:mb-16"
         >
           <span className="text-cyan text-xs tracking-widest uppercase font-medium">02 / Skills</span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-3 mb-4 sm:mb-6">
             Core Skills &{" "}
             <span className="text-gradient">Expertise</span>
           </h2>
           <div className="section-divider" />
         </motion.div>
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
           {skillGroups.map((group, i) => {
             const IconComponent = iconMap[group.iconName] || Code2;
             return (
@@ -144,7 +144,7 @@ export default function Skills({ isOs = false }: { isOs?: boolean } = {}) {
         {selectedTech && (() => {
           const details = getTechDetails(selectedTech);
           return (
-            <div className="fixed inset-0 z-50 flex items-center justify-end p-4 md:p-6">
+            <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:justify-end p-2 sm:p-4 md:p-6">
               {/* Dark overlay backdrop */}
               <motion.div
                 initial={{ opacity: 0 }}
@@ -156,11 +156,11 @@ export default function Skills({ isOs = false }: { isOs?: boolean } = {}) {
 
               {/* Side sheet card */}
               <motion.div
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 100 }}
+                initial={{ opacity: 0, y: 50, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 50, scale: 0.98 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="relative w-full max-w-sm h-full bg-card border border-border text-card-foreground rounded-2xl shadow-2xl p-6 flex flex-col justify-between overflow-y-auto"
+                className="relative w-full sm:max-w-sm max-h-[88vh] sm:h-full bg-card border border-border text-card-foreground rounded-2xl shadow-2xl p-5 sm:p-6 flex flex-col justify-between overflow-y-auto z-10"
               >
                 <div className="space-y-6">
                   {/* Close button */}

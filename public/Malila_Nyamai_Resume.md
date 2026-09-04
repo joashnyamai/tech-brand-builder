@@ -9,7 +9,7 @@
 ---
 
 ## Professional Summary
-Motivated IT professional and BSc Information Technology finalist with 3+ years of hands-on experience in software development, quality assurance, IT support, cloud exposure (AWS), and digital training. Proven ability to monitor systems, document workflows, troubleshoot application issues, and support end users in fast-paced technology environments. Experienced in application testing (Jest & Postman), bug tracking (Jira), data management (MySQL, PostgreSQL), and prototyping web solutions using React, TypeScript, Node.js, and PHP. Familiar with AI/ML concepts through LangChain, RAG, and Generative AI certifications. A fast learner and collaborative team player eager to contribute to digital transformation agendas and J-Hub innovation initiatives.
+Results-driven Software Engineer, QA Specialist, and IT Consultant with 3+ years of hands-on experience engineering scalable web platforms, automated testing frameworks, and cloud-backed systems. Finalist in BSc Information Technology with demonstrated expertise in React, TypeScript, Node.js, and relational databases (MySQL, PostgreSQL). Proven track record in API and end-to-end testing (Postman, Jest), CI/CD integration, and cloud environments (AWS/Azure). Passionate about building reliable digital products, implementing secure AI agent workflows (LangChain, RAG), and delivering high-impact solutions.
 
 ---
 
@@ -92,6 +92,8 @@ Motivated IT professional and BSc Information Technology finalist with 3+ years 
 
 ## Key Projects
 
+- **E-Foleni** · *React · TypeScript · Tailwind CSS · M-Pesa Daraja API · Role-Aware Dashboards* (Sep 2025 – Present)
+  Queue-free digital booking platform. Engineered multi-person booking logic, M-Pesa STK push integration, and fast mobile web views. Saved an average of 42 minutes per visitor with 120,000+ bookings and 99.9% uptime. | efoleni.co.ke
 - **Kiwami TestCloud** · *React · TypeScript · Vite · REST APIs* (Sep 2025 – Jan 2026)
   Production cloud-based software testing platform. Built full frontend with real-time dashboards, secure auth flows, and API integration. | kiwamitestcloud.com
 - **RemboGlow** · *React · Node.js · PostgreSQL* (Aug 2025 – Present)

@@ -94,23 +94,23 @@ export default function About({ isOs = false }: { isOs?: boolean }) {
     <div
       id="about"
       ref={ref}
-      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6"}
+      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-16 sm:py-28 px-4 sm:px-6"}
     >
       <div className="max-w-6xl mx-auto">
         {/* Welcome Hero Section at the top of Profile */}
-        <div className="mb-16 card-glass rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row gap-8 items-center justify-between select-none">
-          <div className="space-y-6 max-w-2xl text-left">
+        <div className="mb-12 sm:mb-16 card-glass rounded-3xl p-5 sm:p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row gap-6 md:gap-8 items-center justify-between select-none">
+          <div className="space-y-4 sm:space-y-6 max-w-2xl text-left w-full">
             {/* Header info */}
-            <div className="flex items-center gap-4">
-              <img src="/profile.jpg" alt="Malila Nyamai" className="w-16 h-16 rounded-full border-2 border-cyan/30 shadow-[0_0_10px_rgba(6,182,212,0.15)]" />
+            <div className="flex items-center gap-3 sm:gap-4">
+              <img src="/profile.jpg" alt="Malila Nyamai" className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-cyan/30 shadow-[0_0_10px_rgba(6,182,212,0.15)] object-cover" />
               <div>
-                <h2 className="text-sm font-black font-mono tracking-wider text-cyan">MALILA NYAMAI</h2>
-                <p className="text-xs text-muted-foreground font-mono">Full-Stack & QA Engineer</p>
+                <h2 className="text-xs sm:text-sm font-black font-mono tracking-wider text-cyan">MALILA NYAMAI</h2>
+                <p className="text-[11px] sm:text-xs text-muted-foreground font-mono">Full-Stack & QA Engineer</p>
               </div>
             </div>
 
             {/* Main Hero Title */}
-            <h1 className="font-display font-black text-3xl sm:text-5xl leading-tight tracking-tight text-foreground">
+            <h1 className="font-display font-black text-2xl sm:text-4xl md:text-5xl leading-tight tracking-tight text-foreground">
               I build systems <br />
               people <span className="text-cyan font-serif italic drop-shadow-[0_0_6px_rgba(6,182,212,0.2)]">love</span> to use.
             </h1>
@@ -121,10 +121,10 @@ export default function About({ isOs = false }: { isOs?: boolean }) {
             </p>
 
             {/* CTA Actions */}
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-2.5 sm:gap-3 pt-2">
               <a 
                 href="#projects"
-                className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan/90 text-primary-foreground text-xs font-bold transition-all duration-200 shadow-lg shadow-cyan/10 flex items-center gap-1.5 cursor-pointer"
+                className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-cyan hover:bg-cyan/90 text-primary-foreground text-xs font-bold transition-all duration-200 shadow-lg shadow-cyan/10 flex items-center gap-1.5 cursor-pointer"
               >
                 Explore work ➔
               </a>
@@ -133,7 +133,7 @@ export default function About({ isOs = false }: { isOs?: boolean }) {
                   const trigger = document.querySelector('[aria-label="Toggle Ava Assistant"]') as HTMLButtonElement;
                   trigger?.click();
                 }}
-                className="px-5 py-2.5 rounded-xl border border-navy-border hover:border-cyan/30 hover:bg-cyan/5 text-foreground text-xs font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer"
+                className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl border border-navy-border hover:border-cyan/30 hover:bg-cyan/5 text-foreground text-xs font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer"
               >
                 AI Lab ✨
               </button>
@@ -233,7 +233,7 @@ export default function About({ isOs = false }: { isOs?: boolean }) {
             </div>
 
             {/* Horizontal Timeline Tracker */}
-            <div className="relative flex flex-col sm:flex-row justify-between items-center gap-4 bg-navy-surface/30 p-4 border border-navy-border/50 rounded-2xl">
+            <div className="relative grid grid-cols-2 sm:flex sm:flex-row justify-between items-center gap-2 sm:gap-4 bg-navy-surface/30 p-3 sm:p-4 border border-navy-border/50 rounded-2xl">
               <div className="absolute top-1/2 left-[12%] right-[12%] h-[1.5px] bg-navy-border -translate-y-1/2 hidden sm:block z-0" />
               {[
                 { key: "student", label: "Student Era", org: "Zetech Uni" },
@@ -244,9 +244,9 @@ export default function About({ isOs = false }: { isOs?: boolean }) {
                 <button
                   key={milestone.key}
                   onClick={() => setActiveMilestone(milestone.key as any)}
-                  className={`relative z-10 w-full sm:w-auto px-4 py-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                  className={`relative z-10 w-full sm:w-auto px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border text-center transition-all cursor-pointer ${
                     activeMilestone === milestone.key
-                      ? "bg-cyan border-cyan text-primary-foreground font-semibold shadow-[0_0_12px_rgba(6,182,212,0.3)] scale-[1.03]"
+                      ? "bg-cyan border-cyan text-primary-foreground font-semibold shadow-[0_0_12px_rgba(6,182,212,0.3)] scale-[1.02]"
                       : "bg-navy-surface border-navy-border text-muted-foreground hover:text-cyan hover:border-cyan/30"
                   }`}
                 >

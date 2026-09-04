@@ -137,11 +137,11 @@ export default function Hero({ onViewResume }: HeroProps) {
       <div className="absolute top-1/4 right-1/4 w-80 h-80 rounded-full bg-cyan/5 blur-3xl animate-pulse pointer-events-none z-1" />
       <div className="absolute bottom-1/4 left-1/4 w-64 h-64 rounded-full bg-cyan/5 blur-3xl animate-pulse pointer-events-none z-1" />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center py-12 sm:py-16">
         {/* Available Badge */}
         <motion.div
           {...fadeUp(0.1)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan/20 bg-cyan/5 text-cyan text-[10px] tracking-widest uppercase font-semibold mb-8 select-none"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-cyan/20 bg-cyan/5 text-cyan text-[10px] sm:text-xs tracking-widest uppercase font-semibold mb-6 sm:mb-8 select-none"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
           Available for Opportunities
@@ -150,10 +150,10 @@ export default function Hero({ onViewResume }: HeroProps) {
         {/* Profile Image with Ring Interaction */}
         <motion.div
           {...fadeUp(0.25)}
-          className="relative inline-block mb-10 group cursor-pointer"
+          className="relative inline-block mb-8 sm:mb-10 group cursor-pointer"
         >
           <div className="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-cyan/50 via-blue-500/30 to-purple-500/50 opacity-70 blur group-hover:opacity-100 group-hover:blur-md transition-all duration-700" />
-          <div className="relative w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-[6px] border-[#070b13] shadow-2xl mx-auto">
+          <div className="relative w-32 h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-4 sm:border-[6px] border-[#070b13] shadow-2xl mx-auto">
             <img
               src="/profile.jpg"
               alt="Malila Nyamai"
@@ -169,54 +169,54 @@ export default function Hero({ onViewResume }: HeroProps) {
         {/* Title Stagger Reveal */}
         <motion.h1
           {...fadeUp(0.4)}
-          className="font-display text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-6"
+          className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.08] tracking-tight mb-4 sm:mb-6 break-words"
         >
           <span className="text-foreground">Malila</span>{" "}
           <span className="text-gradient">Nyamai</span>
         </motion.h1>
 
         {/* Typewriter Tagline */}
-        <div className="h-8 md:h-10 mb-6 flex items-center justify-center">
-          <p className="font-display text-xs md:text-lg text-cyan font-bold tracking-wider uppercase font-mono">
+        <div className="min-h-[2.75rem] sm:min-h-[2rem] mb-6 flex items-center justify-center px-2">
+          <p className="font-display text-xs sm:text-base md:text-lg text-cyan font-bold tracking-wider uppercase font-mono text-center leading-relaxed">
             {tagline}
-            <span className="inline-block w-1.5 h-4 bg-cyan ml-1 animate-pulse" />
+            <span className="inline-block w-1.5 h-3.5 sm:h-4 bg-cyan ml-1 animate-pulse align-middle" />
           </p>
         </div>
 
         {/* Concise Description */}
         <motion.p
           {...fadeUp(0.55)}
-          className="max-w-2xl mx-auto text-sm md:text-base text-muted-foreground leading-relaxed mb-10"
+          className="max-w-2xl mx-auto text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed mb-8 sm:mb-10 px-2"
         >
           I am a Software Engineer, QA Specialist, and IT Consultant with 3+ years of experience building secure React/Node frameworks, engineering Cypress/Postman automation pipelines, and co-founding utility products.
         </motion.p>
 
         {/* Interactive CTA Controls */}
-        <motion.div {...fadeUp(0.7)} className="flex flex-wrap items-center justify-center gap-4 mb-16">
+        <motion.div {...fadeUp(0.7)} className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 mb-12 sm:mb-16">
           <a
             href="#projects"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase gradient-accent text-primary-foreground hover:opacity-95 hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-[0_0_15px_rgba(6,182,212,0.25)]"
+            className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase gradient-accent text-primary-foreground hover:opacity-95 hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-[0_0_15px_rgba(6,182,212,0.25)] min-w-[140px] sm:min-w-0"
           >
             <Play size={12} fill="currentColor" />
             Explore Projects
           </a>
           <button
             onClick={onViewResume}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase bg-navy-surface hover:bg-navy-elevated text-cyan hover:text-cyan-glow border border-cyan/20 hover:border-cyan/40 hover:scale-[1.02] active:scale-95 transition-all duration-200"
+            className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase bg-navy-surface hover:bg-navy-elevated text-cyan hover:text-cyan-glow border border-cyan/20 hover:border-cyan/40 hover:scale-[1.02] active:scale-95 transition-all duration-200 min-w-[140px] sm:min-w-0"
           >
             <FileText size={12} />
             View Resume
           </button>
           <button
             onClick={openAva}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground border border-white/5 hover:border-white/10 hover:scale-[1.02] active:scale-95 transition-all duration-200"
+            className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground border border-white/5 hover:border-white/10 hover:scale-[1.02] active:scale-95 transition-all duration-200 min-w-[140px] sm:min-w-0"
           >
             <Bot size={12} className="animate-pulse" />
             Talk to Ava
           </button>
           <button
             onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase text-muted-foreground hover:text-cyan transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl font-display font-semibold text-xs tracking-wider uppercase text-muted-foreground hover:text-cyan transition-colors"
           >
             <Route size={13} />
             Start Tour

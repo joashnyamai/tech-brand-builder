@@ -70,7 +70,7 @@ END:VCARD`;
     <div
       id="contact"
       ref={ref}
-      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6 bg-navy-surface/30"}
+      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-16 sm:py-28 px-4 sm:px-6 bg-navy-surface/30"}
     >
       <div className="max-w-5xl mx-auto">
         {!isOs && (
@@ -78,40 +78,40 @@ END:VCARD`;
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="text-center mb-10 sm:mb-16"
           >
             <span className="text-cyan text-xs tracking-widest uppercase font-medium">08 / Contact</span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-2 sm:mt-3 mb-4 sm:mb-6">
               Let's Build <span className="text-gradient">Together</span>
             </h2>
-            <div className="section-divider mx-auto mb-8" />
-            <p className="max-w-xl mx-auto text-muted-foreground leading-relaxed text-sm">
+            <div className="section-divider mx-auto mb-6 sm:mb-8" />
+            <p className="max-w-xl mx-auto text-muted-foreground leading-relaxed text-xs sm:text-sm">
               Whether you are looking to hire a software engineer, QA specialist, or IT consultant, I am excited to hear about your goals. Reach out today.
             </p>
           </motion.div>
         )}
 
-        <div className="grid md:grid-cols-5 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 sm:gap-8 items-start">
           {/* Column 1: Info badging & copy triggers (2/5 size) */}
-          <div className="md:col-span-2 space-y-4">
-            <h3 className="font-display font-bold text-lg text-foreground mb-4">Direct Details</h3>
+          <div className="md:col-span-2 space-y-3 sm:space-y-4">
+            <h3 className="font-display font-bold text-base sm:text-lg text-foreground mb-3 sm:mb-4">Direct Details</h3>
 
             {/* Email capsule */}
-            <div className="p-4 rounded-2xl border border-navy-border/60 bg-navy-surface/40 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan">
+            <div className="p-3.5 sm:p-4 rounded-2xl border border-navy-border/60 bg-navy-surface/40 flex items-center justify-between gap-2.5 sm:gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-9 h-9 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan flex-shrink-0">
                   <Mail size={15} />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <span className="block text-[10px] text-muted-foreground uppercase font-bold">Email Address</span>
-                  <a href="mailto:jamesmnyamai9@gmail.com" className="text-xs font-semibold text-foreground hover:text-cyan transition-colors">
+                  <a href="mailto:jamesmnyamai9@gmail.com" className="text-xs font-semibold text-foreground hover:text-cyan transition-colors truncate block">
                     jamesmnyamai9@gmail.com
                   </a>
                 </div>
               </div>
               <button
                 onClick={() => handleCopy("jamesmnyamai9@gmail.com", "email")}
-                className="p-1.5 rounded bg-white/5 border border-white/10 hover:border-cyan text-muted-foreground hover:text-cyan transition-all cursor-pointer"
+                className="p-1.5 rounded bg-white/5 border border-white/10 hover:border-cyan text-muted-foreground hover:text-cyan transition-all cursor-pointer flex-shrink-0"
                 title="Copy Email"
               >
                 {copiedEmail ? <Check size={12} /> : <Copy size={12} />}
@@ -119,21 +119,21 @@ END:VCARD`;
             </div>
 
             {/* Phone capsule */}
-            <div className="p-4 rounded-2xl border border-navy-border/60 bg-navy-surface/40 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan">
+            <div className="p-3.5 sm:p-4 rounded-2xl border border-navy-border/60 bg-navy-surface/40 flex items-center justify-between gap-2.5 sm:gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-9 h-9 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan flex-shrink-0">
                   <Phone size={15} />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <span className="block text-[10px] text-muted-foreground uppercase font-bold">Phone Number</span>
-                  <a href="tel:+254745806761" className="text-xs font-semibold text-foreground hover:text-cyan transition-colors">
+                  <a href="tel:+254745806761" className="text-xs font-semibold text-foreground hover:text-cyan transition-colors truncate block">
                     +254 745 806 761
                   </a>
                 </div>
               </div>
               <button
                 onClick={() => handleCopy("+254745806761", "phone")}
-                className="p-1.5 rounded bg-white/5 border border-white/10 hover:border-cyan text-muted-foreground hover:text-cyan transition-all cursor-pointer"
+                className="p-1.5 rounded bg-white/5 border border-white/10 hover:border-cyan text-muted-foreground hover:text-cyan transition-all cursor-pointer flex-shrink-0"
                 title="Copy Phone"
               >
                 {copiedPhone ? <Check size={12} /> : <Copy size={12} />}
@@ -141,9 +141,9 @@ END:VCARD`;
             </div>
 
             {/* Location & Links */}
-            <div className="p-4 rounded-2xl border border-navy-border/60 bg-navy-surface border border-navy-border space-y-4">
+            <div className="p-3.5 sm:p-4 rounded-2xl border border-navy-border/60 bg-navy-surface border border-navy-border space-y-3.5 sm:space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground">
+                <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground flex-shrink-0">
                   <MapPin size={15} />
                 </div>
                 <div>
@@ -172,7 +172,7 @@ END:VCARD`;
           </div>
 
           {/* Column 2: Interactive message form (3/5 size) */}
-          <div className="md:col-span-3 card-glass rounded-3xl p-6 md:p-8 relative overflow-hidden">
+          <div className="md:col-span-3 card-glass rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 relative overflow-hidden">
             <AnimatePresence mode="wait">
               {!success ? (
                 <motion.form

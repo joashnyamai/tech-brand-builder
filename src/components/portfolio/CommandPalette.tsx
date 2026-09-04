@@ -100,7 +100,7 @@ export default function CommandPalette({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[999] flex items-start justify-center pt-[15vh]">
+      <div className="fixed inset-0 z-[999] flex items-start justify-center p-3 sm:p-4 pt-[10vh] sm:pt-[15vh]">
         {/* Backdrop overlay */}
         <motion.div
           initial={{ opacity: 0 }}

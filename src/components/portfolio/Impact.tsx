@@ -32,7 +32,7 @@ function Counter({ target, suffix, inView }: { target: number; suffix: string; i
   }, [inView, target]);
 
   return (
-    <span className="font-display text-4xl md:text-5xl font-bold text-gradient">
+    <span className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gradient tracking-tight">
       {count.toLocaleString()}{suffix}
     </span>
   );
@@ -62,16 +62,16 @@ export default function Impact() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="impact" ref={ref} className="py-28 px-6">
+    <section id="impact" ref={ref} className="py-16 sm:py-28 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-16"
+          className="mb-10 sm:mb-16"
         >
           <span className="text-cyan text-xs tracking-widest uppercase font-medium">05 / Impact</span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-2 sm:mt-3 mb-4 sm:mb-6">
             Professional{" "}
             <span className="text-gradient">Impact</span>
           </h2>
@@ -79,34 +79,34 @@ export default function Impact() {
         </motion.div>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-20">
           {stats.map((stat, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="card-glass rounded-2xl p-6 text-center"
+              className="card-glass rounded-2xl p-4 sm:p-6 text-center"
             >
               <Counter target={stat.value} suffix={stat.suffix} inView={inView} />
-              <p className="text-xs text-muted-foreground mt-3 leading-relaxed">{stat.label}</p>
+              <p className="text-xs text-muted-foreground mt-2.5 sm:mt-3 leading-relaxed">{stat.label}</p>
             </motion.div>
           ))}
         </div>
 
         {/* Achievements */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {achievements.map((a, i) => (
             <motion.div
               key={a.title}
               initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.4 + i * 0.1 }}
-              className="flex gap-4 card-glass rounded-xl p-5"
+              className="flex gap-3.5 sm:gap-4 card-glass rounded-xl p-4 sm:p-5"
             >
               <div className="w-1 flex-shrink-0 rounded-full gradient-accent" />
               <div>
-                <h3 className="font-display font-semibold text-foreground text-sm mb-2">{a.title}</h3>
+                <h3 className="font-display font-semibold text-foreground text-sm mb-1.5 sm:mb-2">{a.title}</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">{a.desc}</p>
               </div>
             </motion.div>

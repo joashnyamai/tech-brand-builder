@@ -20,9 +20,9 @@ function ExperienceCard({ exp, index, inView }: { exp: ExperienceType; index: nu
         {/* Timeline dot */}
         <div className="absolute left-3.5 top-4 w-3 h-3 rounded-full border-2 border-cyan bg-background hidden md:block" />
 
-        <div className="card-glass rounded-2xl p-6 hover:border-cyan/20 transition-colors duration-300">
+        <div className="card-glass rounded-2xl p-4 sm:p-6 hover:border-cyan/20 transition-colors duration-300">
           <div
-            className="flex items-start justify-between cursor-pointer gap-4"
+            className="flex items-start justify-between cursor-pointer gap-3 sm:gap-4"
             onClick={() => setExpanded(!expanded)}
           >
             <div className="flex-1 min-w-0">
@@ -31,9 +31,9 @@ function ExperienceCard({ exp, index, inView }: { exp: ExperienceType; index: nu
                   {exp.type}
                 </span>
               </div>
-              <h3 className="font-display font-bold text-lg text-foreground">{exp.role}</h3>
-              <p className="text-cyan font-medium text-sm">{exp.company}</p>
-              <div className="flex flex-wrap gap-4 mt-2 text-xs text-muted-foreground">
+              <h3 className="font-display font-bold text-base sm:text-lg text-foreground leading-snug">{exp.role}</h3>
+              <p className="text-cyan font-medium text-xs sm:text-sm mt-0.5">{exp.company}</p>
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-2 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <Calendar size={12} />
                   {exp.period}
@@ -62,19 +62,19 @@ function ExperienceCard({ exp, index, inView }: { exp: ExperienceType; index: nu
                 transition={{ duration: 0.35, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
-                <div className="pt-5 space-y-4 border-t border-navy-border mt-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed">{exp.overview}</p>
+                <div className="pt-4 sm:pt-5 space-y-3 sm:space-y-4 border-t border-navy-border mt-4">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{exp.overview}</p>
                   <ul className="space-y-2">
                     {exp.highlights.map((h, i) => (
-                      <li key={i} className="flex gap-3 text-sm text-muted-foreground">
-                        <span className="text-cyan mt-1 flex-shrink-0">▸</span>
-                        <span>{h}</span>
+                      <li key={i} className="flex gap-2.5 sm:gap-3 text-xs sm:text-sm text-muted-foreground">
+                        <span className="text-cyan mt-0.5 flex-shrink-0">▸</span>
+                        <span className="leading-relaxed">{h}</span>
                       </li>
                     ))}
                   </ul>
-                  <div className="flex flex-wrap gap-2 pt-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-2">
                     {exp.tech.map((t) => (
-                      <span key={t} className="px-2.5 py-1 rounded-md bg-navy text-xs text-muted-foreground border border-navy-border">
+                      <span key={t} className="px-2.5 py-1 rounded-md bg-navy text-[11px] sm:text-xs text-muted-foreground border border-navy-border">
                         {t}
                       </span>
                     ))}
@@ -98,7 +98,7 @@ export default function Experience({ isOs = false }: { isOs?: boolean }) {
     <div
       id="experience"
       ref={ref}
-      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6"}
+      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-16 sm:py-28 px-4 sm:px-6"}
     >
       <div className="max-w-4xl mx-auto">
         {!isOs && (
@@ -106,10 +106,10 @@ export default function Experience({ isOs = false }: { isOs?: boolean }) {
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="mb-16"
+            className="mb-12 sm:mb-16"
           >
             <span className="text-cyan text-xs tracking-widest uppercase font-medium">03 / Experience</span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-6">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-3 mb-4 sm:mb-6">
               Professional{" "}
               <span className="text-gradient">Journey</span>
             </h2>

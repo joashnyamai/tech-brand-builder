@@ -67,7 +67,7 @@ export default function GlobalAvaChat({ onOpenResume }: GlobalAvaChatProps) {
           { role: "user" as const, parts: [{ text: textToSend }] }
         ];
 
-        const rawAns = await queryGeminiWithRetry(chatPayload, apiKey, undefined, AVA_SYSTEM_PROMPT, 1, 400, 650);
+        const rawAns = await queryGeminiWithRetry(chatPayload, apiKey, undefined, AVA_SYSTEM_PROMPT, 1, 400, 800);
         ans = formatAsHumanResponse(rawAns);
       } else {
         // Fallback to mock responder

@@ -44,7 +44,7 @@ LinkedIn: linkedin.com/in/malila-nyamai-0b2711221
 GitHub: github.com/joashnyamai
 
 PROFESSIONAL SUMMARY
-Motivated IT professional and BSc Information Technology finalist with 3+ years of hands-on experience in software development, quality assurance, IT support, cloud exposure (AWS), and digital training. Proven ability to monitor systems, document workflows, troubleshoot application issues, and support end users in fast-paced technology environments. Experienced in application testing (Jest & Postman), bug tracking (Jira), data management (MySQL, PostgreSQL), and prototyping web solutions using React, TypeScript, Node.js, and PHP. Familiar with AI/ML concepts through LangChain, RAG, and Generative AI certifications. A fast learner and collaborative team player eager to contribute to digital transformation agendas and J-Hub innovation initiatives.
+Results-driven Software Engineer, QA Specialist, and IT Consultant with 3+ years of hands-on experience engineering scalable web platforms, automated testing frameworks, and cloud-backed systems. Finalist in BSc Information Technology with demonstrated expertise in React, TypeScript, Node.js, and relational databases (MySQL, PostgreSQL). Proven track record in API and end-to-end testing (Postman, Jest), CI/CD integration, and cloud environments (AWS/Azure). Passionate about building reliable digital products, implementing secure AI agent workflows (LangChain, RAG), and delivering high-impact solutions.
 
 SKILLS:
 - Cloud & Infrastructure: AWS, Azure, resource provisioning, Docker, CI/CD.
@@ -216,6 +216,12 @@ export function cleanJsonOutput(rawText: string): string {
   if (cleaned.endsWith("```")) {
     cleaned = cleaned.substring(0, cleaned.length - 3);
   }
+  cleaned = cleaned.trim();
+  const firstBrace = cleaned.indexOf("{");
+  const lastBrace = cleaned.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    cleaned = cleaned.substring(firstBrace, lastBrace + 1);
+  }
   return cleaned.trim();
 }
 
@@ -248,55 +254,63 @@ export function getMockChatResponse(text: string): string {
     return "Malila is experienced with Docker containerization, AWS cloud provisioning, and CI/CD quality verification, but Kubernetes cluster orchestration is not currently in his primary production stack.";
   }
 
-  // Specific projects
-  if (q.includes("efoleni") || q.includes("foleni") || q.includes("queue") || q.includes("booking")) {
-    return "E-Foleni (efoleni.co.ke) is a queue-free booking scheduler co-founded and engineered by Malila. Built with React, TypeScript, and M-Pesa API (Daraja), it replaced walk-in lines with mobile-first slot bookings. It has handled 120,000+ bookings, saved visitors an average of 42 minutes per visit, and maintained 99.9% uptime.";
+  // RemboGlow
+  if (q.includes("remboglow") || q.includes("beauty") || q.includes("skincare")) {
+    return "RemboGlow is a beauty-tech platform co-founded and engineered by Malila. He architected the platform end-to-end using React, Node.js, and PostgreSQL, leading deployment and user research iteration.";
   }
+
+  // Kiwami Tech Solutions
   if (q.includes("kiwami") || q.includes("testcloud")) {
-    return "Kiwami TestCloud is a production software testing platform where Malila built the frontend architecture using React, TypeScript, and Vite. He implemented reusable test case workflows and analytics dashboards, reducing QA testing cycles by 35% and protecting 10,000+ users from faulty releases.";
+    return "At Kiwami Tech Solutions, Malila engineered the frontend for Kiwami TestCloud (React, Vite, TypeScript) and designed automated QA scripts for mobile banking, cutting QA cycles by 35% and protecting over 10,000 users from faulty releases.";
   }
-  if (q.includes("remboglow") || q.includes("beauty")) {
-    return "RemboGlow (remboglow.com) is a skincare beauty-tech platform co-founded and architected end-to-end by Malila. Built on React, Node.js, and PostgreSQL, he designed the system architecture, checkout flows, and conducted user research iterations.";
+
+  // Annex Technologies
+  if (q.includes("annex") || q.includes("senior qa") || q.includes("current role")) {
+    return "Malila serves as Senior QA Engineer at Annex Technologies Limited. He leads Postman API validation, SQL backend testing, and CI/CD test verification to uphold high reliability across production releases.";
   }
-  if (q.includes("tari") || q.includes("etims") || q.includes("tax")) {
-    return "At Tari Africa, Malila engineered a full-stack platform integrating KRA eTIMS and M-Pesa for SME digital tax compliance using Node.js, PHP, and MySQL, automating VAT submissions and saving businesses hours of manual paperwork.";
+
+  // E-Foleni
+  if (q.includes("efoleni") || q.includes("queue") || q.includes("booking")) {
+    return "E-Foleni (efoleni.co.ke) is a queue-free booking platform Malila co-founded. Built with React, TypeScript, and M-Pesa Daraja API, it has handled over 120,000 slots and saved users an average of 42 minutes per visit with 99.9% uptime.";
   }
-  if (q.includes("skymed") || q.includes("health")) {
-    return "Skymed Life is a healthcare web platform where Malila built critical appointment modules and load-tested infrastructure supporting 500+ concurrent users with high availability and reliability.";
+
+  // Tari Africa
+  if (q.includes("tari") || q.includes("tax") || q.includes("etims")) {
+    return "At Tari Africa, Malila engineered digital tax and billing integrations connecting Node.js and PHP services with KRA eTIMS and M-Pesa API, automating invoice compliance for Kenyan enterprises.";
+  }
+
+  // Tech Stack & Languages
+  if (q.includes("tech stack") || q.includes("stack") || q.includes("technologies") || q.includes("languages")) {
+    return "Malila's core stack includes TypeScript, JavaScript (ES6+), React, Node.js, PHP, and C# (.NET Core). For data and testing, he leverages MySQL, PostgreSQL, Cypress, Selenium, Postman, Docker, and AWS/Azure.";
   }
 
   // QA & Testing
-  if (q.includes("qa") || q.includes("test") || q.includes("cypress") || q.includes("selenium") || q.includes("postman") || q.includes("jest") || q.includes("quality")) {
-    return "Malila brings 3+ years of QA & Testing expertise. He currently serves as Senior QA Engineer at Annex Technologies, executing Postman API tests, database SQL verification, and CI/CD quality gates. He is proficient in automated testing with Cypress, Selenium, Jest, Postman, and Jira for bug tracking.";
-  }
-
-  // Frontend & React
-  if (q.includes("react") || q.includes("typescript") || q.includes("frontend") || q.includes("vite") || q.includes("tailwind") || q.includes("ui") || q.includes("css") || q.includes("javascript")) {
-    return "Yes! Frontend engineering is one of Malila's primary strengths. He specializes in React, TypeScript, modern JavaScript (ES6+), Tailwind CSS, and Vite. He has shipped high-performance production apps like E-Foleni, Kiwami TestCloud, and RemboGlow with rich animations and responsive layouts.";
-  }
-
-  // Backend, Databases & APIs
-  if (q.includes("backend") || q.includes("node") || q.includes("php") || q.includes("c#") || q.includes(".net") || q.includes("api") || q.includes("database") || q.includes("mysql") || q.includes("postgres")) {
-    return "Malila builds resilient backend services and APIs using Node.js, PHP, and ASP.NET Core / C#. For databases, he designs and manages schemas in MySQL and PostgreSQL. He also integrates third-party APIs such as the Safaricom M-Pesa Daraja API and KRA eTIMS.";
+  if (q.includes("qa") || q.includes("test") || q.includes("cypress") || q.includes("selenium") || q.includes("postman")) {
+    return "With 3+ years in QA engineering, Malila specializes in automated regression suites (Cypress, Selenium), API contract testing (Postman), database query validation, and CI/CD quality gates across both web and mobile environments.";
   }
 
   // Cloud & DevOps
-  if (q.includes("cloud") || q.includes("aws") || q.includes("docker") || q.includes("ci/cd") || q.includes("devops") || q.includes("azure")) {
-    return "Malila works with AWS and Azure for cloud provisioning, Docker for containerizing services, and CI/CD pipelines for automated test execution and quality gating before production deployments.";
+  if (q.includes("cloud") || q.includes("aws") || q.includes("azure") || q.includes("docker") || q.includes("devops") || q.includes("ci/cd")) {
+    return "Malila has hands-on expertise in AWS and Azure cloud provisioning, Docker containerization, and continuous integration pipelines (GitHub Actions), ensuring reproducible builds and reliable deployments.";
   }
 
-  // AI / ML
-  if (q.includes("ai") || q.includes("ml") || q.includes("gemini") || q.includes("langchain") || q.includes("rag") || q.includes("llm")) {
-    return "Malila holds a Generative AI certification from SAP and builds AI-powered workflows using LangChain, RAG architectures, Google Gemini API, and n8n automation. You're chatting with Ava right now, one of the AI agents integrated into this portfolio!";
+  // Rates / Pricing
+  if (q.includes("rate") || q.includes("cost") || q.includes("price") || q.includes("salary") || q.includes("compensation") || q.includes("charge")) {
+    return "Malila is open to full-time roles, contract engagements, and consultancy projects with competitive rates aligned with scope and market standards. Contact him directly at jamesmnyamai9@gmail.com to discuss project specifics.";
   }
 
-  // Contact, Hire, Rates, Location
-  if (q.includes("hire") || q.includes("contact") || q.includes("email") || q.includes("phone") || q.includes("call") || q.includes("reach") || q.includes("rate") || q.includes("salary") || q.includes("location") || q.includes("nairobi") || q.includes("remote") || q.includes("available")) {
-    return "Malila is based in Nairobi, Kenya and is open to remote, hybrid, or on-site roles for Software Engineering, QA Engineering, and IT Consulting contracts.\n\n• Email: jamesmnyamai9@gmail.com\n• Phone / WhatsApp: 0745 806 761\n• GitHub: github.com/joashnyamai\n• LinkedIn: linkedin.com/in/malila-nyamai-0b2711221";
+  // Availability / Hiring / Remote
+  if (q.includes("hire") || q.includes("available") || q.includes("remote") || q.includes("full-time") || q.includes("part-time") || q.includes("relocate")) {
+    return "Yes! Malila is actively available for software engineering and senior QA roles, both remote and hybrid. You can reach him at jamesmnyamai9@gmail.com or 0745 806 761.";
+  }
+
+  // Contact / Location
+  if (q.includes("contact") || q.includes("email") || q.includes("phone") || q.includes("reach") || q.includes("location") || q.includes("where")) {
+    return "Malila is based in Nairobi, Kenya. You can reach him via email at jamesmnyamai9@gmail.com or by phone/WhatsApp at 0745 806 761. His LinkedIn is linkedin.com/in/malila-nyamai-0b2711221.";
   }
 
   // Education & Certifications
-  if (q.includes("education") || q.includes("university") || q.includes("degree") || q.includes("zetech") || q.includes("college") || q.includes("certification") || q.includes("ccna") || q.includes("cisco")) {
+  if (q.includes("education") || q.includes("degree") || q.includes("university") || q.includes("zetech") || q.includes("certif")) {
     return "Malila is an Information Technology BSc finalist at Zetech University (completing 2025/2026). His industry credentials include Cisco CCNA (Enterprise Networking, Security & Automation), SAP Generative AI, Hedera Hashgraph Developer, and Software Engineering from Power Learn Project Africa.";
   }
 
@@ -364,7 +378,12 @@ export function getMockJdResponse(jdText: string) {
     score = Math.max(10, score - 15);
   }
   if (jd.includes("flutter") || jd.includes("react native") || jd.includes("ios") || jd.includes("android") || jd.includes("swift") || jd.includes("kotlin")) {
-    gaps.push("Systems programming (Go/Rust)");
+    gaps.push("Native mobile application engineering (iOS/Android/Flutter)");
+    score = Math.max(10, score - 20);
+  }
+  if (jd.includes("rust") || jd.includes("golang") || jd.includes("go ") || jd.includes("c++") || jd.includes("embedded")) {
+    gaps.push("Systems programming (Go/Rust/C++)");
+    score = Math.max(10, score - 20);
   }
 
   // Bound score
@@ -430,7 +449,7 @@ app.get('/users', async (req, res) => {
 function CommentSection({ rawCommentText }) {
   return (
     <div className="comment-box">
-      {rawCommentText}
+      <p>{rawCommentText}</p>
     </div>
   );
 }`
@@ -544,13 +563,13 @@ export async function queryGeminiWithRetry(
   systemInstruction?: string,
   retries = 1,
   delay = 500,
-  maxOutputTokens = 350
+  maxOutputTokens = 1500
 ): Promise<string> {
-  // Cascading list: fastest and latest models first
+  // Cascading list: fastest and modern Google Gemini models first
   const modelsCascade = [
-    "gemini-3.6-flash",
-    "gemini-flash-latest",
-    "gemini-3.5-flash"
+    "gemini-2.0-flash",
+    "gemini-1.5-flash",
+    "gemini-1.5-pro"
   ];
 
   const contents = typeof promptOrContents === "string"
@@ -582,15 +601,14 @@ export async function queryGeminiWithRetry(
           };
         }
 
-        // Fast 5.5-second timeout to prevent UI hang and maintain instant response feel
+        // Generous 15-second timeout to handle cold-starts and complex JSON payloads without premature aborts
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5500);
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
 
         const response = await fetch(url, {
           method: "POST",
           headers: { 
-            "Content-Type": "application/json",
-            "x-goog-api-key": apiKey
+            "Content-Type": "application/json"
           },
           body: JSON.stringify(bodyPayload),
           signal: controller.signal
@@ -608,9 +626,9 @@ export async function queryGeminiWithRetry(
           throw new Error(`Rate limit exceeded for model ${model}.`);
         }
 
-        // If returned 404 or 403 or 400, it means the key lacks access to this specific model, cascade immediately
+        // If returned 404 (model not found) or 403 (access blocked to specific model), cascade to next model
         if (response.status === 404 || response.status === 403 || response.status === 400) {
-          console.warn(`Model ${model} returned HTTP ${response.status}. Cascading immediately.`);
+          console.warn(`Model ${model} returned HTTP ${response.status}. Cascading to next fallback model.`);
           break;
         }
 
@@ -768,7 +786,7 @@ export default function AiLab() {
     setChatLoading(true);
 
     try {
-      if (apiKey && !fallbackActive) {
+      if (apiKey) {
         // Build multi-turn conversation history for context awareness
         const recentHistory: ChatContent[] = messages
           .slice(-6)
@@ -783,7 +801,7 @@ export default function AiLab() {
           { role: "user" as const, parts: [{ text }] }
         ];
 
-        const rawAns = await queryGeminiWithRetry(chatPayload, apiKey, undefined, AVA_SYSTEM_PROMPT, 1, 400, 650);
+        const rawAns = await queryGeminiWithRetry(chatPayload, apiKey, undefined, AVA_SYSTEM_PROMPT, 1, 400, 800);
         const ans = formatAsHumanResponse(rawAns);
         setMessages((prev) => [...prev, { sender: "bot", text: ans, isLlm: true }]);
       } else {
@@ -889,7 +907,7 @@ export default function AiLab() {
     addLog("[CV Parser Agent] Initializing Job Description matching review...", "INFO");
 
     try {
-      if (apiKey && !fallbackActive) {
+      if (apiKey) {
         addLog("[CV Parser Agent] Dispatching keyword payloads to Gemini AI Engine...", "INFO");
         const prompt = `You are a strict, objective recruitment systems analyst.
 Analyze the following Job Description (JD) against Malila Nyamai's resume below.
@@ -912,23 +930,23 @@ Job Description:
 Resume Context:
 ${RESUME_CONTEXT}`;
 
-        const rawJson = await queryGeminiWithRetry(prompt, apiKey, "application/json");
+        const rawJson = await queryGeminiWithRetry(prompt, apiKey, "application/json", undefined, 1, 400, 1500);
         const parsed = JSON.parse(cleanJsonOutput(rawJson));
+        const finalScore = typeof parsed.score === "number" ? parsed.score : 75;
         setMatchResult({
-          score: parsed.score || 80,
+          score: finalScore,
           fit: parsed.fit || "Matches critical parameters.",
-          strengths: parsed.strengths || [],
-          gaps: parsed.gaps || [],
-          recommendations: parsed.recommendations || [],
+          strengths: Array.isArray(parsed.strengths) ? parsed.strengths : [],
+          gaps: Array.isArray(parsed.gaps) ? parsed.gaps : [],
+          recommendations: Array.isArray(parsed.recommendations) ? parsed.recommendations : [],
           isLlm: true
         });
-        addLog(`[CV Parser Agent] Keyword comparison completed. Synthesis complete. Match Score: ${parsed.score}%`, "SUCCESS");
+        addLog(`[CV Parser Agent] Keyword comparison completed. Synthesis complete. Match Score: ${finalScore}%`, "SUCCESS");
       } else {
         throw new Error("No active key configured. Using Sandbox Heuristics.");
       }
     } catch (err: any) {
       console.warn("Matcher API call failed, executing graceful sandbox fallback:", err.message);
-      setFallbackActive(true);
       addLog("[CV Parser Agent] Local sandbox model activated for analysis...", "INFO");
 
       const parsed = getMockJdResponse(jdInput);
@@ -940,7 +958,7 @@ ${RESUME_CONTEXT}`;
         recommendations: parsed.recommendations,
         isLlm: true // Keep identical styling
       });
-      addLog(`[CV Parser Agent] Sandbox parsing completed. Simulated Match Score: ${parsed.score}%`, "SUCCESS");
+      addLog(`[CV Parser Agent] Sandbox parsing completed. Match Score: ${parsed.score}%`, "SUCCESS");
     } finally {
       setMatchLoading(false);
     }
@@ -967,7 +985,7 @@ ${RESUME_CONTEXT}`;
     addLog(`[LinkedIn Integration] Scraping updates: ${linkedinUrl}...`, "INFO");
 
     try {
-      if (apiKey && !fallbackActive) {
+      if (apiKey) {
         addLog("[Profile Parser] Dispatching sync request to Gemini AI Engine...", "INFO");
         const prompt = `You are Malila Nyamai's personal AI Brand Architect.
 Analyze the following inputs from his GitHub (${githubUrl}), LinkedIn (${linkedinUrl}), and his description of recent accomplishments/updates:
@@ -1024,7 +1042,7 @@ Rules:
      "summary": "A 1-2 sentence human-friendly summary of the updates detected."
    }`;
 
-        const rawJson = await queryGeminiWithRetry(prompt, apiKey, "application/json");
+        const rawJson = await queryGeminiWithRetry(prompt, apiKey, "application/json", undefined, 1, 400, 1500);
         const parsed = JSON.parse(cleanJsonOutput(rawJson));
         setSuggestedChanges(parsed);
         addLog("[Profile Parser] Synthesizing updates using Gemini LLM...", "INFO");
@@ -1034,7 +1052,6 @@ Rules:
       }
     } catch (err: any) {
       console.warn("Sync scan failed, executing graceful sandbox fallback:", err.message);
-      setFallbackActive(true);
       addLog("[Profile Parser] Activating local sandbox heuristic model...", "INFO");
       
       const parsed = getMockSyncResponse(syncUpdatesInput);
@@ -1108,7 +1125,7 @@ Rules:
     addLog("[Security Auditor] Beginning vulnerability audit of code block...", "INFO");
 
     try {
-      if (apiKey && !fallbackActive) {
+      if (apiKey) {
         addLog("[Security Auditor] Analyzing AST and syntax patterns with Gemini AI...", "INFO");
         const prompt = `Analyze this code snippet for security vulnerabilities.
 Return ONLY a JSON object with:
@@ -1121,7 +1138,7 @@ Return ONLY a JSON object with:
 Code to audit:
 ${customCode}`;
 
-        const rawJson = await queryGeminiWithRetry(prompt, apiKey, "application/json");
+        const rawJson = await queryGeminiWithRetry(prompt, apiKey, "application/json", undefined, 1, 400, 1500);
         const parsed = JSON.parse(cleanJsonOutput(rawJson));
         setAuditResult({
           vulnerability: parsed.vulnerability || "Vulnerability Found",
@@ -1137,7 +1154,6 @@ ${customCode}`;
       }
     } catch (err: any) {
       console.warn("Auditor API call failed, executing graceful sandbox fallback:", err.message);
-      setFallbackActive(true);
       addLog("[Security Auditor] Auditor fallback: running sandbox analysis...", "INFO");
 
       const parsed = getMockAuditResponse(selectedSnippetKey);
@@ -1149,7 +1165,7 @@ ${customCode}`;
         fixedCode: parsed.fixedCode,
         isLlm: true // Keep identical styling
       });
-      addLog(`[Security Auditor] Sandbox audit completed. Simulated Vulnerability: ${parsed.vulnerability} (High)`, "SUCCESS");
+      addLog(`[Security Auditor] Sandbox audit completed. Vulnerability: ${parsed.vulnerability} (${parsed.severity})`, "SUCCESS");
     } finally {
       setAuditLoading(false);
     }
@@ -1188,11 +1204,11 @@ ${customCode}`;
   }, [isRunning]);
 
   return (
-    <div className="os-shell min-h-screen bg-background text-foreground py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-[#2c001e]">
+    <div className="os-shell min-h-screen bg-background text-foreground py-6 sm:py-10 px-3 sm:px-6 lg:px-8 relative overflow-hidden bg-[#2c001e]">
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
       {/* Header Bar */}
-      <header className="max-w-7xl mx-auto mb-10 flex justify-between items-center bg-navy-surface/40 border border-navy-border p-6 rounded-2xl backdrop-blur-md relative z-10">
+      <header className="max-w-7xl mx-auto mb-6 sm:mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-navy-surface/40 border border-navy-border p-4 sm:p-6 rounded-2xl backdrop-blur-md relative z-10">
         <div className="flex items-center gap-3">
           <Link
             to="/"
@@ -1212,14 +1228,14 @@ ${customCode}`;
         </div>
 
         {/* API Key Configuration Panel */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3">
           {apiKey ? (
-            <div className="hidden sm:flex items-center gap-1.5 text-[10px] text-green-400 bg-green-500/10 border border-green-500/20 px-2.5 py-1 rounded font-semibold uppercase tracking-wider font-mono">
+            <div className="flex items-center gap-1.5 text-[10px] text-green-400 bg-green-500/10 border border-green-500/20 px-2.5 py-1 rounded font-semibold uppercase tracking-wider font-mono">
               <Check size={12} />
               <span>AI Engine Active</span>
             </div>
           ) : (
-            <div className="hidden sm:flex items-center gap-1.5 text-[10px] text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded font-semibold uppercase tracking-wider font-mono">
+            <div className="flex items-center gap-1.5 text-[10px] text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded font-semibold uppercase tracking-wider font-mono">
               <AlertCircle size={12} />
               <span>Offline Preview Mode</span>
             </div>
@@ -1235,10 +1251,10 @@ ${customCode}`;
       </header>
 
       {/* Main Grid Layout */}
-      <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
         
         {/* Left Column: AI Career Chatbot */}
-        <section className="lg:col-span-1 flex flex-col h-[650px] bg-navy-surface/40 border border-navy-border rounded-2xl overflow-hidden backdrop-blur-md">
+        <section className="lg:col-span-1 flex flex-col h-[480px] sm:h-[540px] lg:h-[650px] bg-navy-surface/40 border border-navy-border rounded-2xl overflow-hidden backdrop-blur-md">
           <div className="p-4 border-b border-navy-border bg-navy-elevated flex items-center justify-between">
             <h2 className="text-sm font-bold tracking-wider uppercase font-display flex items-center gap-2 text-foreground">
               <Bot size={16} className="text-cyan animate-pulse" />
@@ -1247,7 +1263,7 @@ ${customCode}`;
             <div className="flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full ${apiKey ? "bg-green-500" : "bg-amber-500"}`} />
               <span className="text-[10px] text-muted-foreground">
-                {apiKey ? "Gemini 3.6 Flash" : "Local Preview"}
+                {apiKey ? "Gemini 2.0 Flash" : "Local Preview"}
               </span>
             </div>
           </div>
@@ -1345,10 +1361,10 @@ ${customCode}`;
         </section>
 
         {/* Right Column: Matcher, Auditor, and n8n Logs */}
-        <div className="lg:col-span-2 space-y-8 flex flex-col h-[650px] justify-between">
+        <div className="lg:col-span-2 space-y-6 lg:space-y-8 flex flex-col min-h-[500px] lg:h-[650px] justify-between">
           
           {/* Unified Console with Tabs */}
-          <div className="bg-navy-surface/40 border border-navy-border rounded-2xl p-6 flex flex-col overflow-hidden backdrop-blur-md flex-1 min-h-0">
+          <div className="bg-navy-surface/40 border border-navy-border rounded-2xl p-4 sm:p-6 flex flex-col overflow-hidden backdrop-blur-md flex-1 min-h-[380px] lg:min-h-0">
             {/* Tab Headers */}
             <div className="flex border-b border-navy-border/60 mb-5 overflow-x-auto scrollbar-none flex-shrink-0">
               <button
@@ -1829,7 +1845,7 @@ ${customCode}`;
           </div>
 
           {/* Bottom Half: n8n Log workflows terminal */}
-          <section className="bg-navy-surface/40 border border-navy-border rounded-2xl p-5 h-[230px] flex flex-col overflow-hidden backdrop-blur-md">
+          <section className="bg-navy-surface/40 border border-navy-border rounded-2xl p-4 sm:p-5 h-[200px] sm:h-[230px] flex flex-col overflow-hidden backdrop-blur-md flex-shrink-0">
             <div className="flex items-center justify-between mb-3 border-b border-navy-border/60 pb-2">
               <h2 className="text-xs font-bold tracking-wider uppercase font-display flex items-center gap-2 text-foreground">
                 <Terminal size={16} className="text-cyan animate-pulse" />

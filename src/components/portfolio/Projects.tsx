@@ -95,10 +95,10 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
     <div
       id="projects"
       ref={ref}
-      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-28 px-6 bg-navy-surface/30"}
+      className={isOs ? "p-4 md:p-8 max-h-[75vh] overflow-y-auto" : "py-16 sm:py-28 px-4 sm:px-6 bg-navy-surface/30"}
     >
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-16">
           {!isOs && (
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -106,10 +106,10 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
               transition={{ duration: 0.6 }}
             >
               <span className="text-cyan text-xs tracking-widest uppercase font-medium">04 / Projects</span>
-              <h2 className="font-display text-4xl md:text-5xl font-bold mt-3">
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-2 sm:mt-3">
                 Featured <span className="text-gradient">Work</span>
               </h2>
-              <div className="section-divider mt-6" />
+              <div className="section-divider mt-4 sm:mt-6" />
             </motion.div>
           )}
 
@@ -118,13 +118,13 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
             initial={{ opacity: 0, y: 15 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className={`flex flex-wrap gap-2 ${isOs ? "w-full justify-start pb-4 border-b border-white/5" : ""}`}
+            className={`flex items-center gap-2 overflow-x-auto scrollbar-none pb-2 sm:pb-0 max-w-full ${isOs ? "w-full justify-start pb-4 border-b border-white/5" : "flex-nowrap sm:flex-wrap"}`}
           >
             {filters.map((f) => (
               <button
                 key={f}
                 onClick={() => setActiveFilter(f)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                className={`whitespace-nowrap px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                   activeFilter === f
                     ? "bg-cyan border-cyan text-primary-foreground shadow-[0_0_12px_rgba(6,182,212,0.3)]"
                     : "bg-navy-surface border-navy-border text-muted-foreground hover:text-cyan hover:border-cyan/20"
@@ -137,7 +137,7 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
         </div>
 
         {/* Projects Grid with layout transitions */}
-        <motion.div layout className="grid md:grid-cols-2 gap-6">
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, i) => (
               <motion.div
@@ -210,57 +210,57 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
         </motion.div>
 
         {/* Live GitHub Activity Dashboard */}
-        <div id="github-pulse" className="mt-20 border-t border-navy-border/40 pt-16">
-          <div className="flex flex-col gap-1 mb-8">
+        <div id="github-pulse" className="mt-14 sm:mt-20 border-t border-navy-border/40 pt-10 sm:pt-16">
+          <div className="flex flex-col gap-1 mb-6 sm:mb-8">
             <span className="text-[10px] text-cyan font-bold uppercase tracking-widest font-mono">Dynamic Sync</span>
-            <h3 className="font-display font-bold text-xl text-foreground">GitHub Contribution Pulse</h3>
+            <h3 className="font-display font-bold text-lg sm:text-xl text-foreground">GitHub Contribution Pulse</h3>
             <p className="text-xs text-muted-foreground">Public contributions, repositories sync, and coding languages distribution</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Column 1: Git Stats (col-span-1) */}
-            <div className="card-glass rounded-2xl p-5 space-y-4">
+            <div className="card-glass rounded-2xl p-4 sm:p-5 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-navy-border/40">
                 <span className="text-xs font-bold text-foreground font-mono">@joashnyamai Profile</span>
                 <span className="text-[9px] text-cyan font-bold font-mono bg-cyan/10 px-2 py-0.5 rounded border border-cyan/20 animate-pulse">Live</span>
               </div>
-              <div className="grid grid-cols-2 gap-3 text-center">
-                <div className="bg-navy-elevated/40 p-3 rounded-xl border border-navy-border/40">
-                  <span className="block text-xl font-bold text-foreground">17</span>
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3 text-center">
+                <div className="bg-navy-elevated/40 p-2.5 sm:p-3 rounded-xl border border-navy-border/40">
+                  <span className="block text-lg sm:text-xl font-bold text-foreground">17</span>
                   <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider">Repositories</span>
                 </div>
-                <div className="bg-navy-elevated/40 p-3 rounded-xl border border-navy-border/40">
-                  <span className="block text-xl font-bold text-foreground">843</span>
+                <div className="bg-navy-elevated/40 p-2.5 sm:p-3 rounded-xl border border-navy-border/40">
+                  <span className="block text-lg sm:text-xl font-bold text-foreground">843</span>
                   <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider">Total Commits</span>
                 </div>
-                <div className="bg-navy-elevated/40 p-3 rounded-xl border border-navy-border/40">
-                  <span className="block text-xl font-bold text-foreground">29</span>
+                <div className="bg-navy-elevated/40 p-2.5 sm:p-3 rounded-xl border border-navy-border/40">
+                  <span className="block text-lg sm:text-xl font-bold text-foreground">29</span>
                   <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider">Stars</span>
                 </div>
-                <div className="bg-navy-elevated/40 p-3 rounded-xl border border-navy-border/40">
-                  <span className="block text-xl font-bold text-foreground">42</span>
+                <div className="bg-navy-elevated/40 p-2.5 sm:p-3 rounded-xl border border-navy-border/40">
+                  <span className="block text-lg sm:text-xl font-bold text-foreground">42</span>
                   <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider">PRs Opened</span>
                 </div>
               </div>
             </div>
 
             {/* Column 2: Contribution Heatmap Graph (col-span-2) */}
-            <div className="md:col-span-2 card-glass rounded-2xl p-5 flex flex-col justify-between gap-4">
+            <div className="lg:col-span-2 card-glass rounded-2xl p-4 sm:p-5 flex flex-col justify-between gap-4">
               <div className="flex justify-between items-center pb-3 border-b border-navy-border/40">
                 <span className="text-xs font-bold text-foreground">Weekly Contribution Grid</span>
                 <span className="text-[10px] text-muted-foreground">Recent 60 days activity pulse</span>
               </div>
 
-              {/* Grid representation */}
-              <div className="py-2">
-                <div className="grid grid-cols-12 gap-2 justify-center">
+              {/* Grid representation with overflow scroll prevention */}
+              <div className="py-2 overflow-x-auto max-w-full pb-2">
+                <div className="grid grid-cols-12 gap-1.5 sm:gap-2 justify-center min-w-[280px] sm:min-w-0">
                   {Array.from({ length: 60 }).map((_, gi) => {
                     const shades = ["bg-navy-elevated", "bg-cyan/10", "bg-cyan/30", "bg-cyan/60", "bg-cyan"];
                     const shadeClass = shades[gi % 5];
                     return (
                       <div
                         key={gi}
-                        className={`w-6 h-6 rounded-md ${shadeClass} border border-white/5`}
+                        className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-md ${shadeClass} border border-white/5`}
                         title={`Commits: ${gi % 5} count`}
                       />
                     );
@@ -270,7 +270,7 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
 
               {/* Languages bar */}
               <div className="space-y-1.5 pt-3 border-t border-navy-border/30">
-                <div className="flex justify-between text-[9px] text-muted-foreground font-bold font-mono">
+                <div className="flex justify-between text-[8px] sm:text-[9px] text-muted-foreground font-bold font-mono">
                   <span>TS (48%)</span>
                   <span>React (22%)</span>
                   <span>PHP (15%)</span>
@@ -319,20 +319,21 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
                 initial={{ opacity: 0, scale: 0.95, y: 15 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 15 }}
-                className="relative w-full max-w-2xl bg-card border border-border text-card-foreground rounded-2xl shadow-2xl p-6 md:p-8 max-h-[85vh] overflow-y-auto z-10 space-y-6"
+                className="relative w-full max-w-2xl bg-card border border-border text-card-foreground rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 max-h-[85vh] overflow-y-auto z-10 space-y-5 sm:space-y-6"
               >
                 {/* Header */}
-                <div className="flex justify-between items-start pb-4 border-b border-white/5">
+                <div className="flex justify-between items-start pb-4 border-b border-white/5 gap-3">
                   <div>
                     <span className="text-[10px] text-cyan font-bold uppercase tracking-widest font-mono">Case Study Analysis</span>
-                    <h3 className="font-display font-black text-2xl md:text-3xl text-foreground mt-1">{matchedProj.name}</h3>
+                    <h3 className="font-display font-black text-xl sm:text-2xl md:text-3xl text-foreground mt-1">{matchedProj.name}</h3>
                     <p className="text-xs text-muted-foreground mt-0.5">{matchedProj.period}</p>
                   </div>
                   <button
                     onClick={() => setSelectedProject(null)}
-                    className="p-1 rounded bg-white/5 text-muted-foreground hover:text-foreground border border-white/5"
+                    className="p-1.5 rounded bg-white/5 text-muted-foreground hover:text-foreground border border-white/5 cursor-pointer flex-shrink-0"
+                    aria-label="Close modal"
                   >
-                    <X size={15} />
+                    <X size={16} />
                   </button>
                 </div>
 
@@ -346,7 +347,7 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
                     <p className="pl-3.5 border-l border-white/5">{study.problem}</p>
                   </div>
 
-                  <div className="space-y-3 rounded-xl border border-cyan/15 bg-cyan/5 p-4">
+                  <div className="space-y-3 rounded-xl border border-cyan/15 bg-cyan/5 p-3.5 sm:p-4">
                     <div className="flex items-center justify-between gap-3">
                       <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                         <Code size={14} className="text-cyan" /> Interactive Architecture
@@ -357,7 +358,7 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
                       {architecture.map((node, index) => {
                         const Icon = node.icon;
                         return <div key={node.name} className="flex items-center gap-2">
-                          <button onClick={() => setSelectedArchitectureNode(node.name)} className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-2 text-[10px] font-bold transition-all ${selectedArchitectureNode === node.name ? "border-cyan bg-cyan text-primary-foreground" : "border-white/10 bg-[#070b13] text-muted-foreground hover:border-cyan/50 hover:text-cyan"}`}>
+                          <button onClick={() => setSelectedArchitectureNode(node.name)} className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 sm:py-2 text-[10px] font-bold transition-all ${selectedArchitectureNode === node.name ? "border-cyan bg-cyan text-primary-foreground" : "border-white/10 bg-[#070b13] text-muted-foreground hover:border-cyan/50 hover:text-cyan"}`}>
                             <Icon size={12} /> {node.name}
                           </button>
                           {index < architecture.length - 1 && <span className="text-cyan/50">→</span>}
@@ -411,17 +412,17 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
                 </div>
 
                 {/* CTAs */}
-                <div className="pt-5 border-t border-white/5 flex flex-wrap items-center justify-between gap-4">
+                <div className="pt-4 sm:pt-5 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                   <div className="flex items-center gap-2 text-xs font-semibold text-cyan">
-                    <CheckCircle size={14} className="text-cyan" />
-                    <span>Impact: {matchedProj.value}</span>
+                    <CheckCircle size={14} className="text-cyan flex-shrink-0" />
+                    <span className="line-clamp-2 sm:line-clamp-none">Impact: {matchedProj.value}</span>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                     <a
                       href={study.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-foreground border border-white/10 flex items-center gap-2"
+                      className="flex-1 sm:flex-initial justify-center px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-foreground border border-white/10 flex items-center gap-2"
                     >
                       <Github size={13} />
                       <span>Repository</span>
@@ -431,7 +432,7 @@ export default function Projects({ isOs = false }: { isOs?: boolean }) {
                         href={matchedProj.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 rounded-xl text-xs font-bold gradient-accent text-primary-foreground flex items-center gap-2 shadow-[0_0_12px_rgba(6,182,212,0.2)]"
+                        className="flex-1 sm:flex-initial justify-center px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold gradient-accent text-primary-foreground flex items-center gap-2 shadow-[0_0_12px_rgba(6,182,212,0.2)]"
                       >
                         <ExternalLink size={13} />
                         <span>Live Demo</span>
