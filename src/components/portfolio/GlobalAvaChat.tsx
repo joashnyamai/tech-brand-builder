@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, X, Send, Sparkles, User } from "lucide-react";
-import { queryGeminiWithRetry, getMockChatResponse, RESUME_CONTEXT } from "@/pages/AiLab";
+import { Bot, X, Send, Sparkles, User, FileText } from "lucide-react";
+import { queryGeminiWithRetry, getMockChatResponse, AVA_SYSTEM_PROMPT, formatAsHumanResponse, type ChatContent } from "@/pages/AiLab";
 
 interface GlobalAvaChatProps {
   onOpenResume: () => void;
@@ -50,14 +50,28 @@ export default function GlobalAvaChat({ onOpenResume }: GlobalAvaChatProps) {
     setLoading(true);
 
     try {
-      const apiKey = localStorage.getItem("gemini_api_key");
+      const apiKey = localStorage.getItem("GEMINI_API_KEY") || localStorage.getItem("gemini_api_key") || import.meta.env.VITE_GEMINI_API_KEY || "";
       let ans = "";
       if (apiKey) {
-        const prompt = `${RESUME_CONTEXT}\n\nVisitor's Question: ${textToSend}\n\nDo NOT state that you are an AI, a large language model, or a chatbot. Keep your tone completely human, friendly, and professional. Provide a helpful response to the visitor's question:`;
-        ans = await queryGeminiWithRetry(prompt, apiKey);
+        // Multi-turn conversation history for contextual follow-up questions
+        const recentHistory: ChatContent[] = messages
+          .slice(-6)
+          .filter((m, idx) => !(idx === 0 && m.sender === "ava" && m.text.startsWith("Hello!")))
+          .map(m => ({
+            role: m.sender === "user" ? ("user" as const) : ("model" as const),
+            parts: [{ text: m.text }]
+          }));
+
+        const chatPayload: ChatContent[] = [
+          ...recentHistory,
+          { role: "user" as const, parts: [{ text: textToSend }] }
+        ];
+
+        const rawAns = await queryGeminiWithRetry(chatPayload, apiKey, undefined, AVA_SYSTEM_PROMPT, 1, 400, 650);
+        ans = formatAsHumanResponse(rawAns);
       } else {
         // Fallback to mock responder
-        await new Promise(r => setTimeout(r, 600));
+        await new Promise(r => setTimeout(r, 400));
         ans = getMockChatResponse(textToSend);
       }
       setMessages(prev => [...prev, { sender: "ava", text: ans }]);
@@ -70,13 +84,13 @@ export default function GlobalAvaChat({ onOpenResume }: GlobalAvaChatProps) {
     }
   };
 
-  const chips = [
-    "Show me backend projects",
-    "What is your strongest project?",
-    "Summarize Malila's experience.",
-    "Does he know Ruby on Rails?",
-    "Why should I hire you?",
-    "View Resume & CV"
+  const suggestedQuestions = [
+    "Tell me about E-Foleni",
+    "What is your core tech stack?",
+    "QA & automated testing experience?",
+    "Are you open to remote roles?",
+    "Why hire Malila?",
+    "How can I contact him?"
   ];
 
   return (
@@ -103,7 +117,7 @@ export default function GlobalAvaChat({ onOpenResume }: GlobalAvaChatProps) {
             className="fixed bottom-20 right-6 z-[100] w-[calc(100%-3rem)] sm:w-96 h-[480px] max-h-[75vh] bg-card border border-border text-card-foreground rounded-2xl shadow-2xl overflow-hidden flex flex-col backdrop-blur-xl"
           >
             {/* Header */}
-            <div className="px-4 py-3 bg-muted/40 border-b border-border flex items-center justify-between">
+            <div className="px-4 py-2.5 bg-muted/40 border-b border-border flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-cyan/20 flex items-center justify-center text-cyan">
                   <Bot size={13} />
@@ -113,12 +127,22 @@ export default function GlobalAvaChat({ onOpenResume }: GlobalAvaChatProps) {
                   <span className="text-[9px] text-cyan uppercase tracking-wider font-bold">Portfolio AI Copilot</span>
                 </div>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-1 rounded text-slate-400 hover:text-white"
-              >
-                <X size={14} />
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={onOpenResume}
+                  className="px-2 py-0.5 text-[10px] font-medium rounded-md bg-cyan/10 hover:bg-cyan/20 text-cyan border border-cyan/30 transition-all flex items-center gap-1 cursor-pointer"
+                  title="View Resume & CV"
+                >
+                  <FileText size={10} />
+                  <span>CV</span>
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-1 rounded text-slate-400 hover:text-white cursor-pointer"
+                >
+                  <X size={14} />
+                </button>
+              </div>
             </div>
 
             {/* Chat Messages Inner Container */}
@@ -159,14 +183,15 @@ export default function GlobalAvaChat({ onOpenResume }: GlobalAvaChatProps) {
               )}
             </div>
 
-            {/* Prompt Chips */}
-            <div className="px-4 py-2 border-t border-white/10 flex gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none bg-white/[0.02]">
-              {chips.map(chip => (
+            {/* Suggested Questions Chips */}
+            <div className="px-3 py-2 border-t border-border/40 flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none bg-muted/20">
+              <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-wider pl-1 shrink-0">Ask:</span>
+              {suggestedQuestions.map(chip => (
                 <button
                   key={chip}
                   onClick={() => handleSend(chip)}
                   disabled={loading}
-                  className="px-2.5 py-1 text-[9px] font-semibold bg-white/5 hover:bg-cyan/15 border border-white/10 hover:border-cyan/30 text-slate-300 hover:text-cyan rounded-full transition-all cursor-pointer"
+                  className="px-2.5 py-1 text-[10px] font-medium bg-secondary/50 hover:bg-cyan/15 border border-border/70 hover:border-cyan/40 text-foreground hover:text-cyan rounded-full transition-all cursor-pointer shrink-0 disabled:opacity-50"
                 >
                   {chip}
                 </button>

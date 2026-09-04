@@ -135,62 +135,188 @@ function CommentSection({ rawCommentText }) {
 }`
 };
 
+export const AVA_SYSTEM_PROMPT = `You are Ava, Malila Nyamai's personal portfolio guide and technical representative.
+
+RESUME CONTEXT:
+${RESUME_CONTEXT}
+
+STRICT RESPONSE FORMAT RULES (DO NOT USE AN AI RESPONSE FORMAT):
+1. NO AI FORMATTING:
+   - Speak naturally like an articulate, friendly human colleague chatting on Slack or WhatsApp.
+   - NEVER use markdown headings (no ### or ##).
+   - NEVER use formulaic bold labels at sentence starts (do not write "**Direct Answer:**", "**Skills:**", or "**Overview:**").
+   - NEVER use robotic conversational filler (do not start with "Certainly!", "Great question!", "Sure thing!", "I'd be glad to help", or "Based on his resume..."). Start immediately with the direct answer.
+   - NEVER add canned AI sign-offs at the end (do not say "Feel free to ask if you need anything else!", "Hope this helps!", or "Let me know if you have questions!").
+
+2. ANSWER SPEED & BREVITY:
+   - Keep answers compact, fast to read, and punchy: 2 to 4 conversational sentences total in 1 or 2 natural paragraphs.
+   - Avoid long walls of text. Be concise, direct, and human.
+
+3. DIRECT ANSWER FIRST:
+   - If asked a direct question (e.g. "Can he build in React?", "What is E-Foleni?", "What is his hourly rate?", "Where is he located?"), state the direct answer in the very first words.
+   - If asked about something he does NOT know (e.g. Ruby on Rails, Flutter, Rust), be honest and direct: "Malila doesn't specialize in Ruby on Rails; his backend experience is mainly with Node.js, PHP, and C#/.NET with MySQL and PostgreSQL."
+   - For greetings ("hi", "hello"), respond in 1 warm, friendly sentence asking what they'd like to explore about Malila's software or QA work.
+   - For contact, state: email jamesmnyamai9@gmail.com, phone 0745 806 761, based in Nairobi Kenya.`;
+
+export function formatAsHumanResponse(raw: string): string {
+  if (!raw) return "";
+  let text = raw.trim();
+
+  // Strip robotic AI opening clichés
+  text = text.replace(/^(certainly|sure thing|great question|of course|absolutely|happy to help|hello there)[!.,\s]*/i, "");
+  text = text.replace(/^(here is a breakdown|based on (the|his|malila's) (resume|background|experience|context)|according to (the|his) (resume|profile))[!.,\s:]*/i, "");
+
+  // Strip section headers like ### or ##
+  text = text.replace(/^#{1,4}\s+/gm, "");
+
+  // Strip formulaic bold labels like **Direct Answer:**, **Overview:**, **Key Highlights:**, **Summary:**
+  text = text.replace(/\*\*(direct answer|answer|overview|key takeaways?|summary|skills?|experience|projects?):\*\*\s*/gi, "");
+
+  // Strip bullet lists that start with bold keys: e.g. "* **Title:** description" -> "• Title: description"
+  text = text.replace(/^[*-]\s+\*\*([^*]+)\*\*:\s*/gm, "• $1: ");
+
+  // Strip standalone robotic AI closing sign-offs at the very end
+  text = text.replace(/\n\s*(Feel free to reach out.*|Let me know if you (have|need) (any|more) questions.*|Hope this helps!*|I hope this helps!*)$/i, "");
+  text = text.replace(/\s*(Feel free to ask if you need anything else|Hope this helps)[.!]*$/i, "");
+
+  // Ensure completeness: if text ends on an unfinished trailing phrase, clean to the last sentence
+  const trimmed = text.trim();
+  if (trimmed.length > 60 && !/[.!?]$/.test(trimmed)) {
+    const lastPunctuation = Math.max(
+      trimmed.lastIndexOf("."),
+      trimmed.lastIndexOf("!"),
+      trimmed.lastIndexOf("?")
+    );
+    if (lastPunctuation > trimmed.length * 0.65) {
+      return trimmed.substring(0, lastPunctuation + 1);
+    }
+    return trimmed + ".";
+  }
+
+  return trimmed;
+}
+
+export interface ChatMessagePart {
+  text: string;
+}
+
+export interface ChatContent {
+  role: "user" | "model";
+  parts: ChatMessagePart[];
+}
+
+export function cleanJsonOutput(rawText: string): string {
+  if (!rawText) return "{}";
+  let cleaned = rawText.trim();
+  if (cleaned.startsWith("```json")) {
+    cleaned = cleaned.substring(7);
+  } else if (cleaned.startsWith("```")) {
+    cleaned = cleaned.substring(3);
+  }
+  if (cleaned.endsWith("```")) {
+    cleaned = cleaned.substring(0, cleaned.length - 3);
+  }
+  return cleaned.trim();
+}
+
 // --- MOCK LOGIC UTILITIES FOR SEAMLESS OFFLINE FALLBACK ---
 
 export function getMockChatResponse(text: string): string {
-  const q = text.toLowerCase();
-  if (q.includes("qa") || q.includes("test")) {
-    return "Malila has 3+ years of QA experience, currently serving as Senior QA Engineer at Annex Technologies. He designs test suites, runs manual/automated test pipelines (Selenium/Cypress), does Postman API testing, and database verification.";
-  } else if (q.includes("efoleni") || q.includes("foleni")) {
-    return "E-Foleni (efoleni.co.ke) is a queue-free booking scheduler built for Kenyan organizations. Malila co-founded and built it using React, TypeScript, and M-Pesa. It has facilitated over 120,000+ bookings and saved users 42+ mins of line time.";
-  } else if (q.includes("remboglow") || q.includes("glow")) {
-    return "RemboGlow is a beauty-tech platform co-founded by Malila. He architected the frontend React dashboard, verified deployment setups, and conducted usability research iterations to ensure responsive and secure interfaces.";
-  } else if (q.includes("skill") || q.includes("tech")) {
-    return "His core stack includes React, TypeScript, Node.js, PHP, and C# (.NET). For databases, he works with MySQL and PostgreSQL. He also has CCNA certification for secure networking and system support.";
-  } else if (q.includes("hire") || q.includes("remote") || q.includes("contact")) {
-    return "Malila is based in Nairobi, Kenya and open to hybrid or remote Software/QA Engineering contracts. You can contact him directly at jamesmnyamai9@gmail.com or 0745 806 761.";
+  const q = text.toLowerCase().trim();
+
+  // Greetings
+  if (/^(hi|hello|hey|greetings|good\s+(morning|afternoon|evening)|sup)\b/i.test(q)) {
+    return "Hello! I'm Ava, Malila's portfolio guide. Ask me anything about his software engineering experience, automated QA pipelines, live projects like E-Foleni, or how to get in touch with him!";
   }
-  return "Malila is a Software and QA Engineer with expertise in React, TypeScript, Node.js, and CI/CD automation pipelines. I'd be happy to share details about his projects, experience, or certifications. What would you like to explore?";
+
+  // Who is Ava / Who are you
+  if (q.includes("who are you") || q.includes("your name") || q.includes("what are you")) {
+    return "I am Ava, Malila Nyamai's AI portfolio guide and technical representative. I can answer questions about his software engineering background, test automation expertise, tech stack, and portfolio projects.";
+  }
+
+  // Missing skills / Not specialized in
+  if (q.includes("ruby") || q.includes("rails")) {
+    return "Malila does not specialize in Ruby on Rails. His primary backend stack is centered on Node.js, PHP, and C# (.NET Core), paired with MySQL and PostgreSQL databases. He has strong foundation in RESTful API architectures and can quickly adapt to backend frameworks.";
+  }
+  if (q.includes("python") || q.includes("django") || q.includes("flask")) {
+    return "While Malila has explored Python for AI/ML and LangChain prototyping, his production engineering focus is centered on TypeScript, React, Node.js, PHP, and C# (.NET). He adapts rapidly to new backend runtimes.";
+  }
+  if (q.includes("flutter") || q.includes("react native") || q.includes("swift") || q.includes("kotlin") || q.includes("mobile app")) {
+    return "Malila's core expertise is in web engineering (React, Vite, TypeScript) and responsive web applications with offline-first and mobile-optimized interfaces (like E-Foleni). While he has designed mobile banking QA test scripts at Kiwami Tech Solutions, he does not specialize in native iOS/Android development.";
+  }
+  if (q.includes("kubernetes") || q.includes("k8s")) {
+    return "Malila is experienced with Docker containerization, AWS cloud provisioning, and CI/CD quality verification, but Kubernetes cluster orchestration is not currently in his primary production stack.";
+  }
+
+  // Specific projects
+  if (q.includes("efoleni") || q.includes("foleni") || q.includes("queue") || q.includes("booking")) {
+    return "E-Foleni (efoleni.co.ke) is a queue-free booking scheduler co-founded and engineered by Malila. Built with React, TypeScript, and M-Pesa API (Daraja), it replaced walk-in lines with mobile-first slot bookings. It has handled 120,000+ bookings, saved visitors an average of 42 minutes per visit, and maintained 99.9% uptime.";
+  }
+  if (q.includes("kiwami") || q.includes("testcloud")) {
+    return "Kiwami TestCloud is a production software testing platform where Malila built the frontend architecture using React, TypeScript, and Vite. He implemented reusable test case workflows and analytics dashboards, reducing QA testing cycles by 35% and protecting 10,000+ users from faulty releases.";
+  }
+  if (q.includes("remboglow") || q.includes("beauty")) {
+    return "RemboGlow (remboglow.com) is a skincare beauty-tech platform co-founded and architected end-to-end by Malila. Built on React, Node.js, and PostgreSQL, he designed the system architecture, checkout flows, and conducted user research iterations.";
+  }
+  if (q.includes("tari") || q.includes("etims") || q.includes("tax")) {
+    return "At Tari Africa, Malila engineered a full-stack platform integrating KRA eTIMS and M-Pesa for SME digital tax compliance using Node.js, PHP, and MySQL, automating VAT submissions and saving businesses hours of manual paperwork.";
+  }
+  if (q.includes("skymed") || q.includes("health")) {
+    return "Skymed Life is a healthcare web platform where Malila built critical appointment modules and load-tested infrastructure supporting 500+ concurrent users with high availability and reliability.";
+  }
+
+  // QA & Testing
+  if (q.includes("qa") || q.includes("test") || q.includes("cypress") || q.includes("selenium") || q.includes("postman") || q.includes("jest") || q.includes("quality")) {
+    return "Malila brings 3+ years of QA & Testing expertise. He currently serves as Senior QA Engineer at Annex Technologies, executing Postman API tests, database SQL verification, and CI/CD quality gates. He is proficient in automated testing with Cypress, Selenium, Jest, Postman, and Jira for bug tracking.";
+  }
+
+  // Frontend & React
+  if (q.includes("react") || q.includes("typescript") || q.includes("frontend") || q.includes("vite") || q.includes("tailwind") || q.includes("ui") || q.includes("css") || q.includes("javascript")) {
+    return "Yes! Frontend engineering is one of Malila's primary strengths. He specializes in React, TypeScript, modern JavaScript (ES6+), Tailwind CSS, and Vite. He has shipped high-performance production apps like E-Foleni, Kiwami TestCloud, and RemboGlow with rich animations and responsive layouts.";
+  }
+
+  // Backend, Databases & APIs
+  if (q.includes("backend") || q.includes("node") || q.includes("php") || q.includes("c#") || q.includes(".net") || q.includes("api") || q.includes("database") || q.includes("mysql") || q.includes("postgres")) {
+    return "Malila builds resilient backend services and APIs using Node.js, PHP, and ASP.NET Core / C#. For databases, he designs and manages schemas in MySQL and PostgreSQL. He also integrates third-party APIs such as the Safaricom M-Pesa Daraja API and KRA eTIMS.";
+  }
+
+  // Cloud & DevOps
+  if (q.includes("cloud") || q.includes("aws") || q.includes("docker") || q.includes("ci/cd") || q.includes("devops") || q.includes("azure")) {
+    return "Malila works with AWS and Azure for cloud provisioning, Docker for containerizing services, and CI/CD pipelines for automated test execution and quality gating before production deployments.";
+  }
+
+  // AI / ML
+  if (q.includes("ai") || q.includes("ml") || q.includes("gemini") || q.includes("langchain") || q.includes("rag") || q.includes("llm")) {
+    return "Malila holds a Generative AI certification from SAP and builds AI-powered workflows using LangChain, RAG architectures, Google Gemini API, and n8n automation. You're chatting with Ava right now, one of the AI agents integrated into this portfolio!";
+  }
+
+  // Contact, Hire, Rates, Location
+  if (q.includes("hire") || q.includes("contact") || q.includes("email") || q.includes("phone") || q.includes("call") || q.includes("reach") || q.includes("rate") || q.includes("salary") || q.includes("location") || q.includes("nairobi") || q.includes("remote") || q.includes("available")) {
+    return "Malila is based in Nairobi, Kenya and is open to remote, hybrid, or on-site roles for Software Engineering, QA Engineering, and IT Consulting contracts.\n\n• Email: jamesmnyamai9@gmail.com\n• Phone / WhatsApp: 0745 806 761\n• GitHub: github.com/joashnyamai\n• LinkedIn: linkedin.com/in/malila-nyamai-0b2711221";
+  }
+
+  // Education & Certifications
+  if (q.includes("education") || q.includes("university") || q.includes("degree") || q.includes("zetech") || q.includes("college") || q.includes("certification") || q.includes("ccna") || q.includes("cisco")) {
+    return "Malila is an Information Technology BSc finalist at Zetech University (completing 2025/2026). His industry credentials include Cisco CCNA (Enterprise Networking, Security & Automation), SAP Generative AI, Hedera Hashgraph Developer, and Software Engineering from Power Learn Project Africa.";
+  }
+
+  // Resume / CV
+  if (q.includes("resume") || q.includes("cv") || q.includes("download")) {
+    return "You can view and download Malila's full CV and Resume directly from the portfolio using the 'Download CV' buttons or the command palette (Cmd/Ctrl + K). It details his 3+ years in QA, software development, cloud infrastructure, and certifications.";
+  }
+
+  // Why should I hire you / strengths
+  if (q.includes("why should") || q.includes("hire you") || q.includes("strength")) {
+    return "Malila offers a rare combination of strong Full-Stack Development (React, TypeScript, Node.js) with 3+ years of rigorous Software Quality Assurance (Cypress, Selenium, Postman). He doesn't just build features—he ensures they are resilient, thoroughly tested, and production-ready from day one.";
+  }
+
+  return "Malila is a Nairobi-based Software Engineer and Senior QA Engineer with 3+ years of experience in React, TypeScript, Node.js, and automated testing (Cypress, Selenium, Postman). Ask me about a specific skill, his projects (like E-Foleni or Kiwami TestCloud), or his availability!";
 }
 
 export function getMockJdResponse(jdText: string) {
   const jd = jdText.toLowerCase();
 
-  // Define keywords for domain detection
-  const techKeywords = [
-    "react", "vue", "angular", "node", "php", "c#", ".net", "python", "java", "javascript",
-    "typescript", "sql", "database", "mysql", "postgresql", "qa", "test", "quality",
-    "software", "developer", "engineer", "programmer", "aws", "azure", "cloud",
-    "cybersecurity", "ccna", "network", "support", "it ", "information technology",
-    "systems", "code", "coder", "git", "devops", "api", "selenium", "cypress",
-    "jest", "postman", "docker", "kubernetes", "k8s", "flutter", "react native",
-    "ios", "android", "swift", "kotlin", "laravel", "django", "flask", "spring", "rust", "golang", "go "
-  ];
-
-  // Check if it's completely unrelated to tech/QA/IT
-  const hasTechKeyword = techKeywords.some(keyword => jd.includes(keyword));
-  
-  // Non-tech indicator keywords
-  const nonTechIndicators = [
-    "doctor", "nurse", "surgeon", "medical", "dentist", "chef", "cooking", "driver", 
-    "sales representative", "marketing manager", "accountant", "finance", "legal", 
-    "lawyer", "therapist", "cashier", "waiter", "bartender"
-  ];
-  const isExplicitlyUnrelated = nonTechIndicators.some(kw => jd.includes(kw));
-
-  if (!hasTechKeyword || isExplicitlyUnrelated || jd.trim().length < 15) {
-    return {
-      score: 5,
-      fit: "Unsatisfactory fit. The role description does not align with software engineering, quality assurance, or IT domains.",
-      strengths: [],
-      gaps: [
-        "Role is in an unrelated domain (non-IT/Software/QA)",
-        "Requires domain-specific qualifications and experience outside Malila's core competencies"
-      ]
-    };
-  }
-
-  let score = 10; // Start with a very strict base for technical alignment
+  let score = 10;
   const strengths: string[] = [];
   const gaps: string[] = [];
 
@@ -198,61 +324,46 @@ export function getMockJdResponse(jdText: string) {
   if (jd.includes("qa") || jd.includes("test") || jd.includes("quality") || jd.includes("selenium") || jd.includes("cypress") || jd.includes("jest") || jd.includes("postman")) {
     score += 25;
     strengths.push("Senior QA manual & automated test suite design");
+  } else {
+    gaps.push("Testing/QA focus not explicitly required or prioritized");
   }
 
   // 2. Evaluate Frontend
-  if (jd.includes("react") || jd.includes("typescript") || jd.includes("javascript")) {
+  if (jd.includes("react") || jd.includes("typescript") || jd.includes("javascript") || jd.includes("frontend") || jd.includes("ui") || jd.includes("css") || jd.includes("tailwind") || jd.includes("html")) {
     score += 25;
-    strengths.push("Frontend React/TypeScript UI development");
-  } else if (jd.includes("frontend") || jd.includes("front-end")) {
-    // transferrable skills
-    score += 10;
-    strengths.push("General frontend engineering principles");
+    strengths.push("Production React, TypeScript & responsive UI engineering");
   }
 
-  // 3. Evaluate Backend & Databases
-  if (jd.includes("node") || jd.includes("php") || jd.includes("c#") || jd.includes(".net")) {
-    score += 15;
-    strengths.push("Backend software engineering (Node.js, PHP, C#)");
-  }
-  if (jd.includes("sql") || jd.includes("mysql") || jd.includes("postgresql") || jd.includes("database")) {
-    score += 15;
-    strengths.push("Relational Database Schema design (MySQL/PostgreSQL)");
+  // 3. Evaluate Backend & DB
+  if (jd.includes("node") || jd.includes("php") || jd.includes("c#") || jd.includes(".net") || jd.includes("sql") || jd.includes("mysql") || jd.includes("postgres") || jd.includes("database") || jd.includes("backend") || jd.includes("api")) {
+    score += 20;
+    strengths.push("Node.js, PHP, C#/.NET backend and relational SQL databases");
   }
 
-  // 4. Evaluate Cloud & DevOps & Networking
-  if (jd.includes("aws") || jd.includes("azure") || jd.includes("cloud")) {
+  // 4. Cloud & DevOps
+  if (jd.includes("aws") || jd.includes("cloud") || jd.includes("docker") || jd.includes("ci/cd") || jd.includes("devops")) {
     score += 10;
-    strengths.push("AWS/Azure cloud resource provisioning & CI/CD deployment");
-  }
-  if (jd.includes("ccna") || jd.includes("network") || jd.includes("security") || jd.includes("cybersecurity")) {
-    score += 10;
-    strengths.push("CCNA-certified networking & security skills");
+    strengths.push("Docker containerization & AWS cloud deployment exposure");
   }
 
-  // 5. Evaluate Gaps for Technologies Malila lacks but are requested
+  // 5. Penalties for Missing Skills
   if (jd.includes("python") || jd.includes("django") || jd.includes("flask")) {
-    score -= 15;
-    gaps.push("Python/Django/Flask backend development");
+    gaps.push("Python production backend development");
+    score = Math.max(10, score - 15);
   }
   if (jd.includes("java") || jd.includes("spring")) {
-    score -= 15;
     gaps.push("Java/Spring Boot enterprise development");
-  }
-  if (jd.includes("kubernetes") || jd.includes("k8s")) {
-    score -= 10;
-    gaps.push("Kubernetes container orchestration");
+    score = Math.max(10, score - 20);
   }
   if (jd.includes("angular") || jd.includes("vue")) {
-    score -= 10;
-    gaps.push("Angular/Vue frontend framework experience");
+    gaps.push("Specific Angular/Vue framework depth");
+    score = Math.max(10, score - 15);
+  }
+  if (jd.includes("kubernetes") || jd.includes("k8s")) {
+    gaps.push("Kubernetes cluster orchestration");
+    score = Math.max(10, score - 15);
   }
   if (jd.includes("flutter") || jd.includes("react native") || jd.includes("ios") || jd.includes("android") || jd.includes("swift") || jd.includes("kotlin")) {
-    score -= 15;
-    gaps.push("Mobile application development (Flutter/React Native/iOS/Android)");
-  }
-  if (jd.includes("rust") || jd.includes("golang") || jd.includes("go ")) {
-    score -= 10;
     gaps.push("Systems programming (Go/Rust)");
   }
 
@@ -427,14 +538,24 @@ export function getMockSyncResponse(text: string) {
  * Resilient Gemini API Caller with Exponential Backoff Retry and Error Handling Heuristics
  */
 export async function queryGeminiWithRetry(
-  prompt: string,
+  promptOrContents: string | ChatContent[],
   apiKey: string,
   responseMimeType?: string,
-  retries = 2,
-  delay = 1000
+  systemInstruction?: string,
+  retries = 1,
+  delay = 500,
+  maxOutputTokens = 350
 ): Promise<string> {
-  // Cascading list of models to try in sequence to survive quota/region deprecations
-  const modelsCascade = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+  // Cascading list: fastest and latest models first
+  const modelsCascade = [
+    "gemini-3.6-flash",
+    "gemini-flash-latest",
+    "gemini-3.5-flash"
+  ];
+
+  const contents = typeof promptOrContents === "string"
+    ? [{ role: "user" as const, parts: [{ text: promptOrContents }] }]
+    : promptOrContents;
 
   for (const model of modelsCascade) {
     let currentDelay = delay;
@@ -446,21 +567,35 @@ export async function queryGeminiWithRetry(
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
+        const bodyPayload: any = {
+          contents,
+          generationConfig: {
+            temperature: 0.35,
+            maxOutputTokens: maxOutputTokens,
+            ...(responseMimeType ? { responseMimeType } : {})
+          }
+        };
+
+        if (systemInstruction) {
+          bodyPayload.systemInstruction = {
+            parts: [{ text: systemInstruction }]
+          };
+        }
+
+        // Fast 5.5-second timeout to prevent UI hang and maintain instant response feel
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5500);
+
         const response = await fetch(url, {
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
             "x-goog-api-key": apiKey
           },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              temperature: i === 0 ? 0.15 : 0.35,
-              maxOutputTokens: 1000,
-              ...(responseMimeType ? { responseMimeType } : {})
-            }
-          })
+          body: JSON.stringify(bodyPayload),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
 
         // Handle Rate Limiting (429) for this specific model
         if (response.status === 429) {
@@ -475,7 +610,7 @@ export async function queryGeminiWithRetry(
 
         // If returned 404 or 403 or 400, it means the key lacks access to this specific model, cascade immediately
         if (response.status === 404 || response.status === 403 || response.status === 400) {
-          console.warn(`Model ${model} is not supported or key is restricted (HTTP ${response.status}). Cascading immediately.`);
+          console.warn(`Model ${model} returned HTTP ${response.status}. Cascading immediately.`);
           break;
         }
 
@@ -634,19 +769,22 @@ export default function AiLab() {
 
     try {
       if (apiKey && !fallbackActive) {
-        // Query Gemini API with Retry Heuristics
-        const prompt = `You are Ava, Malila Nyamai's personal guide and assistant.
-Answer the user's question completely, accurately, and concisely. Speak about Malila in the third person ("he", "him", "his").
-Do NOT state that you are an AI, a large language model, or a chatbot. Keep your tone completely human, friendly, and professional.
-Avoid robotic phrase templates (such as "Based on the provided context..."). Just answer naturally.
-Make sure the response is well-structured, complete, and always ends with a finished sentence. Do not cut off mid-sentence.
+        // Build multi-turn conversation history for context awareness
+        const recentHistory: ChatContent[] = messages
+          .slice(-6)
+          .filter((m, idx) => !(idx === 0 && m.sender === "bot" && m.text.startsWith("Hi, I'm Ava")))
+          .map(m => ({
+            role: m.sender === "user" ? ("user" as const) : ("model" as const),
+            parts: [{ text: m.text }]
+          }));
 
-Resume Context:
-${RESUME_CONTEXT}
+        const chatPayload: ChatContent[] = [
+          ...recentHistory,
+          { role: "user" as const, parts: [{ text }] }
+        ];
 
-User inquiry: "${text}"`;
-
-        const ans = await queryGeminiWithRetry(prompt, apiKey);
+        const rawAns = await queryGeminiWithRetry(chatPayload, apiKey, undefined, AVA_SYSTEM_PROMPT, 1, 400, 650);
+        const ans = formatAsHumanResponse(rawAns);
         setMessages((prev) => [...prev, { sender: "bot", text: ans, isLlm: true }]);
       } else {
         // Run standard mock logic
@@ -654,7 +792,6 @@ User inquiry: "${text}"`;
       }
     } catch (err: any) {
       console.warn("Chat API call failed, executing graceful sandbox fallback:", err.message);
-      setFallbackActive(true);
       
       const mockAns = getMockChatResponse(text);
       setMessages((prev) => [
@@ -776,7 +913,7 @@ Resume Context:
 ${RESUME_CONTEXT}`;
 
         const rawJson = await queryGeminiWithRetry(prompt, apiKey, "application/json");
-        const parsed = JSON.parse(rawJson);
+        const parsed = JSON.parse(cleanJsonOutput(rawJson));
         setMatchResult({
           score: parsed.score || 80,
           fit: parsed.fit || "Matches critical parameters.",
@@ -888,7 +1025,7 @@ Rules:
    }`;
 
         const rawJson = await queryGeminiWithRetry(prompt, apiKey, "application/json");
-        const parsed = JSON.parse(rawJson);
+        const parsed = JSON.parse(cleanJsonOutput(rawJson));
         setSuggestedChanges(parsed);
         addLog("[Profile Parser] Synthesizing updates using Gemini LLM...", "INFO");
         addLog("[Profile Parser] Updates successfully extracted.", "SUCCESS");
@@ -985,7 +1122,7 @@ Code to audit:
 ${customCode}`;
 
         const rawJson = await queryGeminiWithRetry(prompt, apiKey, "application/json");
-        const parsed = JSON.parse(rawJson);
+        const parsed = JSON.parse(cleanJsonOutput(rawJson));
         setAuditResult({
           vulnerability: parsed.vulnerability || "Vulnerability Found",
           severity: parsed.severity || "High",
@@ -1110,7 +1247,7 @@ ${customCode}`;
             <div className="flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full ${apiKey ? "bg-green-500" : "bg-amber-500"}`} />
               <span className="text-[10px] text-muted-foreground">
-                {apiKey ? "Gemini 3.5" : "Local Preview"}
+                {apiKey ? "Gemini 3.6 Flash" : "Local Preview"}
               </span>
             </div>
           </div>
@@ -1164,14 +1301,16 @@ ${customCode}`;
           <div className="px-4 py-2 border-t border-navy-border/40 bg-navy-surface/10 flex flex-wrap gap-1.5">
             {[
               "Tell me about E-Foleni",
-              "QA automation experience?",
-              "Are you open to remote?"
+              "What is his core tech stack?",
+              "Senior QA automation background?",
+              "Are you open to remote roles?",
+              "Why hire Malila?"
             ].map((chip) => (
               <button
                 key={chip}
                 disabled={chatLoading}
                 onClick={() => handleSendChat(chip)}
-                className="text-[10px] text-muted-foreground border border-navy-border hover:border-cyan/40 hover:text-cyan bg-navy-elevated/40 px-2.5 py-1 rounded-full transition-colors"
+                className="text-[10px] text-muted-foreground border border-navy-border hover:border-cyan/40 hover:text-cyan bg-navy-elevated/40 px-2.5 py-1 rounded-full transition-colors cursor-pointer"
               >
                 {chip}
               </button>
