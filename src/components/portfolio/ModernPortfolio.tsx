@@ -7,6 +7,7 @@ import Experience from "@/components/portfolio/Experience";
 import Projects from "@/components/portfolio/Projects";
 import Impact from "@/components/portfolio/Impact";
 import Certifications from "@/components/portfolio/Certifications";
+import Articles from "@/components/portfolio/Articles";
 import Contact from "@/components/portfolio/Contact";
 import Footer from "@/components/portfolio/Footer";
 import GlobalAvaChat from "@/components/portfolio/GlobalAvaChat";
@@ -51,6 +52,7 @@ export default function ModernPortfolio() {
         <Projects isOs={false} />
         <Impact />
         <Certifications isOs={false} />
+        <Articles isOs={false} />
         <Contact onViewResume={() => setResumeOpen(true)} isOs={false} />
       </main>
 

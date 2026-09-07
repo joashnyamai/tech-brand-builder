@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, Keyboard } from "lucide-react";
+import { Menu, X, Sun, Moon, Keyboard, ShieldCheck } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const navItems = [
   { label: "About", href: "#about" },
@@ -9,6 +10,7 @@ const navItems = [
   { label: "Experience", href: "#experience" },
   { label: "Projects", href: "#projects" },
   { label: "Impact", href: "#impact" },
+  { label: "Articles", href: "#articles" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -18,6 +20,7 @@ export default function Navbar() {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("portfolio-theme") as "dark" | "light" | null;
@@ -136,6 +139,18 @@ export default function Navbar() {
             {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
           </button>
 
+          {/* Admin Indicator Link */}
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className="p-2 rounded-lg border border-cyan/40 bg-cyan/10 text-cyan hover:bg-cyan/20 transition-all text-xs font-mono font-bold flex items-center gap-1.5 shadow-[0_0_10px_rgba(6,182,212,0.2)]"
+              title="Admin Console"
+            >
+              <ShieldCheck size={15} />
+              <span className="hidden xl:inline">Admin</span>
+            </Link>
+          )}
+
           <a
             href={isHome ? "#contact" : "/#contact"}
             className="inline-flex items-center px-4 py-2 rounded-lg border border-cyan text-cyan text-sm font-medium hover:bg-cyan hover:text-primary-foreground transition-all duration-200 hover-glow"
@@ -203,6 +218,16 @@ export default function Navbar() {
                     {theme === "light" ? <Moon size={14} /> : <Sun size={14} />}
                     <span>Theme</span>
                   </button>
+                  {isAdmin && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setOpen(false)}
+                      className="flex-1 py-2 px-3 rounded-lg border border-cyan/40 bg-cyan/10 text-cyan text-center text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <ShieldCheck size={14} />
+                      <span>Admin</span>
+                    </Link>
+                  )}
                 </div>
               </li>
               <li>

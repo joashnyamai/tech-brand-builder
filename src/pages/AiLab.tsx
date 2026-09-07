@@ -110,6 +110,13 @@ CERTIFICATIONS:
 - .NET Fundamentals (Microsoft Student Learn) - Development
 - Microsoft Office Suite (Microsoft) - Productivity
 
+ARTICLES & TECHNICAL WRITINGS:
+- "Architecting High-Concurrency M-Pesa Booking Engines: Lessons from E-Foleni": Row-level locking with PostgreSQL, Daraja STK Push callbacks, idempotency, and scaling to 120,000+ bookings in Kenya.
+- "Zero to Production: Building Automated QA Test Suites for Web Platforms": How automated contract and regression suites reduced QA cycles by 35% at Kiwami Tech & Annex Technologies.
+- "Integrating KRA eTIMS Fiscal Compliance APIs with Modern Node & PHP Stacks": Automating electronic tax compliance, XML payloads, and exponential backoff retry workers.
+- "Optimizing React SPAs for Low-Bandwidth Mobile Networks in Emerging Markets": Route-based code splitting, offline fallbacks, and under-150KB bundles for metered mobile traffic.
+Available at /articles.
+
 BEYOND CODE / INTERESTS:
 - Writing about emerging tech, playing chess, exploring AI innovations, and mentoring the next generation of Kenyan engineers into the industry.
 `;
@@ -277,6 +284,11 @@ export function getMockChatResponse(text: string): string {
   // Tari Africa
   if (q.includes("tari") || q.includes("tax") || q.includes("etims")) {
     return "At Tari Africa, Malila engineered digital tax and billing integrations connecting Node.js and PHP services with KRA eTIMS and M-Pesa API, automating invoice compliance for Kenyan enterprises.";
+  }
+
+  // Articles & Technical Writings
+  if (q.includes("article") || q.includes("blog") || q.includes("writing") || q.includes("publication")) {
+    return "Malila publishes in-depth engineering write-ups covering high-concurrency M-Pesa booking engines, automated QA frameworks, and KRA eTIMS API compliance. You can explore his full articles library at /articles or click 'Articles' in the navigation bar.";
   }
 
   // Tech Stack & Languages

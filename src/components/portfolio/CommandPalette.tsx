@@ -11,7 +11,9 @@ import {
   Bot,
   Sliders,
   Sun,
-  Mail
+  Mail,
+  BookOpen,
+  PenSquare
 } from "lucide-react";
 
 interface CommandPaletteProps {
@@ -62,6 +64,7 @@ export default function CommandPalette({
         { icon: <Briefcase size={14} />, label: "Go to Work Experience", action: () => { document.getElementById("experience")?.scrollIntoView({ behavior: "smooth" }); onClose(); } },
         { icon: <FolderGit size={14} />, label: "Go to Featured Projects", action: () => { document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" }); onClose(); } },
         { icon: <Cpu size={14} />, label: "Open Portfolio Knowledge Graph", action: () => { document.querySelector<HTMLButtonElement>('button[title="Skill Graph"]')?.click(); onClose(); } },
+        { icon: <BookOpen size={14} />, label: "Go to Articles & Insights", action: () => { document.getElementById("articles")?.scrollIntoView({ behavior: "smooth" }); onClose(); } },
         { icon: <Mail size={14} />, label: "Go to Contact Details", action: () => { document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); onClose(); } }
       ]
     },
@@ -69,6 +72,8 @@ export default function CommandPalette({
       category: "Actions & Tools",
       commands: [
         { icon: <FileText size={14} />, label: "View Interactive CV", action: () => { onTriggerResume(); onClose(); } },
+        { icon: <PenSquare size={14} />, label: "Write & Publish New Article", action: () => { window.location.href = "/articles/write"; onClose(); } },
+        { icon: <BookOpen size={14} />, label: "Browse All Articles Hub", action: () => { window.location.href = "/articles"; onClose(); } },
         { icon: <Bot size={14} />, label: "Ask Ava AI Assistant", action: () => { onTriggerAva(); onClose(); } },
         { icon: <Sliders size={14} />, label: "Open LLM Sync & Match AI Lab", action: () => { window.location.href = "/ai-lab"; onClose(); } },
         { icon: <Sun size={14} />, label: "Cycle Theme Accents", action: () => {

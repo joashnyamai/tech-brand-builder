@@ -86,6 +86,7 @@ export default function GlobalAvaChat({ onOpenResume }: GlobalAvaChatProps) {
 
   const suggestedQuestions = [
     "Tell me about E-Foleni",
+    "Where can I read your technical articles?",
     "What is your core tech stack?",
     "QA & automated testing experience?",
     "Are you open to remote roles?",
