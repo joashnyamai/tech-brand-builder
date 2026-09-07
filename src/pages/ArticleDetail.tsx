@@ -29,16 +29,37 @@ import { useAuth } from "@/context/AuthContext";
 export default function ArticleDetail() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { articles, getArticleBySlug, likeArticle, incrementView } = useArticles();
+  const {
+    articles,
+    loading,
+    getArticleBySlug,
+    fetchSingleArticleBySlug,
+    likeArticle,
+    incrementView
+  } = useArticles();
   const { isAdmin } = useAuth();
   const [copiedLink, setCopiedLink] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hasLiked, setHasLiked] = useState(false);
+  const [directArticle, setDirectArticle] = useState<any>(null);
+  const [fetchingDirect, setFetchingDirect] = useState(false);
 
-  const article = useMemo(() => {
-    if (!slug) return undefined;
-    return getArticleBySlug(slug);
-  }, [slug, articles, getArticleBySlug]);
+  useEffect(() => {
+    if (!slug) return;
+    const existing = getArticleBySlug(slug);
+    if (existing) {
+      setDirectArticle(existing);
+    } else {
+      setFetchingDirect(true);
+      fetchSingleArticleBySlug(slug).then((res) => {
+        if (res) setDirectArticle(res);
+        setFetchingDirect(false);
+      });
+    }
+  }, [slug, articles, getArticleBySlug, fetchSingleArticleBySlug]);
+
+  const article = directArticle || (slug ? getArticleBySlug(slug) : undefined);
+  const isPageLoading = (loading && !article) || fetchingDirect;
 
   // Scroll Progress calculation
   useEffect(() => {
@@ -114,6 +135,31 @@ export default function ArticleDetail() {
     likeArticle(article.id);
     setHasLiked(true);
   };
+
+  if (isPageLoading && !article) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
+        <Navbar />
+        <main className="flex-1 max-w-3xl mx-auto px-6 pt-40 pb-20 w-full space-y-6 text-center">
+          <div className="w-12 h-12 rounded-2xl bg-cyan/10 border border-cyan/30 flex items-center justify-center text-cyan mx-auto animate-pulse">
+            <BookOpen size={24} />
+          </div>
+          <h2 className="font-display text-lg font-bold text-foreground">
+            Loading Article...
+          </h2>
+          <p className="text-xs text-muted-foreground font-mono">
+            Fetching content from database...
+          </p>
+          <div className="space-y-4 max-w-md mx-auto pt-6 opacity-40">
+            <div className="h-4 bg-navy-surface rounded-full animate-pulse" />
+            <div className="h-4 bg-navy-surface rounded-full animate-pulse w-5/6 mx-auto" />
+            <div className="h-4 bg-navy-surface rounded-full animate-pulse w-4/6 mx-auto" />
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!article) {
     return (

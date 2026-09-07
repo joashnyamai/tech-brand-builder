@@ -9,7 +9,9 @@ import {
   deleteDoc,
   getDocs,
   onSnapshot,
-  increment
+  increment,
+  query,
+  where
 } from "firebase/firestore";
 
 const STORAGE_KEY = "portfolio_articles";
@@ -193,6 +195,27 @@ export function useArticles() {
     return articles.find((a) => a.slug === slug);
   };
 
+  const fetchSingleArticleBySlug = async (slug: string): Promise<Article | null> => {
+    // 1. Check in-memory articles
+    const found = articles.find((a) => a.slug === slug);
+    if (found) return found;
+
+    // 2. Query Firestore directly if not yet loaded in collection snapshot
+    if (isFirestoreActive && db) {
+      try {
+        const q = query(collection(db, "articles"), where("slug", "==", slug));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          const docData = snap.docs[0].data() as Article;
+          return { ...docData, id: snap.docs[0].id };
+        }
+      } catch (e) {
+        console.warn("Could not fetch article by slug directly from Firestore:", e);
+      }
+    }
+    return null;
+  };
+
   const likeArticle = async (id: string) => {
     if (isFirestoreActive && db) {
       try {
@@ -277,6 +300,7 @@ export function useArticles() {
     updateArticle,
     deleteArticle,
     getArticleBySlug,
+    fetchSingleArticleBySlug,
     likeArticle,
     incrementView,
     resetToDefaultArticles,
